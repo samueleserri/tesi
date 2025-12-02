@@ -1,2 +1,167 @@
 \chapter{Background}
 This chapter contains all the preliminaries necessary to formally define the NMF problem and understand the algorithms presented in this work.
+\section{Linear algebra}
+Basic compcet of linear algebra including matrices, vectors, and operations on them.
+\begin{definition}[Matrix]
+    Given two numbers $m,n \in N$, a matrix $A \in \R^{m \times n}$ is a rectangular array of real numbers with $m$ rows and $n$ columns.
+\end{definition}
+\begin{equation*}
+    A = \begin{bmatrix}
+    a_{11} & a_{12} & \cdots & a_{1n} \\
+    a_{21} & a_{22} & \cdots & a_{2n} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    a_{m1} & a_{m2} & \cdots & a_{mn}
+    \end{bmatrix}
+\end{equation*}
+\begin{definition}[transpose of a matrix]
+    Given a matrix $A \in \R^{m \times n}$, the transpose of $A$, denoted by $A^\top$, is the matrix obtained by swapping the rows and columns of $A$.
+    That is, the matrix $A^\top$ is a matrix such that $A[i,j] = A^\top[j,i]$ for all $1 \leq i \leq m$ and $1 \leq j \leq n$.
+\end{definition}
+\begin{observation}
+    The transpose of a matrix $A \in \R^{m \times n}$ is a matrix $A^\top \in \R^{n \times m}$.
+\end{observation}
+\begin{definition}[Product of matrices]
+    Given two matrices $A \in \R^{m \times n}$ and $B \in \R^{n \times p}$, the product of $A$ and $B$, denoted by $AB$, is the matrix $C \in \R^{m \times p}$ such that:
+    \begin{equation*}
+    C[i,j] = \sum_{k=1}^{n} A[i,k] B[k,j]
+    \end{equation*}
+    for all $1 \leq i \leq m$ and $1 \leq j \leq p$.
+\end{definition}
+\begin{definition}[Column vector]
+    A column vector $x \in \R^m$ is a matrix with $m$ rows and 1 column. (i.e. $x \in \R^{m \times 1}$)
+\end{definition}
+\begin{terminology}
+    In this text the word vector will always refer to a column vector unless otherwise specified.
+\end{terminology}
+\begin{equation*}
+    x = \begin{bmatrix}
+    x_{1} \\
+    x_{2} \\
+    \vdots \\
+    x_{m}
+    \end{bmatrix}
+\end{equation*}
+\begin{definition}[Row vector]
+    A row vector $y \in \R^n$ is the transpose of a column vector. (i.e. $y \in \R^{1 \times n}$)
+\end{definition}
+\begin{equation*}
+    y =\begin{bmatrix}
+    y_1 \\
+    y_2 \\
+    \vdots \\
+    y_n
+    \end{bmatrix}^\top =\begin{bmatrix}
+    y_{1} & y_{2} & \cdots & y_{n}
+    \end{bmatrix}
+\end{equation*}
+\subsection{Norms}
+\begin{definition}[Norm of a vector]
+    Given a vector $x \in \R^n$, a norm is a function $\| \cdot \|: \R^n \rightarrow \R_+$ that satisfies the following properties:
+    \begin{itemize}
+        \item $\| x \| \geq 0$ for all $x \in \R^n$ and $\| x \| = 0$ if and only if $x = 0$.
+        \item $\| \alpha x \| = |\alpha| \| x \|$ for all $\alpha \in \R$ and $x \in \R^n$.
+        \item $\| x + y \| \leq \| x \| + \| y \|$ for all $x, y \in \R^n$ (triangle inequality).
+    \end{itemize}
+\end{definition}
+\begin{example}
+    The Euclidean norm (or 2-norm) of a vector $x \in \R^n$ is defined as:
+    
+    \begin{equation}
+    \| x \|_2 = \sqrt{\sum_{i=1}^{n} x_i^2}
+    \end{equation}
+    The 1-norm of a vector $x \in \R^n$ is defined as:
+    \begin{equation}
+    \| x \|_1 = \sum_{i=1}^{n} |x_i|
+    \end{equation}
+    The infinity norm of a vector $x \in \R^n$ is defined as:
+    \begin{equation}
+    \| x \|_\infty = \max_{1 \leq i \leq n} |x_i|
+    \end{equation}
+\end{example}
+\begin{definition}[Norm of a matrix]
+    Given a matrix $A \in \R^{m \times n}$, a norm is a function $\| \cdot \|: \R^{m \times n} \rightarrow \R_+$ that satisfies the following properties:
+    \begin{itemize}
+        \item $\| A \| \geq 0$ for all $A \in \R^{m \times n}$ and $\| A \| = 0$ if and only if $A = 0$.
+        \item $\| \alpha A \| = |\alpha| \| A \|$ for all $\alpha \in \R$ and $A \in \R^{m \times n}$.
+        \item $\| A + B \| \leq \| A \| + \| B \|$ for all $A, B \in \R^{m \times n}$ (triangle inequality).
+    \end{itemize}
+\end{definition}
+\begin{example}
+    The Frobenius norm of a matrix $A \in \R^{m \times n}$ is defined as:
+    \begin{equation}
+    \| A \|_F = \sqrt{\sum_{i=1}^{m} \sum_{j=1}^{n} a_{ij}^2}
+    \end{equation}
+    The 1-norm of a matrix $A \in \R^{m \times n}$ is defined as:
+    \begin{equation}
+    \| A \|_1 = \max_{1 \leq j \leq n} \sum_{i=1}^{m} |a_{ij}|
+    \end{equation}
+    The infinity norm of a matrix $A \in \R^{m \times n}$ is defined as:
+    \begin{equation}
+    \| A \|_\infty = \max_{1 \leq i \leq m} \sum_{j=1}^{n} |a_{ij}|
+    \end{equation}
+\end{example}
+\section{optimization}
+Basic concepts of optimization including convexity, gradient descent, and other optimization algorithms.
+\begin{definition}
+    An optimizatio problem is defined as:
+    \begin{equation}
+        \min_{x \in X}f(x)
+    \end{equation}
+    where \begin{itemize}
+        \item $X$ is the feasible set in which the solution must lie.
+        \item $f: X \rightarrow \R$ is the objective function to be minimized
+    \end{itemize}
+\end{definition}
+\begin{terminology}
+    In other context the objective function is also referred to as cost function, loss function, or energy function. Here will use them interchangeably.
+\end{terminology}
+\begin{definition}[Global optimum]
+    A point $x^* \in X$ is a global optimum of the optimization problem $\min_{x \in X}f(x)$ if:
+    \begin{equation}
+        f(x^*) \leq f(x) \quad \forall x \in X
+    \end{equation}
+\end{definition}
+\begin{definition}[Local optimum]
+    A point $x^* \in X$ is a local optimum of the optimization problem $\min_{x \in X}f(x)$ if there exists a neighborhood $U$ of $x^*$ such that:
+    \begin{equation}
+        f(x^*) \leq f(x) \quad \forall x \in U \cap X
+    \end{equation}
+\end{definition}
+\begin{definition}[Linear least squares problem]
+    Given a matrix $A \in \R^{m \times n}$ and a vector $b \in \R^m$, the linear least squares problem is defined as:
+    \begin{equation}
+        \min_{x \in \R^n} \| Ax - b \|_2^2
+    \end{equation}  
+\end{definition}
+\begin{theorem}[solution of the linear least squares problem]
+    The solution of the linear least squares problem $\min_{x \in \R^n} \| Ax - b \|_2^2$ is given by:
+    \begin{equation}
+        x^* = (A^\top A)^{-1} A^\top b = A^\dagger b
+    \end{equation}
+    provided that $A^\top A$ is invertible.
+\end{theorem}
+\begin{proof}
+    The objective function can be rewritten as:
+    \begin{equation*}
+        f(x) = \| Ax - b \|_2^2 = (Ax - b)^\top (Ax - b) = x^\top A^\top A x - 2b^\top A x + b^\top b
+    \end{equation*}
+    To find the minimum, we compute the gradient of $f(x)$ and set it to zero:
+    \begin{equation*}
+        \nabla f(x) = 2A^\top A x - 2A^\top b
+    \end{equation*}
+    Setting the gradient to zero gives:
+    \begin{equation*}
+        2A^\top A x - 2A^\top b = 0
+    \end{equation*}
+    which simplifies to:
+    \begin{equation*}
+        A^\top A x = A^\top b
+    \end{equation*}
+    Assuming that $A^\top A$ is invertible, we can solve for $x$:
+    \begin{equation*}
+        x^* = (A^\top A)^{-1} A^\top b
+    \end{equation*}
+    This completes the proof.
+\end{proof}
+\section{Linear dimensionality reduction}
+Basic concepts of linear dimensionality reduction including PCA, SVD, and other related techniques.

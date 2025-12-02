@@ -59,6 +59,8 @@
 \newtheorem{proposition}{Proposition}[chapter]
 \newtheorem{corollary}{Corollary}[chapter]
 \theoremstyle{remark}
+\newtheorem{observation}{Observation}[chapter]
+\newtheorem{terminology}{Terminology}[chapter]
 \newtheorem{remark}{Remark}[chapter]    
 \newtheorem{example}{Example}[chapter]
 
@@ -124,8 +126,11 @@ ANNO ACCADEMICO 2024--2025
 
 
 \clearpage
+% notation page not numbered
+\thispagestyle{empty}
+\include{chapters/Notation}
+\clearpage
 \pagenumbering{arabic}
-
 \include{chapters/Introduction}
 \include{chapters/Background}
 \include{chapters/NMF}
