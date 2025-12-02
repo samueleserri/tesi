@@ -1,0 +1,61 @@
+# LaTeX intermediate files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+*.idx
+*.ilg
+*.ind
+
+# biber/bibtex / biblatex outputs
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# latexmk / build artifacts
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.xdv
+*.maf
+*.mtc*
+_minted-*/
+*.pyg
+
+# Compiled PDF (keep if you prefer tracking the PDF)
+main.pdf
+*.pdf
+
+# Temporary / backup files
+*~
+*.bak
+*.tmp
+*.swp
+# Emacs/Vim/IDE locks
+.#*
+#*#
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generic build / output dirs
+build/
+out/
+_logs/
+
+#main-blx.bib
+.main-blx.bib
+
+# pdf files
+*.pdf

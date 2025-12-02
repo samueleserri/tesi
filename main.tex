@@ -1,0 +1,100 @@
+\documentclass[12pt]{book}
+
+% Page layout
+\usepackage[a4paper,margin=3cm]{geometry}
+
+% Encoding and language
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+
+% Math and graphics
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{tikz}
+% Links
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+% \usepackage{biblatex}
+\usepackage[backend=bibtex,style=numeric,sorting=nyt]{biblatex} % use bibtex backend to avoid biber
+\addbibresource{references.bib}
+% Simple metadata
+\newcommand{\thesistitle}{TITOLO}
+\newcommand{\thesisauthor}{Samuele Serri}
+\newcommand{\thesismatricola}{SM3201369}
+\newcommand{\thesissupervisor}{Prof. Nome Cognome}
+\newcommand{\thesisyear}{2024--2025}
+
+\begin{document}
+\begin{center}
+\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=center, inner sep= 0pt] 
+{\includegraphics[width=.5\textwidth]
+{logo_centenario-eps-converted-to.pdf}};
+\centering
+\end{tikzpicture}
+\vfill
+\LARGE
+\textsc{Università degli Studi di Trieste}\\
+\rule{\textwidth}{0.1mm}\\
+\large
+\textsc{Dipartimento di Matematica Informatica e Geoscienze -- MIGE}\\ 
+\bigskip
+Corso di Laurea in Intelligenza Artitificiale e Data Analytics \\
+\vfill %%\vspace{3cm}
+\textsc{Tesi di laurea triennale}\\
+\vfill %%\vspace{3cm}
+\LARGE
+\textbf{\textsc{TITOLO}}\\
+\end{center}
+\vfill
+%%%%%%
+%%%%%% Qui va inserito il nome del laureando
+\begin{tabular}[t]{l}
+Laureando:\\
+\textbf{Samuele Serri}\\
+\textsc{Matricola: SM3201369}
+\end{tabular}
+%%%%%%
+\hfill 
+%%%%%% Qui va inserito il nome del relatore
+\begin{tabular}[t]{l}
+Relatore: \\
+\textbf{Prof. Nome Cognome} \\
+\\
+Correlatore: \\
+\textbf{Prof. Nome Cognome}
+\end{tabular}
+%%%%%%
+\vfill
+\begin{center}
+\normalsize
+\rule{8cm}{0.1mm}\\
+\bigskip
+ANNO ACCADEMICO 2024--2025
+\end{center}
+\thispagestyle{empty}  
+
+
+\clearpage              
+\pagenumbering{roman}
+\tableofcontents
+\bigskip
+\shipout\null % pagina vuota
+
+
+\clearpage
+\pagenumbering{arabic}
+
+\include{chapters/Introduction}
+
+
+% \listoffigures
+% Bibliography placeholder:
+\clearpage
+\printbibliography
+
+\end{document}
+
+
