@@ -1,0 +1,38 @@
+\chapter{Algorithms for NMF}
+In this chapter, some algorithms are derived and presented.\
+\par
+Recall that the NMF problem \ref{NMF optimization problem} is NP-hard, hence all the Algorithms presented in this chapter are heuristics that aim to find a local minimum of the optimization problem.
+More precisely, they are iterative schemes that start from an initial guess of the factors \( W \) and \( H \) and iteratively update them to reduce the value of the objective function.
+Converging to a local minimum. \\
+They don't guarantee to converge to the global minimum.
+\par
+The most common setting for NMF is the so called two-blocks coordinate descent, in this setting the factors \( W \) and \( H \) are updated alternately, fixing one while updating the other.
+\begin{algorithm}[H]
+    \caption{Two-blocks coordinate descent for NMF}
+    \begin{algorithmic}[1]
+        \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
+        % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
+        \While{stopping criterion not met}
+            \State Update \( W^{(k+1)} \) by fixing \( H^{(k+1)} \)
+            \State Update \( H^{(k+1)} \) by fixing \( W^{(k)} \)
+        \EndWhile
+        \State \Return \( W, H \)
+    \end{algorithmic}
+\end{algorithm}
+This general scheme is widely used, and there are different ways to update the factors \( W \) and \( H \). There are mainly two observations that justift this approach:
+\begin{itemize}
+    \item When one of the factors is fixed, the optimization subproblem is convex for most of the common cost functions. That makes it easier to design algorithms to solve them.
+    \item Due to the symmetry of the problem $V = WH \iff V^T = H^T W^T$ the value of the cost function is the same if we swap \( W \) and \( H \) and transpose the input matrix \( V \). $D(V, WH) = D(V^T, H^T W^T)$.
+    Therefore, it is sufficient to design an update rule for one of the factors, the other can be obtained by swapping the roles of \( W \) and \( H \) and transposing \( V \).
+\end{itemize}
+Overall this approach is much easier to handle than trying to update both factors simultaneously. See\cite{mukkamala2019alternatingupdatesmatrixfactorization}.
+
+
+\section{Multiplicative Updates (MU)}
+TODO
+\section{MU with beta divergence}
+TODO
+\section{Alternating Least Squares (ALS)}
+TODO
+\section{Hierarchical Alternating Least Squares (HALS)}
+TODO

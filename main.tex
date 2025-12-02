@@ -13,6 +13,27 @@
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{tikz}
+% code
+\usepackage{listings}
+\lstset{language=Python,
+        basicstyle=\ttfamily\small,
+        keywordstyle=\color{blue},
+        commentstyle=\color{green!60!black},
+        stringstyle=\color{orange},
+        showstringspaces=false,
+        numbers=left,
+        numberstyle=\tiny,
+        stepnumber=1,
+        numbersep=5pt,
+        breaklines=true,
+        frame=single,
+        tabsize=4,
+        captionpos=b,
+        morekeywords={self, None, True, False}
+}
+% pseudocode
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 % Links
 \usepackage{hyperref}
 \hypersetup{hidelinks}
@@ -25,6 +46,24 @@
 \newcommand{\thesismatricola}{SM3201369}
 \newcommand{\thesissupervisor}{Prof. Nome Cognome}
 \newcommand{\thesisyear}{2024--2025}
+
+% useful math commands
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+
+% create math environment for theorems, definitions, etc.
+\usepackage{amsthm}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}{Lemma}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{corollary}{Corollary}[chapter]
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[chapter]    
+\newtheorem{example}{Example}[chapter]
+
+% Begin document
+
 
 \begin{document}
 \begin{center}
@@ -88,9 +127,18 @@ ANNO ACCADEMICO 2024--2025
 \pagenumbering{arabic}
 
 \include{chapters/Introduction}
+\include{chapters/Background}
+\include{chapters/NMF}
+\include{chapters/Algorithms}
+\include{chapters/Experiments}
 
 
 % \listoffigures
+\clearpage
+\pagenumbering{roman}
+\appendix
+\include{chapters/appendix/code_documentation}
+
 % Bibliography placeholder:
 \clearpage
 \printbibliography

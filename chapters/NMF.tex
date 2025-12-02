@@ -1,0 +1,36 @@
+\chapter{Non-Negative Matrix Factorization}
+This chapter introduces the NMF problem.
+\section{Definition}
+In its more general form the Non-negative matrix factorization problem can be defined as follows: given a non-negative (all the elements must be non-negative) matrix $V \in \R_+^{m \times n}$ and a factorization rank $r \in \N$ find two matrices
+$W \in \R_+^{m \times r}$ and $H \in \R_+^{r \times n}$, constrained to be non-negative, such that their product $WH$ approximates $V$ as closely as possible according to some distance measure $D$.
+\par
+This problem can be formulated with an optimization problem as follows:
+\begin{definition}[Non-Negative Matrix Factorization optimization problem]\label{NMF optimization problem}
+Given a non-negative matrix $V \in \R_+^{m \times n}$ and a factorization rank $r \in \N$, find two non-negative matrices $W \in \R_+^{m \times r}$ and $H \in \R_+^{r \times n}$ that minimize 
+a given cost function $D(V, WH)$, that is:
+\begin{equation}
+\min_{W \in \R_+^{m \times r}, H \in \R_+^{r \times n}} D(V, WH)
+\end{equation}
+where $D$ is a distance measure between matrices.
+\end{definition}
+
+PARLARE DEI PROBLEMI (NP-HARD, NON UNICITÀ DELLA SOLUZIONE)\\
+PARLARE DELLE DIVERSE DISTANZE USATE COMUNEMENTE (FROBENIUS, KL, ETC) E DEL PERCHÈ SI USANO.\\
+ESEMPI DI APPLICAZIONI\\
+INTERPRETAZIONE GEOMETRICA\\
+
+\section{Historical origin of NMF}
+Even though some early works date back to the 70s in the field of Earth science and remote system sensing \cite{Wallace1960}\cite{Imbrie1964}\cite{craig1994}
+the first modern definition of the NMF problem is usually attributed to the work of Paatero and Tapper in 1994 \cite{Paatero1994} where they defined the so-called Positive Matrix Factorization (PMF) problem, a particular case of NMF where the distance measure used is the least squares one (Frobenius norm).
+This early work arose in the field of analytical chemistry and the NMF model as a modern data analysis tool remained relatively unknown until the seminal paper of Lee and Seung in 1999 \cite{Lee1999}.
+\par
+In this work Lee and Seung introduces the NMF model to the machine learning community and proposed an easy to implement algorithm based on multiplicative updates to solve the NMF optimization problem.
+Their work is especially famous because they  demonstrate an algorithm for non-negative matrix factorization that is able to learn parts of faces, in contrast to other decomposition methods like PCA or SVD that learn holistic features.
+Their results are also reproduced in this thesis to show an example of application of NMF.
+\section{Two applications of NMF}
+In this section two applications of NMF are presented: the first one is the well-known example of learning parts of faces introduced by Lee and Seung in \cite{Lee1999},
+while the second one is an application of NMF to text mining, in particular to topic modeling.
+\subsection{Learning parts of faces}
+TODO
+\subsection{Topic modeling}
+TODO
