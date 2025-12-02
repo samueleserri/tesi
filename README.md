@@ -1,0 +1,1 @@
+This repository contains all the LaTeX source files for my thesis. It includes chapters, bibliography, figures, and other related materials needed to compile the final document.

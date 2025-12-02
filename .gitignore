@@ -55,7 +55,7 @@ out/
 _logs/
 
 #main-blx.bib
-.main-blx.bib
+main-blx.bib
 
 # pdf files
 *.pdf
