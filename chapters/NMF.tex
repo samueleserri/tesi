@@ -13,12 +13,28 @@ a given cost function $D(V, WH)$, that is:
 \end{equation}
 where $D$ is a distance measure between matrices.
 \end{definition}
-
-PARLARE DEI PROBLEMI (NP-HARD, NON UNICITÀ DELLA SOLUZIONE)\\
-PARLARE DELLE DIVERSE DISTANZE USATE COMUNEMENTE (FROBENIUS, KL, ETC) E DEL PERCHÈ SI USANO.\\
-ESEMPI DI APPLICAZIONI\\
-INTERPRETAZIONE GEOMETRICA\\
-
+\section{Metrics}
+TODO
+\section{Complexity of NMF}
+The main result was proved by Vavasis in \cite{vavasis2007complexitynonnegativematrixfactorization} where it is shown that the NMF problem is NP-hard in general.
+To do so Vavasis considers the exact NMF problem, a particular case of NMF where the distance measure is such that $D(V, WH) = 0$ if and only if $V = WH$ and $D(V, WH) > 0$ otherwise.
+\begin{definition}[Exact Non-Negative Matrix Factorization problem]\label{Exact NMF definition}
+      Given a nonnegative matrix $V \in \R^{m\times n}_+$ and a factorization rank $r$,
+compute, if possible, two nonnegative matrices
+$W \in \R^{m \times r}_+$ and $H \in \R^{r \times n}_+$
+such that
+\begin{equation}
+    V = WH
+\end{equation}
+The pair $(W , H)$ is said to be an Exact NMF of $V$ of size $r$.  
+\end{definition}
+Behind every approximation $\tilde{V}\approx WH$ an exact NMF is hidden.
+Exact NMF has a nice \textit{geometric interpretation} which allows one to
+characterize the set of solutions.   
+\par
+Since the NMF problem as stated in \ref{NMF optimization problem} is a generalization of the exact NMF problem, the NP-hardness of exact NMF implies the NP-hardness of NMF.
+\section{Geometric Interpretation}
+TODO
 \section{Historical origin of NMF}
 Even though some early works date back to the 70s in the field of Earth science and remote system sensing \cite{Wallace1960}\cite{Imbrie1964}\cite{craig1994}
 the first modern definition of the NMF problem is usually attributed to the work of Paatero and Tapper in 1994 \cite{Paatero1994} where they defined the so-called Positive Matrix Factorization (PMF) problem, a particular case of NMF where the distance measure used is the least squares one (Frobenius norm).
