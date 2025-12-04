@@ -100,10 +100,11 @@ Basic compcet of linear algebra including matrices, vectors, and operations on t
     \| A \|_\infty = \max_{1 \leq i \leq m} \sum_{j=1}^{n} |a_{ij}|
     \end{equation}
 \end{example}
+\newpage
 \section{Optimization}
 Basic concepts of optimization including convexity, gradient descent, and other optimization algorithms.
 \begin{definition}
-    An optimizatio problem is defined as:
+    An optimization problem is defined as:
     \begin{equation}
         \min_{x \in X}f(x)
     \end{equation}
@@ -136,7 +137,7 @@ Basic concepts of optimization including convexity, gradient descent, and other 
 \begin{theorem}[solution of the linear least squares problem]
     The solution of the linear least squares problem $\min_{x \in \R^n} \| Ax - b \|_2^2$ is given by:
     \begin{equation}
-        x^* = (A^\top A)^{-1} A^\top b = A^\dagger b
+        x^* = (A^\top A)^{-1} A^\top b = A^\dagger A^\top b
     \end{equation}
     provided that $A^\top A$ is invertible.
 \end{theorem}
@@ -167,17 +168,32 @@ Basic concepts of optimization including convexity, gradient descent, and other 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth]{Imgs/Least_squares.png}
-    \caption{Visualization of the sub-space spanned by the columns of $A$ and the projection of $b$ onto this sub-space, which gives the least squares solution.}
+    \caption{In a three-dimensional setting
+    the least squares regression line becomes a plane. The plane is chosen
+to minimize the sum of the squared vertical distances between each vector
+(shown in red) and the plane.
+\\  \vspace{2pt} \small\textit{Image from: \cite{IntroToSL}}}
     \label{fig:least_squares}
 \end{figure}
-\subsection{Gradient descent}
+\newpage
+\subsection{Gradient descent}\label{Gradient descent section}
 \begin{definition}[Gradient descent]
-    Gradient descent is an iterative optimization algorithm used to find the minimum of a differentiable function. Given an initial point $x_0 \in X$, the algorithm updates the point iteratively using the following rule:
+    Gradient descent is an iterative optimization algorithm used to find a local minimum of a differentiable function. Given an initial point $x_0 \in X$, the algorithm updates the point iteratively using the following rule:
     \begin{equation}
         x_{k+1} = x_k - \eta_k \nabla f(x_k)
     \end{equation}
     where $\eta_k > 0$ is the step size (or learning rate) at iteration $k$ and $\nabla f(x_k)$ is the gradient of the objective function at point $x_k$.
 \end{definition}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Imgs/Gradient_descent.png}
+    \caption{Illustration of gradient descent on a series of level sets.%
+    \\ \vspace{2pt} \small\textit{Source: Wikimedia Commons -- see \url{https://commons.wikimedia.org/wiki/File:Gradient_descent.png} for author and license information.}}
+    \label{fig:gradient_descent}
+\end{figure}
+\par
+We have the following convergence result for gradient descent:
 
+\newpage
 \section{Linear dimensionality reduction}
 Basic concepts of linear dimensionality reduction including PCA, SVD, and other related techniques.

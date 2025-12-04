@@ -13,6 +13,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{tikz}
+\usepackage{float}
 % code
 \usepackage{listings}
 \lstset{language=Python,
@@ -52,7 +53,7 @@
 
 % \usepackage[backend=bibtex,style=numeric,sorting=nyt]{biblatex}
 \usepackage[backend=bibtex,style=numeric,sorting=nyt]{biblatex} % use bibtex backend to avoid biber
-\addbibresource{references.bib}
+\addbibresource{references.bib} % The file containing the bibliography
 % Simple metadata
 \newcommand{\thesistitle}{TITOLO}
 \newcommand{\thesisauthor}{Samuele Serri}
@@ -76,6 +77,8 @@
 \newtheorem{terminology}{Terminology}[chapter]
 \newtheorem{remark}{Remark}[chapter]    
 \newtheorem{example}{Example}[chapter]
+
+\setcounter{tocdepth}{3}
 
 % Begin document
 
