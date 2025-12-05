@@ -33,6 +33,8 @@ Exact NMF has a nice \textit{geometric interpretation} which allows one to
 characterize the set of solutions.   
 \par
 Since the NMF problem as stated in \ref{NMF optimization problem} is a generalization of the exact NMF problem, the NP-hardness of exact NMF implies the NP-hardness of NMF.
+\section{Identifiability}
+TODO
 \section{Geometric Interpretation}
 TODO
 \section{Historical origin of NMF}
@@ -47,6 +49,64 @@ Their results are also reproduced in this thesis to show an example of applicati
 In this section two applications of NMF are presented: the first one is the well-known example of learning parts of faces introduced by Lee and Seung in \cite{Lee1999},
 while the second one is an application of NMF to text mining, in particular to topic modeling.
 \subsection{Learning parts of faces}
-TODO
+The dataset used in this example is the CBCL face dataset \footnote{See \ref{code documentation appendix} for data availability and details on the code used}.
+This dataset has size $2429 \times 361$ where each column represent a $19 \times 19$ gray-scale image of a face.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Imgs/CBCL_Original.png}
+    \caption{Some example images from the CBCL face dataset.}
+    \label{fig:CBCL original faces}
+\end{figure}
+The NMF model is applied to this dataset with a factorization rank of $r = 49$,  the algorithm used is the multiplicative updates with the Kullback-Leibler divergence as distance measure.
+After fitting the model we obtain two matrices: $W \in \R_+^{2429 \times 49}$ and $H \in \R_+^{49 \times 361}$.
+The non-negativity constraints of the NMF problem \ref{NMF optimization problem} allows one to interpret the columns of $W$ in the same way as the original data, that is each column of $W$ can be reshaped to form a $19 \times 19$ gray-scale image and displayed.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Imgs/CBCL_colums_of_W.png}
+    \caption{Columns of the matrix $W$ reshaped as $19 \times 19$ gray-scale images.}
+    \label{fig:CBCL columns of W}
+\end{figure}
+As can be seen in figure \ref{fig:CBCL columns of W} the pixels of the images formed by the columns of $W$ are active only in certain regions, for example some columns represent eyes, others noses, mouths and so on.
+This is the reason why it is said that Non-negative matrix factorization is able to learn a ``part based'' representation of faces.
+\par
+The matrix $H$ contains the coefficients or weights to reconstruct the original images as linear combinations of the parts.\\
+The $j$-th column of the original data matrix $V$ can be approximated as:
+\begin{equation}
+    V[:,j] \approx W H[:,j] = \sum_{k=1}^{r} H[k,j] W[:, k]
+\end{equation}
+This is a linear combination of the columns of $W$ weighted by the coefficients in the $j$-th column of $H$.
+\begin{equation}
+    \begin{bmatrix}
+        v_{1,j} \\
+        v_{2,j} \\
+        \vdots \\
+        v_{m,j}
+    \end{bmatrix} \approx H[1,j]
+    \begin{bmatrix}
+        w_{1,1} \\
+        w_{2,1} \\
+        \vdots \\
+        w_{m,1}
+    \end{bmatrix} + H[2,j]
+    \begin{bmatrix}
+        w_{1,2} \\
+        w_{2,2} \\
+        \vdots \\
+        w_{m,2}
+    \end{bmatrix} + \ldots + H[r,j]
+    \begin{bmatrix}
+        w_{1,r} \\
+        w_{2,r} \\
+        \vdots \\
+        w_{m,r}
+    \end{bmatrix}
+\end{equation}
+Note that the number of columns of $V$ is equal to the number of columns of $H$. That means that there is a one-to-one correspondence between the columns of $V$ and the columns of $H$ containing the weights to reconstruct each image.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Imgs/Reconstruction_1.png}
+    \caption{Example of reconstruction of an image from the CBCL dataset using the NMF model. On the left the original image, on the right the reconstructed one.}
+    \label{fig:CBCL reconstructed faces}
+\end{figure}
 \subsection{Topic modeling}
 TODO
