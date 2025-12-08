@@ -1,7 +1,7 @@
 \chapter{Non-Negative Matrix Factorization}
 This chapter introduces the NMF problem.
 \section{Definition}
-In its more general form the Non-negative matrix factorization problem can be defined as follows: given a non-negative (all the elements must be non-negative) matrix $V \in \R_+^{m \times n}$ and a factorization rank $r \in \N$ find two matrices
+In its more general form the Non-negative matrix factorization problem can be defined as follows: given a non-negative matrix $V \in \R_+^{m \times n}$ and a factorization rank $r \in \N$ find two matrices
 $W \in \R_+^{m \times r}$ and $H \in \R_+^{r \times n}$, constrained to be non-negative, such that their product $WH$ approximates $V$ as closely as possible according to some distance measure $D$.
 \par
 This problem can be formulated with an optimization problem as follows:
@@ -14,6 +14,46 @@ a given cost function $D(V, WH)$, that is:
 where $D$ is a distance measure between matrices.
 \end{definition}
 \section{Metrics}
+Some introduction here ...
+\subsection{Frobenius norm}
+Probably the most used choice for the distance measure $D$ in the NMF problem is the squared Frobenius norm:
+\begin{equation}
+    D(V, WH) = ||V - WH||_F^2 = \sum_{i=1}^{m} \sum_{j=1}^{n} (V[i,j] - (WH)[i,j])^2
+\end{equation}
+This choice leads to the following optimization problem:
+\begin{equation}
+    \min_{W \in \R_+^{m \times r}, H \in \R_+^{r \times n}} ||V - WH||_F^2
+\end{equation}
+A justification for the use of Frobenius norm as objective function of the optimization problem can be given from a statistical point of view.
+The Frobenius norm can be obtained using the principle of maximum likelihood estimation assuming that the elements of the matrix $V$ are affected by a i.i.d. Gaussian noise.
+See \cite{gillis2020nonnegative} chapter $5.1$.
+\par
+Suppose that each element of $V$ is generated as:
+\begin{equation}
+    V[i,j] = (WH)[i,j] + \epsilon_{i,j}
+\end{equation}
+where $\epsilon_{i,j} \sim \mathcal{N}(0, \sigma^2)$ are i.i.d. Gaussian noise variables with zero mean and variance $\sigma^2$.
+The likelihood of observing the matrix $V$ given the parameters $W$ and $H$ is:
+\begin{equation}
+    L(WH ; V) = \prod_{i=1}^{m} \prod_{j=1}^{n} \frac{1}{\sqrt{2 \pi \sigma^2}} \exp\left(-\frac{(V[i,j] - (WH)[i,j])^2}{2 \sigma^2}\right)
+\end{equation}
+The log-likelihood $\ell(WH ; V) = \log L(WH ; V)$  is:
+\begin{equation}
+    \ell(WH ; V) =  -\frac{mn}{2} \log(2 \pi \sigma^2) - \frac{1}{2 \sigma^2} \sum_{i=1}^{m} \sum_{j=1}^{n} (V[i,j] - (WH)[i,j])^2
+\end{equation}
+Maximizing the log-likelihood 
+\begin{equation}
+    \max_{W \in \R_+^{m \times r}, H \in \R_+^{r \times n}} \ell(WH ; V)
+\end{equation}
+is equivalent to minimizing the sum of squared errors:
+\begin{equation}
+    \min_{W \in \R_+^{m \times r}, H \in \R_+^{r \times n}} \sum_{i=1}^{m} \sum_{j=1}^{n} (V[i,j] - (WH)[i,j])^2
+\end{equation}
+which is exactly the Frobenius norm.
+\par
+\subsection{Kullback-Leibler}
+TODO
+\subsection{$\beta$-divergence}
 TODO
 \section{Complexity of NMF}
 The main result was proved by Vavasis in \cite{vavasis2007complexitynonnegativematrixfactorization} where it is shown that the NMF problem is NP-hard in general.

@@ -172,7 +172,7 @@ Again this scheme can be interpreted as a scaled gradient descent method, in fac
 \par
 The gradient of the cost function with respect to \( H \) is given by:
 \begin{equation}
-    \nabla_H D_{KL}(V \| WH) = W^\top \left( 1 - \frac{V}{WH} \right) = W^\top \textbf{1} - W^\top \frac{V}{WH}
+    \nabla_H D_{KL}(V \| WH) = W^\top \left(\textbf{1} - \frac{V}{WH} \right) = W^\top \textbf{1} - W^\top \frac{V}{WH}
 \end{equation}
 Where $\textbf{1}$ is the matrix of all ones with the same dimensions as \( V \).
 A re-scaled gradient descent update for \( H \) is given by:
@@ -185,7 +185,7 @@ This leads to the following update rule:
 \end{equation}
 Similarly, the update rule for \( W \) can be derived by fixing \( H \)
 \begin{equation}
-    \nabla_W D_{KL}(V \| WH) = \left( 1 - \frac{V}{WH} \right) H^\top = \textbf{1} H^\top - \frac{V}{WH} H^\top
+    \nabla_W D_{KL}(V \| WH) = \left(\textbf{1} - \frac{V}{WH} \right) H^\top = \textbf{1} H^\top - \frac{V}{WH} H^\top
 \end{equation}
 A re-scaled gradient descent update for \( W \) is given by:
 \begin{equation}

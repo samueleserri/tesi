@@ -37,22 +37,33 @@
 \usepackage{algpseudocode}
 % Links
 \usepackage{hyperref}
-\hypersetup{hidelinks}
+\hypersetup{
+    hidelinks,
+    colorlinks=true,
+    linkcolor=black,        % TOC, references, etc. stay black
+    urlcolor=black,         % URLs stay black
+    citecolor=green,         
+    filecolor=black
+}
 
 % add this to make page numbers always bottom center
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}                      % clear all header/footer fields
-\fancyfoot[C]{\thepage}         % page number centered in footer
-\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\leftmark}        % chapter name in left header
+\fancyhead[R]{\thepage}         % page number in right header
+\renewcommand{\headrulewidth}{0.4pt}  % thin line under header
 \renewcommand{\footrulewidth}{0pt}
-% make the plain page style (used on chapter-start pages) use the same layout
-\makeatletter
-\let\ps@plain\ps@fancy
-\makeatother
 
-% \usepackage[backend=bibtex,style=numeric,sorting=nyt]{biblatex}
-\usepackage[backend=bibtex,style=numeric,sorting=nyt]{biblatex} % use bibtex backend to avoid biber
+% customize the plain page style (used on chapter-start pages)
+\fancypagestyle{plain}{%
+  \fancyhf{}                    % clear all header/footer fields
+  \fancyfoot[C]{\thepage}       % page number centered in footer only
+  \renewcommand{\headrulewidth}{0pt}  % no header line
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+\usepackage[backend=bibtex,style=numeric-comp,sorting=nyt]{biblatex} % use bibtex backend to avoid biber
 \addbibresource{references.bib} % The file containing the bibliography
 % Simple metadata
 \newcommand{\thesistitle}{TITOLO}
