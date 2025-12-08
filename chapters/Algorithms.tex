@@ -146,9 +146,9 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     \end{algorithmic}
 \end{algorithm}
 \subsubsection{Convergence of MU with the Frobenius norm}
-\begin{theorem}
+\begin{theorem}[\cite{cho2025leeseung2000salgorithms}]
     The value of the objective function $D(V, WH) = \|V - WH \|_F^2$ is non-increasing when $W^{(k)}, H^{(k)}$ are produced by Multiplicative updates \ref{MU for Frobenius}.
-    Furthermore if  $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ then the distance is invariant under the iterative scheme \ref{MU for Frobenius}.
+    Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under the iterative scheme \ref{MU for Frobenius}.
 \end{theorem}
 \begin{proof}
     TODO
@@ -242,9 +242,9 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     \end{algorithmic}
 \end{algorithm}
 \subsubsection{Convergence of MU with the Kullback-Leibler divergence}
-\begin{theorem}
+\begin{theorem}[\cite{cho2025leeseung2000salgorithms}]
     The value of the objective function $D(V, WH) = D_{KL}(V \| WH)$ is non-increasing when $W^{(k)}, H^{(k)}$ are produced by Multiplicative updates \ref{MU for KL}.
-    Furthermore if  $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ then the distance is invariant under the iterative scheme \ref{MU for KL}.
+    Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under the iterative scheme \ref{MU for KL}.
 \end{theorem}
 \begin{proof}
     TODO
