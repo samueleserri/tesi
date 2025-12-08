@@ -16,7 +16,7 @@ where $D$ is a distance measure between matrices.
 \section{Metrics}
 Some introduction here ...
 \subsection{Frobenius norm}
-Probably the most used choice for the distance measure $D$ in the NMF problem is the squared Frobenius norm:
+Probably the most common choice for the distance measure $D$ in the NMF problem \ref{NMF optimization problem} is the squared Frobenius norm:
 \begin{equation}
     D(V, WH) = ||V - WH||_F^2 = \sum_{i=1}^{m} \sum_{j=1}^{n} (V[i,j] - (WH)[i,j])^2
 \end{equation}
@@ -24,7 +24,7 @@ This choice leads to the following optimization problem:
 \begin{equation}
     \min_{W \in \R_+^{m \times r}, H \in \R_+^{r \times n}} ||V - WH||_F^2
 \end{equation}
-A justification for the use of Frobenius norm as objective function of the optimization problem can be given from a statistical point of view.
+A justification for the use of Frobenius norm as objective function of the optimization problem \ref{NMF optimization problem} can be given from a statistical point of view.
 The Frobenius norm can be obtained using the principle of maximum likelihood estimation assuming that the elements of the matrix $V$ are affected by a i.i.d. Gaussian noise.
 See \cite{gillis2020nonnegative} chapter $5.1$.
 \par
@@ -78,17 +78,17 @@ TODO
 \section{Geometric Interpretation}
 TODO
 \section{Historical origin of NMF}
-Even though some early works date back to the 70s in the field of Earth science and remote system sensing \cite{Wallace1960}\cite{Imbrie1964}\cite{craig1994}
+Even though some early works date back to the 60s in the field of Earth science and remote system sensing \cite{Wallace1960}\cite{Imbrie1964}\cite{craig1994}
 the first modern definition of the NMF problem is usually attributed to the work of Paatero and Tapper in 1994 \cite{Paatero1994} where they defined the so-called Positive Matrix Factorization (PMF) problem, a particular case of NMF where the distance measure used is the least squares one (Frobenius norm).
 This early work arose in the field of analytical chemistry and the NMF model as a modern data analysis tool remained relatively unknown until the seminal paper of Lee and Seung in 1999 \cite{Lee1999}.
 \par
-In this work Lee and Seung introduces the NMF model to the machine learning community and proposed an easy to implement algorithm based on multiplicative updates to solve the NMF optimization problem.
+In their work Lee and Seung introduce the NMF model to the machine learning community and proposed an easy to implement algorithm based on multiplicative updates to find local minima of the NMF optimization problem \ref{NMF optimization problem}.
 Their work is especially famous because they  demonstrate an algorithm for non-negative matrix factorization that is able to learn parts of faces, in contrast to other decomposition methods like PCA or SVD that learn holistic features.
-Their results are also reproduced in this thesis to show an example of application of NMF.
+Their results are also reproduced in this thesis in section \ref{Example feature extraction NMF} to show a prominent example of NMF's application.
 \section{Two applications of NMF}
 In this section two applications of NMF are presented: the first one is the well-known example of learning parts of faces introduced by Lee and Seung in \cite{Lee1999},
 while the second one is an application of NMF to text mining, in particular to topic modeling.
-\subsection{Learning parts of faces}
+\subsection{Learning parts of faces} \label{Example feature extraction NMF}
 The dataset used in this example is the CBCL face dataset \footnote{See \ref{code documentation appendix} for data availability and details on the code used}.
 This dataset has size $2429 \times 361$ where each column represent a $19 \times 19$ gray-scale image of a face.
 \begin{figure}[h]

@@ -2,13 +2,12 @@
 In this chapter, some algorithms are derived and presented.\
 \par
 Recall that the NMF problem \ref{NMF optimization problem} is NP-hard \cite{vavasis2007complexitynonnegativematrixfactorization}, hence all the Algorithms presented in this chapter are heuristics that aim to find a local minimum of the optimization problem.
-More precisely, they are iterative schemes that start from an initial guess of the factors \( W \) and \( H \) and iteratively update them to reduce the value of the objective function.
-Converging to a local minimum.
+More precisely, they are iterative schemes that start from an initial guess of the factors \( W \) and \( H \) and iteratively update them to reduce the value of the objective function, converging to a local minimum.
 They don't guarantee to converge to the global minimum.
 \section{Two blocks coordinate descent (2-BCD)}
 The most common setting for NMF is the so called two-blocks coordinate descent, in this setting the factors \( W \) and \( H \) are updated alternately, fixing one while updating the other.
 
-\begin{algorithm}[H]\label{2-BCD}
+\begin{algorithm}[h]\label{2-BCD}
     \caption{Two-blocks coordinate descent for NMF}
     \begin{algorithmic}[1]
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
@@ -20,13 +19,13 @@ The most common setting for NMF is the so called two-blocks coordinate descent, 
         \State \Return \( W, H \)
     \end{algorithmic}
 \end{algorithm}
-This general scheme is widely used, and we will present different ways to update the factors \( W \) and \( H \). There are mainly two observations that justift this approach:
-\begin{itemize}
+This general scheme is widely used, and we will present different ways to update the factors \( W \) and \( H \). There are mainly two observations that justify this approach:
+\begin{enumerate}
     \item When one of the factors is fixed, the optimization subproblem is convex for most of the common cost functions. That makes it easier to design algorithms to solve them.
     \item Due to the symmetry of the problem $V = WH \iff V^T = H^T W^T$ the value of the cost function is the same if we swap \( W \) and \( H \) and transpose the input matrix \( V \). $D(V, WH) = D(V^T, H^T W^T)$.
     Therefore, it is sufficient to design an update rule for one of the factors, the other can be obtained by swapping the roles of \( W \) and \( H \) and transposing \( V \).
-\end{itemize}
-Overall this approach is much easier to handle than trying to update both factors simultaneously. See\cite{mukkamala2019alternatingupdatesmatrixfactorization}.
+\end{enumerate}
+Overall this approach is much easier to handle than trying to update both factors simultaneously. See \cite{mukkamala2019alternatingupdatesmatrixfactorization}.
 \subsection{Exact 2-BCD}
 If the subproblems of \ref{2-BCD} are solved exactly at each iteration, the method is called exact 2-BCD. 
 And takes the following form:
@@ -80,13 +79,16 @@ Another effective stopping criterion is to check the norm of the difference betw
     &\|W^{(t)} - W^{(t-T)}\|_F^2 \leq tol \times \|W^{(t - T)}\|_F^2 \\
     &\|H^{(t)} - H^{(t-T)}\|_F^2 \leq tol \times \|H^{(t - T)}\|_F^2
 \end{align}
-Again $tol$ is a small tolerance value, for instance $10^{-4}$, and $T = 10$ are reasonable choices in practice.
-The complete algorithm with the stopping criterion \ref{stopping criterion I} is summarized in the following algorithm:
+Again a small value for $tol$, for instance $10^{-4}$, and $T = 10$ are reasonable choices in practice.
+\par
+The complete algorithm with the stopping criterion \ref{stopping criterion I} is summarized in the following pseudo-code:
 \begin{algorithm}[H]\label{2-BCD}
     \caption{Two-blocks coordinate descent for NMF with stopping criteria \ref{stopping criterion I}}
     \begin{algorithmic}[1]
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \), tolerance \( tol \), lag \( T \), maximum iterations \( \text{max\_iter} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
+        \State Compute \( e(0) = \frac{\|V - W^{(0)}H^{(0)}\|_F^2}{\|V\|_F^2} \)
+        \Comment{Initial relative error}
         \For {\( k = 0, 1, 2, \ldots, \text{max\_iter} \)}
             \State Update \( W^{(k+1)} \) by fixing \( H^{(k+1)} \)
             \State Update \( H^{(k+1)} \) by fixing \( W^{(k)} \)
@@ -186,7 +188,7 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     \end{algorithmic}
 \end{algorithm}
 \subsubsection{Convergence of MU with the Frobenius norm}
-\begin{theorem}[\cite{cho2025leeseung2000salgorithms}]
+\begin{theorem}[\cite{cho2025leeseung2000salgorithms}, Theorem 1]
     The value of the objective function $D(V, WH) = \|V - WH \|_F^2$ is non-increasing when $W^{(k)}, H^{(k)}$ are produced by Multiplicative updates \ref{MU for Frobenius}.
     Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under the iterative scheme \ref{MU for Frobenius}.
 \end{theorem}
@@ -282,7 +284,7 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     \end{algorithmic}
 \end{algorithm}
 \subsubsection{Convergence of MU with the Kullback-Leibler divergence}
-\begin{theorem}[\cite{cho2025leeseung2000salgorithms}]
+\begin{theorem}[\cite{cho2025leeseung2000salgorithms}, Theorem 2]
     The value of the objective function $D(V, WH) = D_{KL}(V \| WH)$ is non-increasing when $W^{(k)}, H^{(k)}$ are produced by Multiplicative updates \ref{MU for KL}.
     Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under the iterative scheme \ref{MU for KL}.
 \end{theorem}
