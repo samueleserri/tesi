@@ -6,8 +6,11 @@
 % Encoding and language
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{newunicodechar}
+\newunicodechar{ℓ}{\ensuremath{\ell}}
 \usepackage[english]{babel}
 \usepackage{lmodern}
+\usepackage{microtype}
 
 % Math and graphics
 \usepackage{amsmath,amssymb}
@@ -36,18 +39,21 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 % Links
+\usepackage{csquotes}
 \usepackage{hyperref}
 \hypersetup{
     hidelinks,
     colorlinks=true,
-    linkcolor=black,        % TOC, references, etc. stay black
-    urlcolor=black,         % URLs stay black
-    citecolor=green,         
-    filecolor=black
+    linkcolor=black,
+    urlcolor=black,
+    citecolor=green,
+    filecolor=black,
+    breaklinks=true  
 }
 
 % add this to make page numbers always bottom center
 \usepackage{fancyhdr}
+\setlength{\headheight}{14.49998pt}  % fix fancyhdr warning
 \pagestyle{fancy}
 \fancyhf{}                      % clear all header/footer fields
 \fancyhead[L]{\leftmark}        % chapter name in left header
@@ -147,9 +153,10 @@ ANNO ACCADEMICO 2024--2025
 
 \clearpage              
 \pagenumbering{roman}
+\shipout\null 
 \tableofcontents
 \bigskip
-\shipout\null % pagina vuota
+% pagina pdflatex -interaction=nonstopmode main.texvuota
 
 
 \clearpage
@@ -159,7 +166,7 @@ ANNO ACCADEMICO 2024--2025
 \clearpage
 \pagenumbering{arabic}
 \include{chapters/Introduction}
-\include{chapters/Background}
+% \include{chapters/Background}
 \include{chapters/NMF}
 \include{chapters/Algorithms}
 \include{chapters/Experiments}
@@ -172,7 +179,6 @@ ANNO ACCADEMICO 2024--2025
 \clearpage
 \pagenumbering{roman}
 \printbibliography
-\clearpage
 \pagenumbering{arabic}
 \appendix
 \include{chapters/appendix/code_documentation}

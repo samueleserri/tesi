@@ -74,9 +74,79 @@ characterize the set of solutions.
 \par
 Since the NMF problem as stated in \ref{NMF optimization problem} is a generalization of the exact NMF problem, the NP-hardness of exact NMF implies the NP-hardness of NMF.
 \section{Identifiability}
-TODO
+Let's start with an observation: In the case of the exact factorization $V = WH$, if we consider any invertible matrix $Q \in \R^{r \times r}$ such that both $WQ$ and $Q^{-1}H$ are non-negative matrices, then we have another exact factorization of $V$ given by:
+\begin{equation}
+    V = WH = (WQ)(Q^{-1}H)
+\end{equation}
+This simple observation shows that in general the NMF problem does not have a unique solution.
+\par
+Even after removing this scaling ambiguity, one should not expect to find an unique NMF solution in general.
+in the literature this is also known as the \textit{identifiability} problem of NMF. See \cite{gillis2020nonnegative} chapter $4$ for a detailed discussion on this topic.
+\par
+In this section we will observe a necessary condition for identifiability and a sufficient condition for identifiability.
+To do so we first need the definition of the \textit{support} of a vector.
+\begin{definition}[Support of a vector]
+Given a vector $x \in \R^n$, the support of $x$ is defined as:
+\begin{equation}
+    \text{supp}(x) = \{ i \in \{1, \ldots, n\} | x_i \neq 0 \}
+\end{equation}
+\end{definition}
+The next theorem states that a necessary condition for identifiability is that the support of any column of W does not contain the support of any other column of W
+\begin{theorem}
+[Necessary condition for identifiability]\label{Necessary condition for identifiability}
+Let $V \in \R_+^{m \times n}$ be a non-negative matrix and let $V = WH$ be an exact NMF of $V$ of size $r$.
+If the exact NMF of $V$ is unique (up to scaling and permutation) then for any pair of distinct columns $W[:,i]$ and $W[:,j]$ of $W$ it holds that:
+\begin{equation}
+    \text{supp}(W[:,i]) \nsubseteq \text{supp}(W[:,j])
+\end{equation} 
+\end{theorem}
+\begin{proof}
+Assume by contradiction that there exist two distinct columns $W[:,i]$ and $W[:,j]$ of $W$ such that:
+\begin{equation}
+    \text{supp}(W[:,i]) \subseteq \text{supp}(W[:,j])
+\end{equation}
+Then we can construct a new pair of matrices $(\tilde{W}, \tilde{H})$ as follows:
+\begin{equation}
+    \tilde{W}[:,k] = 
+    \begin{cases}
+        W[:,k] & \text{if } k \neq j \\
+        W[:,j] + \alpha W[:,i] & \text{if } k = j
+    \end{cases}
+\end{equation}
+\begin{equation}
+    \tilde{H}[k,:] = 
+    \begin{cases}
+        H[k,:] & \text{if } k \neq i \\
+        H[i,:] - \alpha H[j,:] & \text{if } k = i
+    \end{cases}
+\end{equation} 
+such that $W[:,j] + \alpha W[:,i] \geq 0$ and $H[i,:] - \alpha H[j,:] \geq 0$ for some $\alpha > 0$.
+It is easy to see that $(\tilde{W}, \tilde{H})$ is another exact NMF of $V$ of size $r$:
+\begin{equation}
+    \tilde{W} \tilde{H} = W H = V
+\end{equation}
+This contradicts the assumption that the exact NMF of $V$ is unique.
+\end{proof}
+Now we present a sufficient condition for identifiability known as the \textit{separability} condition.
+\begin{theorem}
+[Sufficient condition for identifiability: Separability]\label{Sufficient condition for identifiability}
+Let $V \in \R_+^{m \times n}$ be a non-negative matrix and let $V = WH$ be an exact NMF of $V$ of size $r$.
+The matrices $W$ and $H$ contain non-singular diagonal submatrices of size $r \times r$, then the NMF solutions are identifiable.
+\end{theorem}
+\begin{proof}
+    The properties of separable matrices are analyzed in \cite{donoho2003does}.
+\end{proof}
+An equivalent definition of separability is the following:
+\begin{definition}[Separable NMF]
+An NMF $V = WH$ is said to be separable if there exists a set of indices $\{j_1, j_2, \ldots, j_r\} \subseteq \{1, 2, \ldots, n\}$ of size $r$ such that:
+\begin{equation}
+    V = W H = V[:, \{j_1, j_2, \ldots, j_r\}]\tilde{H}
+\end{equation}
+\end{definition}
+The separable matrices represent an important class of matrices in applications \cite{arora2012computing}, \cite{gillis2013fast}; for example in text mining \cite{arora2013practical}, 
+hyperspectral imaging \cite{boardman1995mapping}, and for some computer vision tasks like background subtraction \cite{kumar2015near}.
 \section{Geometric Interpretation}
-TODO
+IN QUESTA SEZIONE SI DA UN'INTUIZIONE GEOMETRICA DELL'NMF.
 \section{Historical origin of NMF}
 Even though some early works date back to the 60s in the field of Earth science and remote system sensing \cite{Wallace1960}\cite{Imbrie1964}\cite{craig1994}
 the first modern definition of the NMF problem is usually attributed to the work of Paatero and Tapper in 1994 \cite{Paatero1994} where they defined the so-called Positive Matrix Factorization (PMF) problem, a particular case of NMF where the distance measure used is the least squares one (Frobenius norm).

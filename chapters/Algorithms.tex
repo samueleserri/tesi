@@ -13,8 +13,10 @@ The most common setting for NMF is the so called two-blocks coordinate descent, 
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
         \While{stopping criterion not met}
-            \State Update \( W^{(k+1)} \) by fixing \( H^{(k+1)} \)
-            \State Update \( H^{(k+1)} \) by fixing \( W^{(k)} \)
+            \State \(W^{(k)}\) $\gets$ Update (\( W^{(k - 1)} \), \( H^{(k-1)} \))
+            \Comment{Update \( W \) by fixing \( H \)}
+            \State \(H^{(k)}\) $\gets$ Update (\( H^{(k - 1)} \), \( W^{(k)} \))
+            \Comment{Update \( H \) by fixing \( W \)}
         \EndWhile
         \State \Return \( W, H \)
     \end{algorithmic}
@@ -35,8 +37,8 @@ And takes the following form:
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
         \While{stopping criterion not met}
-            \State \( W^{(k+1)} \leftarrow \arg\min_{W \geq 0} D(V, WH^{(k)}) \)
-            \State \( H^{(k+1)} \leftarrow \arg\min_{H \geq 0} D(V, W^{(k+1)}H) \)
+            \State \( W^{(k)} \leftarrow \arg\min_{W \geq 0} D(V, WH^{(k - 1)}) \)
+            \State \( H^{(k)} \leftarrow \arg\min_{H \geq 0} D(V, W^{(k)}H) \)
         \EndWhile
         \State \Return \( W, H \)
     \end{algorithmic}
@@ -90,11 +92,13 @@ The complete algorithm with the stopping criterion \ref{stopping criterion I} is
         \State Compute \( e(0) = \frac{\|V - W^{(0)}H^{(0)}\|_F^2}{\|V\|_F^2} \)
         \Comment{Initial relative error}
         \For {\( k = 0, 1, 2, \ldots, \text{max\_iter} \)}
-            \State Update \( W^{(k+1)} \) by fixing \( H^{(k+1)} \)
-            \State Update \( H^{(k+1)} \) by fixing \( W^{(k)} \)
+            \State \(W^{(k)}\) $\gets$ Update (\( W^{(k - 1)} \), \( H^{(k-1)} \))
+            \Comment{Update \( W \) by fixing \( H \)}
+            \State \(H^{(k)}\) $\gets$ Update (\( H^{(k - 1)} \), \( W^{(k)} \))
+            \Comment{Update \( H \) by fixing \( W \)}
             \State Compute \( e(k) = \frac{\|V - W^{(k)}H^{(k)}\|_F^2}{\|V\|_F^2} \)
             \Comment{Compute relative error}
-            \If {\( k  \geq T \) and \( |e(k - T) - e(k)| \leq tol \times e(k) \)}
+            \If {\( k  \geq T \) \textbf{and} \( |e(k - T) - e(k)| \leq tol \times e(k) \)}
                 \State \textbf{break}
                 \Comment{If stopping criterion met, exit loop}
             \EndIf
