@@ -52,9 +52,44 @@ is equivalent to minimizing the sum of squared errors:
 which is exactly the Frobenius norm.
 \par
 \subsection{Kullback-Leibler}
-TODO
+Another popular choice for the distance measure $D$ in the NMF problem \ref{NMF optimization problem} is the Kullback-Leibler (KL) divergence:
+\begin{equation}
+    D(V, WH) = D_{KL}(V \| WH) = \sum_{i=1}^{m} \sum_{j=1}^{n} \left( V[i,j] \log \frac{V[i,j]}{(WH)[i,j]} - V[i,j] + (WH)[i,j] \right) 
+\end{equation}
+This choice leads to the following optimization problem:
+\begin{equation}
+    \min_{W \in \R_+^{m \times r}, H \in \R_+^{r \times n}} D_{KL}(V \| WH)
+\end{equation}
+As with the Frobenius norm, we can use the maximum likelihood principle to obtain the KL divergence as objective function of the NMF problem \ref{NMF optimization problem} assuming that the elements of the matrix $V$ are affected by a i.i.d. Poisson noise.
+See \cite{gillis2020nonnegative} 5.1.1.
 \subsection{$\beta$-divergence}
-TODO
+The $\beta$-divergence is a family of cost functions that generalizes both the Frobenius norm and the Kullback-Leibler divergence.
+It is defined as follows:
+\begin{equation}
+    D_{\beta}(V, WH) = \sum_{i=1}^{m} \sum_{j=1}^{n} d_{\beta}(V[i,j], (WH)[i,j])
+\end{equation}
+where 
+\begin{equation}
+    d_{\beta}(x,y) = \begin{cases}
+        \frac{x}{y} - \log \frac{x}{y} - 1 & \text{if } \beta = 0 \\
+        x \log \frac{x}{y} - x + y & \text{if } \beta = 1 \\
+        \frac{1}{\beta(\beta - 1)}\left(x^\beta + (\beta - 1)y^\beta - \beta x y^{\beta - 1}\right) & \text{if } \beta \neq 0, 1
+    \end{cases}
+\end{equation}
+It easy to show that for $\beta = 2$ the $\beta$-divergence reduces to the squared Frobenius norm and for $\beta = 1$ it reduces to the Kullback-Leibler divergence.
+The case where $\beta = 0$ is known as the Itakura-Saito divergence\footnote{\href{https://en.wikipedia.org/wiki/Itakura\%E2\%80\%93Saito\_distance}{https://en.wikipedia.org/wiki/Itakura Saito distance}}.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Imgs/Beta_diveregence_plot.png}
+    \caption{Plot of the $\beta$-divergence for $\beta$ values of $0$, $1$ $\frac{1}{2}$, $2$, and $3$.}
+    \label{beta_divergence_plot}
+\end{figure}
+
+The choice of the $\beta$-divergence as objective function leads to the following optimization problem:
+\begin{equation}
+    \min_{W \in \R_+^{m \times r}, H \in \R_+^{r \times n}} D_{\beta}(V, WH)
+\end{equation}
+
 \section{Complexity of NMF}
 The main result was proved by Vavasis in \cite{vavasis2007complexitynonnegativematrixfactorization} where it is shown that the NMF problem is NP-hard in general.
 To do so Vavasis considers the exact NMF problem, a particular case of NMF where the distance measure is such that $D(V, WH) = 0$ if and only if $V = WH$ and $D(V, WH) > 0$ otherwise.
@@ -198,7 +233,6 @@ That is we wish to find $r$ basis vectors (columns of $W$) such that each data p
 \begin{equation}
     V[:,j] \approx WH[:,j] = \sum_{k=1}^{r} H[k,j] W[:, k] \quad \forall j = 1, \ldots, n
 \end{equation}
-In this sense NMF can be thought of as a linear dimensionality reduction technique for matrices of non-negative data.
 % todo add visualization
 
 \begin{figure}[h]
@@ -250,6 +284,7 @@ In this sense NMF can be thought of as a linear dimensionality reduction techniq
 \caption{NMF seeks a low-dimensional non-negative subspace (gray area) spanned by basis vectors (black arrows) such that data points (blue dots) lie close to this subspace. Each data point can be approximated as a non-negative linear combination of the basis vectors.}
 \label{fig:dimensionality_reduction interpretation}
 \end{figure}
+In this sense NMF can be thought of as a linear dimensionality reduction technique for matrices of non-negative data.
 \subsection{Geometric interpretation with cones}
 We begin by giving a definition of convex cone.
 \begin{definition}[Convex cone]
@@ -332,8 +367,8 @@ In other words:
 Often in the literature the geometric interpretation of NMF is analyzed in terms of nested polytopes.
 The reason for this is that because it is easier to visualize and because there is a close connection between the NMF problem in computational geometry known as the and the nested polytope problem (NPP) \cite{shitov2018universalitytheoremnonnegativematrix} \cite{donoho2003does}.
 For an overview on the NPP see: \cite{dobbins2019universalitytheoremnestedpolytopes}.
-A detailed discussion on the geometric interpretation of NMF can be found in \cite{gillis2020nonnegative} chapetr $2.1$.
-additional references include \cite{gillis2017introductionnonnegativematrixfactorization}
+A detailed discussion on the geometric interpretation of NMF can be found in \cite{gillis2020nonnegative} chapter $2.1$.
+An example with nested hexagons can be found in \cite{gillis2017introductionnonnegativematrixfactorization}.
 
 \section{Historical origin of NMF}
 Even though some early works date back to the 60s in the field of Earth science and remote system sensing \cite{Wallace1960}\cite{Imbrie1964}\cite{craig1994}

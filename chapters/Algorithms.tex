@@ -111,8 +111,7 @@ TODO
 \section{Multiplicative Updates (MU)}
 The multiplicative updates (MU) were first introduced by Lee and Seung in \cite{Lee1999}. They are one of the most popular algorithms for NMF.
 In this section we will derive the MU algorithm for two different cost functions: the Frobenius norm and the Kullback-Leibler divergence.
-A supplementary proof guide for the MU algorithm can be found in \cite{cho2025leeseung2000salgorithms}.
-A derivation using matrix algebra can be found in \cite{burred2014detailed}.
+The Lee and Seung paper with converge proof is \cite{lee2000algorithms}. A derivation using matrix algebra can be found in \cite{burred2014detailed}.
 In section \ref{MU beta section} we will present the MU algorithm for the more general case of beta divergence \cite{févotte2011algorithmsnonnegativematrixfactorization}.
 \subsection{MU with the Frobenius norm}
 In this section we will derive the MU iteration scheme for the case where
@@ -192,7 +191,7 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     \end{algorithmic}
 \end{algorithm}
 \subsubsection{Convergence of MU with the Frobenius norm}
-\begin{theorem}[\cite{cho2025leeseung2000salgorithms}, Theorem 1]
+\begin{theorem}[\cite{lee2000algorithms}, Theorem 1]
     The value of the objective function $D(V, WH) = \|V - WH \|_F^2$ is non-increasing when $W^{(k)}, H^{(k)}$ are produced by Multiplicative updates \ref{MU for Frobenius}.
     Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under the iterative scheme \ref{MU for Frobenius}.
 \end{theorem}
@@ -288,7 +287,7 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     \end{algorithmic}
 \end{algorithm}
 \subsubsection{Convergence of MU with the Kullback-Leibler divergence}
-\begin{theorem}[\cite{cho2025leeseung2000salgorithms}, Theorem 2]
+\begin{theorem}[\cite{lee2000algorithms}, Theorem 2]
     The value of the objective function $D(V, WH) = D_{KL}(V \| WH)$ is non-increasing when $W^{(k)}, H^{(k)}$ are produced by Multiplicative updates \ref{MU for KL}.
     Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under the iterative scheme \ref{MU for KL}.
 \end{theorem}
