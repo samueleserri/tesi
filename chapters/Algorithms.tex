@@ -191,7 +191,7 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     \end{algorithmic}
 \end{algorithm}
 \subsubsection{Convergence of MU with the Frobenius norm}
-\begin{theorem}[\cite{lee2000algorithms}, Theorem 1]
+\begin{theorem}[\cite{lee2000algorithms}, Theorem 1] \label{MU convergence Fro}
     The value of the objective function $D(V, WH) = \|V - WH \|_F^2$ is non-increasing when $W^{(k)}, H^{(k)}$ are produced by Multiplicative updates \ref{MU for Frobenius}.
     Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under the iterative scheme \ref{MU for Frobenius}.
 \end{theorem}
@@ -287,7 +287,7 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     \end{algorithmic}
 \end{algorithm}
 \subsubsection{Convergence of MU with the Kullback-Leibler divergence}
-\begin{theorem}[\cite{lee2000algorithms}, Theorem 2]
+\begin{theorem}[\cite{lee2000algorithms}, Theorem 2] \label{MU convergence KL}
     The value of the objective function $D(V, WH) = D_{KL}(V \| WH)$ is non-increasing when $W^{(k)}, H^{(k)}$ are produced by Multiplicative updates \ref{MU for KL}.
     Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under the iterative scheme \ref{MU for KL}.
 \end{theorem}
@@ -300,4 +300,92 @@ TODO
 \section{Hierarchical Alternating Least Squares (HALS)}
 TODO
 \section{MU with beta divergence} \label{MU beta section}
-TODO
+The $\beta$-divergence is a family of cost functions with a single parameter $\beta$ that generalizes several common cost functions used in NMF, including the Frobenius norm and the Kullback-Leibler divergence.
+For the definition of the beta divergence see section \ref{Beta divergence section}.
+\par
+In this section we will derive the MU iteration scheme for $D(V, WH) = D_{\beta}(V, WH)$ the beta divergence in the general case.
+One can see that the previous results for the Frobenius norm and the Kullback-Leibler divergence are special cases of the beta divergence for $\beta = 2$ and $\beta = 1$ respectively.
+However, since they are the most popular cost functions used in NMF, we presented them separately.
+Furthermore very few theoretical results are known for values of $\beta$ other than 0, 1 and 2.
+\par
+The gradient of the cost function with respect to \( H \) is given by:
+\begin{equation}
+    \nabla_H D_{\beta}(V, WH) = W^\top \left( (WH)^{\beta - 1} - V \circ (WH)^{\beta - 2} \right)
+\end{equation}
+Where the exponentiation is intended element-wise.
+A re-scaled gradient descent update for \( H \) is given by:
+\begin{equation}
+    H \leftarrow H - \frac{H}{W^\top (WH)^{\beta - 1}} \circ \nabla_H D_{\beta}(V, WH)
+\end{equation}
+This leads to the following update rule:
+\begin{equation}
+    H \leftarrow H \circ \frac{W^\top (V \circ (WH)^{\beta - 2})}{W^\top (WH)^{\beta - 1}}
+\end{equation}
+Similarly, the update rule for \( W \) can be derived by fixing \( H \)
+\begin{equation}
+    \nabla_W D_{\beta}(V, WH) = \left( (WH)^{\beta - 1} - V \circ (WH)^{\beta - 2} \right) H^\top
+\end{equation}
+A re-scaled gradient descent update for \( W \) is given by:
+\begin{equation}
+    W \leftarrow W - \frac{W}{(WH)^{\beta - 1} H^\top} \circ \nabla_W D_{\beta}(V, WH)
+\end{equation}
+This leads to the following update rule:
+\begin{equation}
+    W \leftarrow W \circ \frac{(V \circ (WH)^{\beta - 2}) H^\top}{(WH)^{\beta - 1} H^\top}
+\end{equation}
+Ultimately, the updated are given by:
+\begin{equation}
+    \boxed{W^{(k+1)} = W^{(k)} \circ \frac{(V \circ (W^{(k)}H^{(k)})^{\beta - 2}) H^{(k) \top}}{(W^{(k)}H^{(k)})^{\beta - 1} H^{(k) \top}}}
+\end{equation}
+and
+\begin{equation}
+    \boxed{H^{(k+1)} = H^{(k)} \circ \frac{W^{(k) \top} (V \circ (W^{(k)} H^{(k)})^{\beta - 2})}{W^{(k) \top} (W^{(k)} H^{(k)})^{\beta - 1}}}
+\end{equation}
+\par
+The complete MU algorithm is summarized in the following algorithm:
+\begin{algorithm}[H]\label{MU for beta}
+    \caption{Multiplicative Updates for NMF with the beta divergence}
+    \begin{algorithmic}[1]
+        \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \), parameter \( \beta \)
+        % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
+        \While{stopping criterion not met}
+            \State \( H^{(k+1)} \leftarrow H^{(k)} \circ \frac{W^{(k) \top} (V \circ (W^{(k)} H^{(k)})^{\beta - 2})}{W^{(k) \top} (W^{(k)} H^{(k)})^{\beta - 1}} \)
+            \State \( W^{(k+1)} \leftarrow W^{(k)} \circ \frac{(V \circ (W^{(k)}H^{(k+1)})^{\beta - 2}) H^{(k+1) \top}}{(W^{(k)}H^{(k+1)})^{\beta - 1} H^{(k+1) \top}} \)
+        \EndWhile
+        \State \Return \( W, H \)
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Convergence of MU with the $\beta$-divergence}
+For the cases where $\beta = 1$ theorem \ref{MU convergence KL} apply, and for $\beta = 2$ theorem \ref{MU convergence Fro} apply.
+For others values of $\beta$ we need to adjust MU updated \ref{MU for beta} by a scaling factor $\gamma(\beta)$ \cite{févotte2011algorithmsnonnegativematrixfactorization} defined as:
+\begin{equation}
+    \gamma(\beta) =
+    \begin{cases}
+        1/(2 - \beta) & \text{if } \beta < 1 \\
+        1 & \text{if } 1 \leq \beta \leq 2 \\
+        1/(\beta - 1) & \text{if } \beta > 2
+    \end{cases}
+\end{equation}
+And constraint the iterates to be greater than a small positive constant $\varepsilon > 0$ \cite{takahashi2014global}.
+The reason for this is that [...]
+\par
+Now we are ready to state the more general convergence theorem for MU with the beta divergence:
+\begin{theorem}[\cite{gillis2020nonnegative} theorem 8.9]
+    Let $\varepsilon > 0$ and consider the adjusted beta divergence Multiplicative updates defined as:
+    \begin{align}
+        &H^{(k + 1)} \leftarrow \max\Bigg(\varepsilon, 
+        H^{(k)} \circ \Big(\frac{W^{(k) \top} (V \circ (W^{(k)} H^{(k)})^{\beta - 2})}{W^{(k) \top} (W^{(k)} H^{(k)})^{\beta - 1}}\Big)^{\gamma(\beta)}\Bigg)
+        \\
+        &W^{(k + 1)} \leftarrow \max\Bigg(\varepsilon, 
+        W^{(k)} \circ \Big(\frac{(V \circ (W^{(k)}H^{(k+1)})^{\beta - 2}) H^{(k+1) \top}}{(W^{(k)}H^{(k+1)})^{\beta - 1} H^{(k+1) \top}}\Big)^{\gamma(\beta)}\Bigg)
+    \end{align}
+then: 
+\begin{enumerate}
+    \item The value of the objective function $D(V, WH) = D_{\beta}(V \| WH)$ is non-increasing when $W^{(k)}, H^{(k)}$ are produced by the adjusted beta divergence Multiplicative updates, given that $W \geq \varepsilon$ and $H \geq \varepsilon$.
+    \item For any initialization $W^{(0)} \geq \varepsilon$ and $H^{(0)} \geq \varepsilon$, every limit point of the sequence $\{(W^{(k)}, H^{(k)})\}_{k \in \mathbb{N}}$ generated by the adjusted beta divergence Multiplicative updates is a stationary point of the optimization problem $\min_{W,H \geq \varepsilon} D_{\beta}(V \| WH)$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+    The proof of this theorem can be found in \cite{gillis2020nonnegative} section 8.2.4.
+\end{proof}
+\subsubsection{Computational cost}

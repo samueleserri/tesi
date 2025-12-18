@@ -62,7 +62,7 @@ This choice leads to the following optimization problem:
 \end{equation}
 As with the Frobenius norm, we can use the maximum likelihood principle to obtain the KL divergence as objective function of the NMF problem \ref{NMF optimization problem} assuming that the elements of the matrix $V$ are affected by a i.i.d. Poisson noise.
 See \cite{gillis2020nonnegative} 5.1.1.
-\subsection{$\beta$-divergence}
+\subsection{$\beta$-divergence} \label{Beta divergence section}
 The $\beta$-divergence is a family of cost functions that generalizes both the Frobenius norm and the Kullback-Leibler divergence.
 It is defined as follows:
 \begin{equation}
@@ -166,7 +166,7 @@ Now we present a sufficient condition for identifiability known as the \textit{s
 \begin{theorem}
 [Sufficient condition for identifiability: Separability]\label{Sufficient condition for identifiability}
 Let $V \in \R_+^{m \times n}$ be a non-negative matrix and let $V = WH$ be an exact NMF of $V$ of size $r$.
-The matrices $W$ and $H$ contain non-singular diagonal submatrices of size $r \times r$, then the NMF solutions are identifiable.
+The matrices $W$ and $H$ contain non-singular diagonal sub-matrices of size $r \times r$, then the NMF solutions are identifiable.
 \end{theorem}
 \begin{proof}
     The properties of separable matrices are analyzed in \cite{donoho2003does}.
@@ -249,11 +249,15 @@ That is we wish to find $r$ basis vectors (columns of $W$) such that each data p
     
     %  3. The Gray Subspace (Cone) 
     % Drawing the filled gray area bounded by W1 and W2
-    \fill[gray!40] (O) -- (W1) -- (5.5, 4.5) -- (8, 5.2) -- (W2) -- cycle;
+    \fill[red!10] (O) -- (W1) -- (5.5, 4.5) -- (8, 5.2) -- (W2) -- cycle;
 
     % 4. Basis Vectors 
-    \draw[->, thick, red] (O) -- (W1) node[midway, left, xshift=-2pt] {\large $W(:,1)$};
-    \draw[->, thick, red] (O) -- (W2) node[midway, below, yshift=-2pt] {\large $W(:,2)$};
+    \draw[->, thick, red] (O) -- (W1) node[black, midway, left, xshift=-5pt] {\large $W(:,1)$};
+    \draw[->, thick, red] (O) -- (W2) node[black, midway, below, yshift=-10pt] {\large $W(:,2)$};
+
+    % 4.1 dashed lines extending the basis vectors
+    \draw[dashed, red, thin] (W1) -- (5.5, 4.5);
+    \draw[dashed, red, thin] (W2) -- (8, 5.2);
 
     %  5. Data Points (The 'x' markers) 
     \foreach \p in {
@@ -268,7 +272,7 @@ That is we wish to find $r$ basis vectors (columns of $W$) such that each data p
     }
 
     %  6. Legend (In-plot) 
-    \fill[blue] (1.0, 5.0) circle (2.0pt) node[right, xshift=5pt] {\small Data Points (Columns of $V$)};
+    \fill[blue] (0, 5.0) circle (2.0pt) node[black, right, xshift=5pt] {\small Data Points (Columns of $V$)};
 
     %  7. Origin 
     \fill[red] (O) circle (2pt);
@@ -320,12 +324,12 @@ In other words:
     \node[below left] at (O) {$\mathbf{0}$};
     
     % Columns of W (basis vectors)
-    \draw[->,very thick,red] (O) -- (2.5,1.2) coordinate (W1);
+    %\draw[->,very thick,red] (O) -- (2.5,1.2) coordinate (W1);
     \draw[->,very thick,red] (O) -- (1.2,3) coordinate (W2);
     \draw[->,very thick,red] (O) -- (3.5,0.6) coordinate (W3);
     
     % Cone boundary (dashed lines extending the basis)
-    \draw[dashed,red,thin] (W1) -- (4.2,2);
+    % \draw[dashed,red,thin] (W1) -- (4.2,2);
     \draw[dashed,red,thin] (W2) -- (1.8,4.5);
     \draw[dashed,red,thin] (W3) -- (5,0.85);
     
@@ -337,12 +341,13 @@ In other words:
     \node[red,font=\large] at (2.5,3.3) {$\text{cone}(W)$};
     
     % Columns of V (data points inside the cone)
-    \fill[blue] (2.2,2.0) circle (2.5pt);
-    \fill[blue] (2.6,2.2) circle (2.5pt);
-    \fill[blue] (1.8,2.4) circle (2.5pt);
-    \fill[blue] (2.9,1.5) circle (2.5pt);
-    \fill[blue] (2.4,2.6) circle (2.5pt);
-    \fill[blue] (2.0,2.0) circle (2.5pt);
+        \fill[blue] (0.5,0.5) circle (2.5pt);
+        \fill[blue] (1.0,1.2) circle (2.5pt);
+        \fill[blue] (1.2,2.0) circle (2.5pt);
+        \fill[blue] (2.8,1.6) circle (2.5pt);
+        \fill[blue] (1.8,2.4) circle (2.5pt);
+        \fill[blue] (1.5,1.0) circle (2.5pt);
+        \fill[blue] (2.0,2.0) circle (2.5pt);
     
     % Axes (for reference)
     \draw[->,thin,gray] (-0.5,0) -- (5.5,0);
