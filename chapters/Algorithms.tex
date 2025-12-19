@@ -295,9 +295,68 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     TODO
 \end{proof}
 \subsubsection{Computational cost}
-\section{Alternating Least Squares (ALS)}
-TODO
-\section{Hierarchical Alternating Least Squares (HALS)}
+\section{Alternating Non-Negative Least Squares (ANLS)}
+The alternating non-negative least squares (ANLS) method consists in solving exactly the non-negative least squares sub-problems at each iteration of the two-blocks coordinate descent scheme \ref{2-BCD}, this is a case of exact 2-BCD \ref{Exact 2-BCD}.
+This scheme was originally proposed in \cite{Paatero1994} and further studied in \cite{kim2008nonnegative}.
+\par
+The metric used in this case is the Frobenius norm $D(V, WH) = \|V - WH\|_F^2$, and the subproblems to solve at each iteration are:
+\begin{equation}
+    W^{(k + 1)} = \arg\min_{W \geq 0} \|V - WH^{(k)}\|_F^2
+\end{equation}
+and
+\begin{equation}
+    H^{(k + 1)} = \arg\min_{H \geq 0} \|V - W^{(k)}H\|_F^2
+\end{equation}
+The algorithm can be summarized as follows:
+\begin{algorithm}[H]\label{ANLS}
+    \caption{Alternating Non-Negative Least Squares for NMF}
+    \begin{algorithmic}[1]
+        \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
+        % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
+        \While{stopping criterion not met}
+            \State \( W^{(k + 1)} \leftarrow \arg\min_{W \geq 0} \|V - WH^{(k)}\|_F^2 \)
+            \State \( H^{(k + 1)} \leftarrow \arg\min_{H \geq 0} \|V - W^{(k + 1)}H\|_F^2 \)
+        \EndWhile
+        \State \Return \( W, H \)
+    \end{algorithmic}
+\end{algorithm}
+\section{Projected methods}
+    Since the non-negative least squares subproblems are non trivial to solve, an idea is to solve the subproblems without the non-negativity constraints and then project the solution onto the non-negative orthant.
+    This leads to the projected gradient descent method for NMF where the solution of each subproblem takes the following form:
+    \begin{equation}
+        W^{(k + 1)} = \max\left(0, \arg\min_W \|V - W^{(k)}H^{(k)}\|_F^2  \right)
+    \end{equation}
+    and
+    \begin{equation}
+        H^{(k + 1)} = \max\left(0, \arg\min_H \|V - W^{(k + 1)}H\|_F^2  \right)
+    \end{equation}
+\subsection{Alternating Least squares ALS}
+The Alternating Least Squares (ALS) method is a projected method where the sub-problems are solved using the ordinary least squares solution \ref{least squares} and then projected onto the non-negative orthant.
+This is very easy to implement since most programming languages have built-in functions to solve least squares problems. For instance in MATLAB one can use the backslash operator `$\backslash$' to solve least squares problems. 
+In python, that is the language used in the repository associated with this thesis, the method \textit {`numpy.linalg.lstsq'    } is used to solve least squares problems.
+\par
+The ALS algorithm can be summarized as follows:
+\begin{algorithm}[H]\label{ALS}
+    \caption{Alternating Least Squares for NMF}
+    \begin{algorithmic}[1]
+        \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \
+in \mathbb{R}_+^{r \times n} \)
+        % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
+        \While{stopping criterion not met}
+            \State \( W^{(k + 1)} \leftarrow \max\left(0, \arg\min_W \|V - WH^{(k)}\|_F^2  \right) \)
+            \State \( H^{(k + 1)} \leftarrow \max\left(0, \arg\min_H \|V -  W^{(k + 1)}H\|_F^2  \right) \)
+        \EndWhile
+        \State \Return \( W, H \)
+    \end{algorithmic}
+\end{algorithm}
+This is the default solver used in MATLAB \footnote{Version R2025b.} for Non-negative Matrix Factorization via the function \textit{`nnmf'}. 
+\subsubsection{Convergence}
+Although the ALS algorithm is very popular in practice due to its simplicity, it does not have any convergence guarantees, in fact it has been observed that the algorithm can diverge in some cases. See \cite{gillis2020nonnegative} section 8.3.2.
+\subsubsection{Computational cost}
+The computational cost of the ALS algorithm depends on the cost of solving the least squares problems at each iteration.
+Using the normal equations method \ref{normal equations} the cost of solving the least squares problem for \( W \) is $O(mnr + mr^2 + r^3)$ and for \( H \) is $O(mnr + nr^2 + r^3)$. 
+Thus the total cost per iteration is $O(2mnr + (m+n)r^2 + 2r^3)$.
+\subsection{Hierarchical Alternating Least Squares (HALS)}
 TODO
 \section{MU with beta divergence} \label{MU beta section}
 The $\beta$-divergence is a family of cost functions with a single parameter $\beta$ that generalizes several common cost functions used in NMF, including the Frobenius norm and the Kullback-Leibler divergence.

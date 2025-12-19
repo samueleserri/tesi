@@ -128,18 +128,19 @@ Basic concepts of optimization including convexity, gradient descent, and other 
         f(x^*) \leq f(x) \quad \forall x \in U \cap X
     \end{equation}
 \end{definition}
-\begin{example}[Linear least squares problem]
+\begin{example}[Linear least squares problem]\label{least squares}
     Given a matrix $A \in \R^{m \times n}$ and a vector $b \in \R^m$, the linear least squares problem is defined as:
     \begin{equation}
         \min_{x \in \R^n} \| Ax - b \|_2^2
     \end{equation}  
 \end{example}
-\begin{theorem}[solution of the linear least squares problem]
+\begin{theorem}[solution of the linear least squares problem] \label{normal equations}
     The solution of the linear least squares problem $\min_{x \in \R^n} \| Ax - b \|_2^2$ is given by:
     \begin{equation}
         x^* = (A^\top A)^{-1} A^\top b = A^\dagger A^\top b
     \end{equation}
     provided that $A^\top A$ is invertible.
+    This solution is also known as the normal equations solution.
 \end{theorem}
 \begin{proof}
     The objective function can be rewritten as:
