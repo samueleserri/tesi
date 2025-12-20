@@ -108,7 +108,7 @@ The complete algorithm with the stopping criterion \ref{stopping criterion I} is
 \end{algorithm}
 \section{Initialization}
 TODO
-\section{Multiplicative Updates (MU)}
+\section{Multiplicative Updates (MU)} \label{MU derivation section}
 The multiplicative updates (MU) were first introduced by Lee and Seung in \cite{Lee1999}. They are one of the most popular algorithms for NMF.
 In this section we will derive the MU algorithm for two different cost functions: the Frobenius norm and the Kullback-Leibler divergence.
 The Lee and Seung paper with converge proof is \cite{lee2000algorithms}. A derivation using matrix algebra can be found in \cite{burred2014detailed}.
@@ -321,7 +321,7 @@ The algorithm can be summarized as follows:
     \end{algorithmic}
 \end{algorithm}
 \section{Projected methods}
-    Since the non-negative least squares subproblems are non trivial to solve, an idea is to solve the subproblems without the non-negativity constraints and then project the solution onto the non-negative orthant.
+    Since the non-negative least squares sub-problems are non trivial to solve, an idea is to solve the sub-problems without the non-negativity constraints and then project the solution onto the non-negative orthant.
     This leads to the projected gradient descent method for NMF where the solution of each subproblem takes the following form:
     \begin{equation}
         W^{(k + 1)} = \max\left(0, \arg\min_W \|V - W^{(k)}H^{(k)}\|_F^2  \right)
@@ -330,7 +330,7 @@ The algorithm can be summarized as follows:
     \begin{equation}
         H^{(k + 1)} = \max\left(0, \arg\min_H \|V - W^{(k + 1)}H\|_F^2  \right)
     \end{equation}
-\subsection{Alternating Least squares ALS}
+    \subsection{Alternating Least squares ALS}
 The Alternating Least Squares (ALS) method is a projected method where the sub-problems are solved using the ordinary least squares solution \ref{least squares} and then projected onto the non-negative orthant.
 This is very easy to implement since most programming languages have built-in functions to solve least squares problems. For instance in MATLAB one can use the backslash operator `$\backslash$' to solve least squares problems. 
 In python, that is the language used in the repository associated with this thesis, the method \textit {`numpy.linalg.lstsq'    } is used to solve least squares problems.
@@ -356,6 +356,55 @@ Although the ALS algorithm is very popular in practice due to its simplicity, it
 The computational cost of the ALS algorithm depends on the cost of solving the least squares problems at each iteration.
 Using the normal equations method \ref{normal equations} the cost of solving the least squares problem for \( W \) is $O(mnr + mr^2 + r^3)$ and for \( H \) is $O(mnr + nr^2 + r^3)$. 
 Thus the total cost per iteration is $O(2mnr + (m+n)r^2 + 2r^3)$.
+\subsection{Projected Gradient}
+The projected gradient method consists in performing a gradient descent step for each block of variables and then projecting the result onto the non-negative orthant.
+This method is discussed in a detailed way in \cite{lin2007projected}.
+\par
+As seen in section \ref{MU derivation section}, the gradient of the Frobenius norm with respect to \( H \) is given by:
+\begin{equation}
+    \nabla_H \frac{1}{2} \|V - WH\|_F^2 = W^\top (WH - V) = W^\top WH - W^\top V
+\end{equation}
+and with respect to \( W \) is given by:
+\begin{equation}
+    \nabla_W \frac{1}{2} \|V - WH\|_F^2 = (WH - V) H^\top = W H H^\top - V H^\top
+\end{equation}
+In this case the step size is chosen to be the Lipschitz constant of the gradient.
+The Lipschitz constant of the gradient with respect to \( H \)  is equal to \( \|W\|_2^2 \) and with respect to \( W \) is equal to \( \|H\|_2^2 \).
+Thus the projected gradient updates for \( H \) and \( W \) are given by:
+\begin{equation}
+    H \leftarrow \max\left(0, H - \frac{1}{\|W\|_2^2} \nabla_H \frac{1}{2} \|V - WH\|_F^2 \right)
+\end{equation}
+and
+\begin{equation}
+    W \leftarrow \max\left(0, W - \frac{1}{\|H\|_2^2} \nabla_W \frac{1}{2   } \|V - WH\|_F^2 \right)
+\end{equation}
+The complete projected gradient algorithm is summarized in the following algorithm:
+\begin{algorithm}[H]\label{Projected Gradient}
+    \caption{Projected Gradient for NMF}
+    \begin{algorithmic}[1] 
+        \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
+        % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
+        \While{stopping criterion not met}
+            \State LW \( \leftarrow \|W^{(k)}\|_2^2 \)
+            \State LH \( \leftarrow \|H^{(k)}\|_2^2 \)
+            \Comment{Lipschitz constants}
+            \State Grad\_W \( \leftarrow W^{(k)} H^{(k)} H^{(k) \top} - V H^{(k) \top} \)
+            \Comment{Gradient w.r.t. W}
+            \State $W^{(k+1)}$ \( \leftarrow \max\left(0, W^{(k)} - \frac{1}{LW} \text{Grad\_W} \right) \)
+            \Comment{Projected gradient update for W}
+            \State Grad\_H \( \leftarrow W^{(k+1) \top} W^{(k+1)} H^{(k)} - W^{(k+1) \top} V \)
+            \Comment{Gradient w.r.t. H}
+            \State $H^{(k+1)} \leftarrow \max\left(0, H^{(k)} - \frac{1}{LH} \text{Grad\_H} \right)$
+            \Comment{Projected gradient update for H}
+        \EndWhile
+        \State \Return \( W, H \)
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Convergence}
+% this is a gd with lipschitz step size, project gradient descent convergence theorem in the background chapter
+TODO
+\subsubsection{Computational cost}
+The computational cost discussion here is similar to the one presented for the MU algorithm with the Frobenius norm in section \ref{MU derivation section}, since the main cost is in the computation of the gradients.
 \subsection{Hierarchical Alternating Least Squares (HALS)}
 TODO
 \section{MU with beta divergence} \label{MU beta section}
