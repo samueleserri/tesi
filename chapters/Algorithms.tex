@@ -107,7 +107,38 @@ The complete algorithm with the stopping criterion \ref{stopping criterion I} is
     \end{algorithmic}
 \end{algorithm}
 \section{Initialization}
-TODO
+The algorithms commonly used for NMF are iterative methods that require an initial guess for the factors \( W^{(0)} \) and \( H^{(0)} \), they are generally sensitive to the initialization.
+A very common yet effective initialization often used in the literature is to initialize \( W^{(0)} \) and \( H^{(0)} \) with random non-negative values sampled from a uniform distribution $[0,1]$.
+\par
+In this section we will present a slightly more sophisticated initialization method called Non-negative Double Singular Value Decomposition (NNDSVD) \cite{boutsidis2008svd}.
+Recall the Ecktar-Young theorem that states that the best rank-$r$ approximation of a matrix $V$ in the Frobenius norm sense is given by its truncated SVD \cite{schmidt1907theorie}; then the idea behind NNDSVD is to use the SVD of $V$ to compute a non-negative initialization for the factors \( W^{(0)} \) and \( H^{(0)} \).
+\par
+The algorithm can be summarized as follows:
+\begin{algorithm}[H]\label{NNDSVD}
+    \caption{Non-negative Double Singular Value Decomposition (NNDSVD) for NMF initialization}
+    \begin{algorithmic}[1]
+        \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \)
+        % \output \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \R_+^{r \times n} \) such that \( V \approx W^{(0)}H^{(0)} \)
+        \State Compute the truncated SVD of \( V \): \( V_r = U_r \Sigma_r V_r^\top \)
+        \State Initialize $W(:,1) = \sqrt{\sigma_1} U(:,1)$
+        \State Initialize $H(1,:) = \sqrt{\sigma_1} V(:,1)^\top$
+        \For{\( i = 2 \) to \( r \)}
+            \State Let \( u = U(:,i) \), \( v = V(:,i) \)
+            \State \( u^+ = \max(u, 0) \), \( u^- = \max(-u, 0) \)
+            \State \( v^+ = \max(v, 0) \), \( v^- = \max(-v, 0) \)
+            \State \( \|u^+\| = norm(u^+) \), \( \|u^-\| = norm(u^-) \)
+            \State \( \|v^+\| = norm(v^+) \), \( \|v^-\| = norm(v^-) \)     
+            \If {\( \|u^+\| \times \|v^+\| \geq \|u^-\| \times \|v^-\| \)}
+                \State \( W(:,i) = \sqrt{\sigma_i} u^+ / \|u^+\| \)
+                \State \( H(i,:) = \sqrt{\sigma_i} v^+ / \|v^+\|^\top \)
+            \Else
+                \State \( W(:,i) = \sqrt{\sigma_i} u^- / \|u^-\| \)
+                \State \( H(i,:) = \sqrt{\sigma_i} v^- / \|v^-\|^\top \)
+            \EndIf
+        \EndFor    
+        \State \Return \( W^{(0)}, H^{(0)} \)
+    \end{algorithmic}
+\end{algorithm}
 \section{Multiplicative Updates (MU)} \label{MU derivation section}
 The multiplicative updates (MU) were first introduced by Lee and Seung in \cite{Lee1999}. They are one of the most popular algorithms for NMF.
 In this section we will derive the MU algorithm for two different cost functions: the Frobenius norm and the Kullback-Leibler divergence.
