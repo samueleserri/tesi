@@ -1,10 +1,15 @@
 \chapter{Algorithms for NMF}
-In this chapter, some algorithms are derived and presented.\
+In this chapter all the algorithms studied in this thesis and used in the numerical simulations are derived and formally presented, along with their convergence properties when available.
+The algorithms are listed here: Multiplicative Updated (MU) with the Frobenius norm \ref{MU for Frobenius}, Kullback-Leibler divergence \ref{MU for KL} and beta divergence \ref{MU for beta}; Alternating Least Squares (ALS) \ref{ALS}; Projected gradient descent (PGD) \ref{Projected Gradient}; Hierarchical Alternating Least Squares (HALS) \ref{HALS}.
+\par
+In section \ref{2-BCD general framework} the two-block coordinate descent framework is presented, which is the most common approach to design methods for solving the NMF optimization problem.
+in section \ref{Stopping criteria section} the stopping criteria commonly used in the literature are discussed.
+In section \ref{initialization section} the sensitivity of NMF algorithms to the initialization in general is highlighted, and the Non-negative Double Singular Value Decomposition (NNDSVD) initialization method is presented.
 \par
 Recall that the NMF problem \ref{NMF optimization problem} is NP-hard \cite{vavasis2007complexitynonnegativematrixfactorization}, hence all the Algorithms presented in this chapter are heuristics that aim to find a local minimum of the optimization problem.
 More precisely, they are iterative schemes that start from an initial guess of the factors \( W \) and \( H \) and iteratively update them to reduce the value of the objective function, converging to a local minimum.
 They don't guarantee to converge to the global minimum.
-\section{Two blocks coordinate descent (2-BCD)}
+\section{Two blocks coordinate descent (2-BCD)} \label{2-BCD general framework}
 The most common setting for NMF is the so called two-blocks coordinate descent, in this setting the factors \( W \) and \( H \) are updated alternately, fixing one while updating the other.
 
 \begin{algorithm}[h]\label{2-BCD}
@@ -59,7 +64,7 @@ In this case we have the following convergence result:
 \begin{observation}
     In the NMF problem, the condition \ref{Condition 2 Exact 2-BCD} is always satisfied because the elements of $W$ and $H$ are constrained to lie in the non negative orthant.
 \end{observation}
-\section{Stopping criteria}
+\section{Stopping criteria} \label{Stopping criteria section}
 All the algorithms presented in this chapter are iterative methods that require a stopping criterion to terminate.
 Usually, the implementation of these algorithms include a maximum number of iterations after which the algorithm stops.
 However, others stopping criteria can be used in addition to the maximum number of iterations.
@@ -106,7 +111,7 @@ The complete algorithm with the stopping criterion \ref{stopping criterion I} is
         \State \Return \( W, H \)
     \end{algorithmic}
 \end{algorithm}
-\section{Initialization}
+\section{Initialization} \label{initialization section}
 The algorithms commonly used for NMF are iterative methods that require an initial guess for the factors \( W^{(0)} \) and \( H^{(0)} \), they are generally sensitive to the initialization.
 A very common yet effective initialization often used in the literature is to initialize \( W^{(0)} \) and \( H^{(0)} \) with random non-negative values sampled from a uniform distribution $[0,1]$.
 \par
@@ -227,7 +232,7 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under the iterative scheme \ref{MU for Frobenius}.
 \end{theorem}
 \begin{proof}
-    TODO
+    The proof of this theorem can be found in \cite{lee2000algorithms} section 6.
 \end{proof}
 \subsubsection{Computational cost}
 The computational cost of the MU algorithm with the Frobenius norm depends on the computation of the gradients, $WHH^\top$ and $VH^\top$ for the update of $W$.
@@ -240,7 +245,7 @@ Recall that the dimensions of the matrices are:
 \end{itemize}
 When computing $WHH^\top$ one should pay attention to compute $W(HH^\top)$ instead of $(WH)H^\top$ to reduce the computational cost.
 The cost of the latter is $O(mnr + mnr^2)$ while the cost of the former is $O(mr^2 + r^2 n) = O(r^2(m+n))$. And in most NMF applications $r \ll \min(m,n)$.
-Similarly, when computing $W^\top WH$ one should compute $(W^\top W)H$ instead of $W^\top (WH)$ to reduce the computational cost. Again we have that the former requires $O(mr^2 + r^2 n) = O(r^2(m+n))$ operations while the latter requires $O(mnr + mnr^2)$ operations.
+The second term $VH^\top$ requires $O(mnr)$ operations.
 \subsection{MU with the Kullback-Leibler divergence}
 In this section we will derive the MU iteration scheme for the case where
 $D(V, WH) = D_{KL}(V \| WH)$ is the Kullback-Leibler divergence. 
@@ -323,14 +328,16 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under the iterative scheme \ref{MU for KL}.
 \end{theorem}
 \begin{proof}
-    TODO
+    The proof of this theorem can be found in \cite{lee2000algorithms} section 6.
 \end{proof}
 \subsubsection{Computational cost}
+In the case of the Kullback-Leibler divergence, the computational cost of the MU algorithm depends on the computation of the gradients, $\frac{V}{WH} H^\top$ and $\textbf{1} H^\top$ for the update of $W$.
+The term $\textbf{1} H^\top$ can be computed in $O(mr)$ operations and the term $\frac{V}{WH} H^\top$ requires $O(mnr)$ operations.
 \section{Alternating Non-Negative Least Squares (ANLS)}
 The alternating non-negative least squares (ANLS) method consists in solving exactly the non-negative least squares sub-problems at each iteration of the two-blocks coordinate descent scheme \ref{2-BCD}, this is a case of exact 2-BCD \ref{Exact 2-BCD}.
-This scheme was originally proposed in \cite{Paatero1994} and further studied in \cite{kim2008nonnegative}.
+This scheme was originally proposed in \cite{paatero1994positive}.
 \par
-The metric used in this case is the Frobenius norm $D(V, WH) = \|V - WH\|_F^2$, and the subproblems to solve at each iteration are:
+The metric used in this case is the Frobenius norm $D(V, WH) = \|V - WH\|_F^2$, and the subproblem to solve at each iteration are:
 \begin{equation}
     W^{(k + 1)} = \arg\min_{W \geq 0} \|V - WH^{(k)}\|_F^2
 \end{equation}
@@ -351,8 +358,9 @@ The algorithm can be summarized as follows:
         \State \Return \( W, H \)
     \end{algorithmic}
 \end{algorithm}
+However solving exactly the constrained least-squares sub-problems is non-trivial; see \cite{kim2008nonnegative} for an example of an algorithm based on active-set methods to solve non-negative least squares problems.
 \section{Projected methods}
-    Since the non-negative least squares sub-problems \ref{ANLS} are non trivial to solve, an idea is to solve the sub-problems without the non-negativity constraints and then project the solution onto the non-negative orthant.
+    Since the non-negative least squares sub-problems \ref{ANLS} are non trivial to solve, a possible approach is to solve the sub-problems without the non-negativity constraints and then project the solution onto the non-negative orthant.
     This leads to the projected gradient descent methods for NMF where the solution of each subproblem takes the following form:
     \begin{equation}
         W^{(k + 1)} = \max\left(0, \arg\min_W \|V - W^{(k)}H^{(k)}\|_F^2  \right)
@@ -387,8 +395,8 @@ Although the ALS algorithm is very popular in practice due to its simplicity, it
 The computational cost of the ALS algorithm depends on the cost of solving the least squares problems at each iteration.
 Using the normal equations method \ref{normal equations} the cost of solving the least squares problem for \( W \) is $O(mnr + mr^2 + r^3)$ and for \( H \) is $O(mnr + nr^2 + r^3)$. 
 Thus the total cost per iteration is $O(2mnr + (m+n)r^2 + 2r^3)$.
-\subsection{Projected Gradient}
-The projected gradient method consists in performing a gradient descent step for each block of variables and then projecting the result onto the non-negative orthant.
+\subsection{Projected Gradient Descent (PGD)}
+The projected gradient descent method consists in performing a gradient descent step for each block of variables and then projecting the result onto the non-negative orthant.
 This method is discussed in a detailed way in \cite{lin2007projected}.
 \par
 As seen in section \ref{MU derivation section}, the gradient of the Frobenius norm with respect to \( H \) is given by:
@@ -409,9 +417,9 @@ and
 \begin{equation}
     W \leftarrow \max\left(0, W - \frac{1}{\|H\|_2^2} \nabla_W \frac{1}{2   } \|V - WH\|_F^2 \right)
 \end{equation}
-The complete projected gradient algorithm is summarized in the following algorithm:
+The complete projected gradient descent algorithm is summarized in the following algorithm:
 \begin{algorithm}[H]\label{Projected Gradient}
-    \caption{Projected Gradient for NMF}
+    \caption{Projected Gradient Descent for NMF}
     \begin{algorithmic}[1] 
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
@@ -433,7 +441,8 @@ The complete projected gradient algorithm is summarized in the following algorit
 \end{algorithm}
 \subsubsection{Convergence}
 % this is a gd with lipschitz step size, project gradient descent convergence theorem in the background chapter
-TODO
+This is a gradient descent method with a Lipschitz step size with a projection onto a the non-negative orthant when the iterates go out of bounds.
+Thus theorem \ref{GD convergence theorem} can be applied to ensure the convergence of the projected gradient descent method for NMF.
 \subsubsection{Computational cost}
 The computational cost discussion here is similar to the one presented for the MU algorithm with the Frobenius norm in section \ref{MU derivation section}, since the main cost is in the computation of the gradients.
 \subsection{Hierarchical Alternating Least Squares (HALS)}
@@ -592,7 +601,8 @@ For others values of $\beta$ we need to adjust MU updated \ref{MU for beta} by a
     \end{cases}
 \end{equation}
 And constraint the iterates to be greater than a small positive constant $\varepsilon > 0$ \cite{takahashi2014global}.
-The reason for this is that [...]
+The reason for this is that in this case the objective function $D_{\beta}(V \| WH)$ is guaranteed to be non-increasing under the adjusted MU update rules.
+This result is obtained by \cite{févotte2011algorithmsnonnegativematrixfactorization} using the majorization-minimization framework.
 \par
 Now we are ready to state the more general convergence theorem for MU with the beta divergence:
 \begin{theorem}[\cite{gillis2020nonnegative} theorem 8.9]
@@ -614,3 +624,12 @@ then:
     The proof of this theorem can be found in \cite{gillis2020nonnegative} section 8.2.4.
 \end{proof}
 \subsubsection{Computational cost}
+The computational cost is given by the cost of computing the two gradients at each iteration, recall that the gradient with respect to \( H \) is given by:
+\begin{equation}
+    \nabla_H D_{\beta}(V, WH) = W^\top \left( (WH)^{\beta - 1} - V \circ (WH)^{\beta - 2} \right)
+\end{equation}
+and with respect to \( W \) is given by:
+\begin{equation}
+    \nabla_W D_{\beta}(V, WH) = \left( (WH)^{\beta - 1} - V \circ (WH)^{\beta - 2} \right) H^\top
+\end{equation}
+The cost of computing the gradient with respect to \( H \) is $O(mnr)$ and the cost of computing the gradient with respect to \( W \) is also $O(mnr)$.

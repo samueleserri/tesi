@@ -19,6 +19,9 @@
 \usepackage{float}
 \usepackage{adjustbox}
 \usetikzlibrary{arrows.meta, positioning, calc, 3d}
+
+% Tables
+\usepackage{longtable}
 % code
 \usepackage{listings}
 \lstset{language=Python,
@@ -118,7 +121,9 @@
 \textsc{Dipartimento di Matematica Informatica e Geoscienze -- MIGE}\\ 
 \bigskip
 Corso di Laurea in Intelligenza Artitificiale e Data Analytics \\
+\small{Classe ministeriale: L-31 - Scienze e tecnologie informatiche}
 \vfill %%\vspace{3cm}
+\large
 \textsc{Tesi di laurea triennale}\\
 \vfill %%\vspace{3cm}
 \LARGE
@@ -157,6 +162,7 @@ ANNO ACCADEMICO 2024--2025
 \pagenumbering{roman}
 \shipout\null 
 \tableofcontents
+\hypersetup{linkcolor=red} % restore red for other \ref links
 \bigskip
 % pagina pdflatex -interaction=nonstopmode main.texvuota
 
@@ -174,9 +180,12 @@ ANNO ACCADEMICO 2024--2025
 \include{chapters/Experiments}
 
 \appendix
+\hypersetup{linkcolor=black} % make TOC links black
 \listoffigures
 \listofalgorithms
+\hypersetup{linkcolor=red} 
 \include{chapters/appendix/code_documentation}
+\hypersetup{linkcolor=black} 
 
 % Bibliography placeholder:
 \clearpage

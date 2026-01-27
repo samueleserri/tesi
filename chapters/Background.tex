@@ -1,7 +1,9 @@
 \chapter{Background}
 This chapter contains all the preliminaries necessary to formally define the NMF problem and understand the algorithms presented in this work.
-\section{Linear algebra}
-Basic compcet of linear algebra including matrices, vectors, and operations on them.
+\section{Linear algebra and matrix decompositions}
+This section briefly introduces the common [find the correct word] of linear algebra from scratch, although it is assumed that the reader already knows linear algebra they are included here for completeness and to fix the notation and terminology subsequently used in this text.
+In section \ref{matrix decomposition section} the problem of matrix decomposition is introduced from a general perspective and the Singular Value Decomposition (SVD) is presented.
+\subsection{basic linear algebra}
 \begin{definition}[Matrix]
     Given two numbers $m,n \in N$, a matrix $A \in \R^{m \times n}$ is a rectangular array of real numbers with $m$ rows and $n$ columns.
 \end{definition}
@@ -54,7 +56,7 @@ Basic compcet of linear algebra including matrices, vectors, and operations on t
     y_{1} & y_{2} & \cdots & y_{n}
     \end{bmatrix}
 \end{equation*}
-\subsection{Norms}
+\subsubsection{Norms}
 \begin{definition}[Norm of a vector]
     Given a vector $x \in \R^n$, a norm is a function $\| \cdot \|: \R^n \rightarrow \R_+$ that satisfies the following properties:
     \begin{itemize}
@@ -100,7 +102,8 @@ Basic compcet of linear algebra including matrices, vectors, and operations on t
     \| A \|_\infty = \max_{1 \leq i \leq m} \sum_{j=1}^{n} |a_{ij}|
     \end{equation}
 \end{example}
-\newpage
+\subsection{Matrix decomposition} \label{matrix decomposition section}
+\subsubsection{Singular Value Decomposition (SVD)}
 \section{Optimization}
 Basic concepts of optimization including convexity, gradient descent, and other optimization algorithms.
 \begin{definition}
@@ -185,16 +188,15 @@ to minimize the sum of the squared vertical distances between each vector
     \end{equation}
     where $\eta_k > 0$ is the step size (or learning rate) at iteration $k$ and $\nabla f(x_k)$ is the gradient of the objective function at point $x_k$.
 \end{definition}
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.5\textwidth]{Imgs/Gradient_descent.png}
-    \caption{Illustration of gradient descent on a series of level sets.%
-    \\ \vspace{2pt} \small\textit{Source: Wikimedia Commons -- see \url{https://commons.wikimedia.org/wiki/File:Gradient_descent.png} for author and license information.}}
-    \label{fig:gradient_descent}
-\end{figure}
-\par
 We have the following convergence result for gradient descent:
-
-\newpage
-\section{Linear dimensionality reduction}
-Basic concepts of linear dimensionality reduction including PCA, SVD, and other related techniques.
+\begin{theorem} [GD convergence for a general smooth function] \label{GD convergence theorem} 
+    Let $f: \R^n \rightarrow \R$ be a differentiable function with $L$-Lipschitz continuous gradient, i.e., there exists a constant $L > 0$ such that for all $x, y \in \R^n$:
+    \begin{equation*}
+        \| \nabla f(x) - \nabla f(y) \|_2 \leq L \| x - y \|_2
+    \end{equation*}
+    Let $\{x_k\}$ be the sequence generated s.t. $f(x_{k+1}) \leq f(x_k) - \frac{1}{2L} \| \nabla f(x_k) \|_2^2$; and suppose that $f$ is bounded below, then we have:
+    \begin{equation*}
+        f(x_k) \rightarrow f(\bar{x}) \quad \text{as} \quad k \rightarrow \infty
+    \end{equation*}
+    where $\bar{x}$ is a stationary point of $f$, i.e., $\nabla f(\bar{x}) = 0$.
+\end{theorem}
