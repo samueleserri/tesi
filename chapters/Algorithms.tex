@@ -1,4 +1,4 @@
-\chapter{Algorithms for NMF}
+\chapter{Algorithms for NMF}\label{ALGO CHAPTER}
 In this chapter all the algorithms studied in this thesis and used in the numerical simulations are derived and formally presented, along with their convergence properties when available.
 The algorithms are listed here: Multiplicative Updated (MU) with the Frobenius norm \ref{MU for Frobenius}, Kullback-Leibler divergence \ref{MU for KL} and beta divergence \ref{MU for beta}; Alternating Least Squares (ALS) \ref{ALS}; Projected gradient descent (PGD) \ref{Projected Gradient}; Hierarchical Alternating Least Squares (HALS) \ref{HALS}.
 \par
@@ -116,7 +116,7 @@ The algorithms commonly used for NMF are iterative methods that require an initi
 A very common yet effective initialization often used in the literature is to initialize \( W^{(0)} \) and \( H^{(0)} \) with random non-negative values sampled from a uniform distribution $[0,1]$.
 \par
 In this section we will present a slightly more sophisticated initialization method called Non-negative Double Singular Value Decomposition (NNDSVD) \cite{boutsidis2008svd}.
-Recall the Ecktar-Young theorem that states that the best rank-$r$ approximation of a matrix $V$ in the Frobenius norm sense is given by its truncated SVD \cite{schmidt1907theorie}; then the idea behind NNDSVD is to use the SVD of $V$ to compute a non-negative initialization for the factors \( W^{(0)} \) and \( H^{(0)} \).
+Recall the Eckart-Young theorem that states that the best rank-$r$ approximation of a matrix $V$ in the Frobenius norm sense is given by its truncated SVD \cite{schmidt1907theorie}; then the idea behind NNDSVD is to use the SVD of $V$ to compute a non-negative initialization for the factors \( W^{(0)} \) and \( H^{(0)} \).
 \par
 The algorithm can be summarized as follows:
 \begin{algorithm}[H]\label{NNDSVD}
