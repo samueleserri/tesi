@@ -7,8 +7,11 @@ in section \ref{Stopping criteria section} the stopping criteria commonly used i
 In section \ref{initialization section} the sensitivity of NMF algorithms to the initialization in general is highlighted, and the Non-negative Double Singular Value Decomposition (NNDSVD) initialization method is presented.
 \par
 Recall that the NMF problem \ref{NMF optimization problem} is NP-hard \cite{vavasis2007complexitynonnegativematrixfactorization}, hence all the Algorithms presented in this chapter are heuristics that aim to find a local minimum of the optimization problem.
-More precisely, they are iterative schemes that start from an initial guess of the factors \( W \) and \( H \) and iteratively update them to reduce the value of the objective function, converging to a local minimum.
+More precisely, they are iterative schemes that start from an initial guess of the factors \( W_0 \) and \( H_0 \) and iteratively update them to reduce the value of the objective function, converging to a local minimum.
 They don't guarantee to converge to the global minimum.
+Furthermore the optimization problem \ref{NMF optimization problem} is a constrained optimization problem, since the factors \( W \) and \( H \) are constrained to be non-negative, that is \( W \geq 0 \) and \( H \geq 0 \).
+To handle the non-negativity constraints, the algorithms presented in this chapter use two main approaches: the first one is to design a scheme that ensure the non-negativity of the iterates at each step, this is the case of the MU \ref{MU for Frobenius}, \ref{MU for KL} and \ref{MU for beta}, and Non-negative Least Squares (ANLS) \ref{ANLS};
+the second approach is to first solve the sub-problems without the non-negativity constraints and then project the solution onto the non-negative orthant, this is the case of the ALS \ref{ALS}, HALS \ref{HALS}, and PGD \ref{Projected Gradient}.
 \section{Two blocks coordinate descent (2-BCD)} \label{2-BCD general framework}
 The most common setting for NMF is the so called two-blocks coordinate descent, in this setting the factors \( W \) and \( H \) are updated alternately, fixing one while updating the other.
 
@@ -633,3 +636,7 @@ and with respect to \( W \) is given by:
     \nabla_W D_{\beta}(V, WH) = \left( (WH)^{\beta - 1} - V \circ (WH)^{\beta - 2} \right) H^\top
 \end{equation}
 The cost of computing the gradient with respect to \( H \) is $O(mnr)$ and the cost of computing the gradient with respect to \( W \) is also $O(mnr)$.
+\section*{}
+During the last decades, many algorithm have been proposed to solve the NMF problem, in this chapter we derived and presented the most important ones.
+There are different variant of the algorithm presented here, notably some algorithm can be accelerated.
+\cite{gillis2012accelerated}.

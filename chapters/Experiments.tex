@@ -1,2 +1,84 @@
 \chapter{Experiments}
-In this chapter numerical experiments of NMF algorithms are presented and discussed.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lllll}
+\hline
+\multicolumn{1}{|l|}{Dataset}         & \multicolumn{1}{l|}{m}   & \multicolumn{1}{l|}{n}    & \multicolumn{1}{l|}{rank} & \multicolumn{1}{l|}{Sparsity} \\ \hline
+\multicolumn{1}{|l|}{rand U{[}0,1{]}} & \multicolumn{1}{l|}{250} & \multicolumn{1}{l|}{100}  & \multicolumn{1}{l|}{20}   & \multicolumn{1}{l|}{0\%}      \\ \hline
+\multicolumn{1}{|l|}{rand |N(0,1)|}   & \multicolumn{1}{l|}{}    & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}         \\ \hline
+\multicolumn{1}{|l|}{rand P(1)}       & \multicolumn{1}{l|}{}    & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}         \\ \hline
+\multicolumn{1}{|l|}{CBCL}            & \multicolumn{1}{l|}{361} & \multicolumn{1}{l|}{2429} & \multicolumn{1}{l|}{361}  & \multicolumn{1}{l|}{0\%}      \\ \hline
+\multicolumn{1}{|l|}{top30\_news}     & \multicolumn{1}{l|}{}    & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}         \\ \hline
+\end{tabular}
+\caption{Summary of the datasets used in the experiments.}
+\end{table}
+
+
+\section{Synthetic data}
+We generate a matrix $V \in \R^{m \times n}$ with as $V = WH$ where $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$, with $m = 250, n = 100$, and $r = 20$.
+The entries of $W$ and $H$ are generated from a uniform distribution over the interval $[0,1)$. The matices are generated using the method form numpy library \texttt{numpy.random.rand}, the seed is set to $15$ for reproducibility.
+We then run the MU algorithm with the Frobenius norm \ref{MU for Frobenius}, the Hierarchical Alternating Least Squares (HALS) algorithm \ref{HALS}, the Alternating Least Squares (ALS) algorithm \ref{ALS}, and the Projected Gradient Descent method (PGD) \ref{Projected Gradient} for $1000$ iterations.
+Each algorithm is run $10$ times with $10$ different random initialization of $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$ from a uniform distribution in $[0,1)$.
+The errors are averaged over the $10$ runs and plotted against the number of iterations.
+The results are shown in Figure \ref{fig:Random init comparison}.
+\subsection{Dense Matrix}
+In this setting, the matrix $V$ is dense, meaning most of its entries are non-zero.
+
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{Imgs/Chapter 5/Uniform_data_random_init.png}
+    \caption{Average reconstruction error for different algorithms averaged over 10 random initializations.}
+    \label{fig:Random init comparison}
+\end{figure}
+
+
+By looking at the left part of the figure \ref{fig:Random init comparison} we can see that the MU algorithm with Frobenius norm converges the slowest among all algorithms and HALS is the fastest.
+On the right part of the figure \ref{fig:Random init comparison} we can see which algorithm reaches the lowest reconstruction error after $1000$ iterations, in this case it is the PGD algorithm followed by HALS and MU with Frobenius norm, which are very close.
+Meanwhile, the ALS performs poorly, this is a known result in the case of dense matrices see [...].
+ 
+\subsection{initializations comparison}
+We generate a dense matrix $V \in \R^{m \times n}$ as before with $m = 250, n = 100$, and $r = 20$ and we fit a NMF model with reconstruction rank rank $= 20$ using the HALS algorithm as solver with two different initialization strategies:
+\begin{enumerate}
+    \item random initialization: $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$ are initialized from a uniform distribution in $[0,1)$.
+    \item NNDSVD initialization \ref{NNDSVD} : $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$ are initialized using the NNDSVD method.
+\end{enumerate}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{Imgs/Chapter 5/HALS_init_comparison.png}
+    \caption{Comparison between random initialization and NNDSVD initialization using the HALS algorithm for fitting a dense matrix.}
+    \label{fig:Hals_init_comparison}
+\end{figure}
+
+We observe that in this case, the HALS algorithm initialized with NNDSVD converges faster and reaches a lower reconstruction error after $1000$ iterations compared to the random initialization, as shown in figure \ref{fig:Hals_init_comparison}.
+\section{Low rank reconstruction}
+For this experiment we generate a matrix $V \in \R^{m \times n}$ as $V = WH$ where $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$, with $m = 250, n = 100$, and $r = 50$.
+We then fit a NMF model with a factorization rank of $k = 10$ using the MU algorithm with Frobenius norm \ref{MU for Frobenius}, the Hierarchical Alternating Least Squares (HALS) algorithm \ref{HALS}, the Alternating Least Squares (ALS) algorithm \ref{ALS}, and the Projected Gradient Descent method (PGD) \ref{Projected Gradient} for $1000$ iterations.
+that mean solving the optimization problem $\min_{W \geq 0, H \geq 0} ||V - WH||_F^2$ with $W \in \R^{250 \times 10}$ and $H \in \R^{10 \times 100}$.
+Note that the total number of elements in $V$ is $250 \times 100 =  25000$ while the total number of elements in $W$ and $H$ is $250 \times 10 + 10 \times 100 = 3500$.
+We wonder how well the different algorithms are able to reconstruct the original matrix $V$ using a low rank approximation and how much information is lost in the compression.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{Imgs/Chapter 5/Low_rank_reconstruction.png}
+    \caption{Average reconstruction error for different algorithms averaged over 10 random initializations for a NMF model with a low reconstruction rank $r = 10$}
+    \label{fig:Low rank reconstruction}
+\end{figure}
+
+We observe in figure \ref{fig:Low rank reconstruction} that the HALS algorithm converges the fastest and reaches the lowest reconstruction error after $1000$ iterations, while MU with the Frobenius norm, PGD, and ALS perform similarly.
+To observe how the reconstruction error evolves with respect to the rank of the approximation, we fit NMF models with $10$ different ranks ranging from $10$ to $50$ for the four solvers.
+
+\section{The CBCL dataset}
+In this section we use the CBCL face dataset used in \cite{Lee1999}, see \ref{Example feature extraction NMF} for more details.
+The dataset contains $361$ grayscale images of faces with a resolution of $19 \times 19$ pixels. The tot
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=1\textwidth]{Imgs/Chapter 5/CBCL_dataset_random_init.png}
+%     \caption{Average reconstruction error for different algorithms averaged over 10 random initializations on the CBCL dataset.}
+%     \label{fig:CBCL dataset}
+% \end{figure}
+
+\section{Sparse matrices}

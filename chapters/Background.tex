@@ -9,9 +9,10 @@ Then in section \ref{optimization section} the taxonomy of optimization problems
 Clearly this chapter is not mean to be an exhaustive introduction to linear algebra and optimization, and it is assumed that the reader is already familiar with most of the concepts presented here, therefore only those results that are essential are included. 
 Finally the point of view adopted here is mainly computational and from a data analysis perspective.
 \par
-The main reference for organizing this chapter has been the book by Stephen Wright and Benjamin Recht \cite{wright2022optimization}.
+The main reference for organizing this chapter have been the book by S. Wright and B. Recht \cite{wright2022optimization},
+and the book by A. Quarteroni, R. Sacco, F. Saleri, and P. Gervasio \cite{quarteroni2010matematica}. We refer to those books for proofs and more detailed explanations on the topics presented here.
 \section{Linear Algebra and Matrix decomposition}\label{Linear algebra and matrix decomposition section}
-This section briefly introduces the common [find the correct word] of linear algebra from scratch;
+This section briefly introduces the fundamentals of linear algebra from scratch;
 in section \ref{matrix decomposition section} the problem of matrix decomposition is introduced from a general perspective and the Singular Value Decomposition (SVD) is presented, it is shown how the SVD can be equivalently expressed as a sum of rank-one matrices and the Eckart-Young theorem \ref{Eckart-Young Theorem} is stated.
 \subsection{Basics of Linear Algebra}
 \begin{definition}[Matrix]
@@ -25,7 +26,7 @@ in section \ref{matrix decomposition section} the problem of matrix decompositio
     a_{m1} & a_{m2} & \cdots & a_{mn}
     \end{bmatrix}
 \end{equation*}
-\begin{definition}[transpose of a matrix]
+\begin{definition}[Transpose of a matrix]
     Given a matrix $A \in \R^{m \times n}$, the transpose of $A$, denoted by $A^\top$, is the matrix obtained by swapping the rows and columns of $A$.
     That is, the matrix $A^\top$ is a matrix such that $A[i,j] = A^\top[j,i]$ for all $1 \leq i \leq m$ and $1 \leq j \leq n$.
 \end{definition}
@@ -76,8 +77,7 @@ in section \ref{matrix decomposition section} the problem of matrix decompositio
     \end{itemize}
 \end{definition}
 \begin{example}
-    The Euclidean norm (or 2-norm) of a vector $x \in \R^n$ is defined as:
-    
+    The Euclidean norm (or 2-norm) of a vector $x \in \R^n$ is defined as:  
     \begin{equation}
     \| x \|_2 = \sqrt{\sum_{i=1}^{n} x_i^2}
     \end{equation}
@@ -140,7 +140,7 @@ where \begin{itemize}
     where $r$ is the rank of $A$, $\sigma_i$ are the singular values, and $u_i$ and $v_i$ are the corresponding left and right singular vectors.
 \end{observation}
 We have the following important theorem regarding the SVD:
-\begin{theorem}[Eckart-Young Theorem] \label{Eckart-Young Theorem}
+\begin{theorem}[\cite{schmidt1907theorie} Eckart-Young Theorem] \label{Eckart-Young Theorem}
     Let $A \in \R^{m \times n}$ be a matrix with singular value decomposition $A = U \Sigma V^\top$. For any integer $k$ such that $1 \leq k \leq rank(A)$, the best rank-$k$ approximation of $A$ in terms of the Frobenius norm is given by:
     \begin{equation}
         A_k = \sum_{i=1}^{k} \sigma_i u_i v_i^\top
@@ -215,7 +215,9 @@ Finally, the gradient descent algorithm \ref{Gradient descent section} is introd
     This completes the proof.
 \end{proof}
 % illustration of least squares
-\begin{figure}[h]
+The problem of linear least squares is known in statistics as the ordinary least square regression, and it allows to find the best-fitting line (or hyperplane in higher dimensions) to a set of data points by minimizing the sum of the squared vertical distances between the data points and the line (or hyperplane).
+In figure \ref{fig:least_squares} an illustration of the least squares regression line in a three-dimensional setting is shown.
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.5\textwidth]{Imgs/Least_squares.png}
     \caption{In a three-dimensional setting
@@ -249,3 +251,14 @@ We have the following convergence result for gradient descent:
     \end{equation*}
     where $\bar{x}$ is a stationary point of $f$, i.e., $\nabla f(\bar{x}) = 0$.
 \end{theorem}
+\subsection{Low Rank Matrix Approximation}
+An important optimization problem that is relevant for this thesis, and that often arise in the context of data analysis and data compression, is the problem of low rank matrix approximation, that is the problem of approximating a given matrix $A \in \R^{m \times n}$ of rank $r$ with a matrix of lower rank.
+In particular this is an optimization problem \ref{optimization problem definition} where the objective function is a matrix norm and the feasible set is the set of matrices with rank less than or equal to a given integer $k < r$.
+\begin{definition}[Low rank matrix approximation]
+    Given a matrix $A \in \R^{m \times n}$ of rank $r$ and an integer $k < r$, the low rank matrix approximation problem is defined as:
+    \begin{equation}
+        \min_{B \in \R^{m \times n}, \text{rank}(B) \leq k} \| A - B \|
+    \end{equation}
+    where $\| \cdot \|$ is a matrix norm.
+\end{definition}
+In the particular case of $\|\cdot\| = \|\cdot\|_F$ being the Frobenius norm, the solution to the low rank matrix approximation problem is given by the truncated SVD of $A$, as stated in the Eckart-Young theorem \ref{Eckart-Young Theorem}.
