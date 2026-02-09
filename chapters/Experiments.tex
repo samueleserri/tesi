@@ -5,10 +5,10 @@
 \begin{tabular}{lllll}
 \hline
 \multicolumn{1}{|l|}{Dataset}         & \multicolumn{1}{l|}{m}   & \multicolumn{1}{l|}{n}    & \multicolumn{1}{l|}{rank} & \multicolumn{1}{l|}{Sparsity} \\ \hline
-\multicolumn{1}{|l|}{rand U{[}0,1{]}} & \multicolumn{1}{l|}{250} & \multicolumn{1}{l|}{100}  & \multicolumn{1}{l|}{20}   & \multicolumn{1}{l|}{0\%}      \\ \hline
-\multicolumn{1}{|l|}{rand |N(0,1)|}   & \multicolumn{1}{l|}{}    & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}         \\ \hline
-\multicolumn{1}{|l|}{rand P(1)}       & \multicolumn{1}{l|}{}    & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}         \\ \hline
+\multicolumn{1}{|l|}{rand U{[}0,1{)}} & \multicolumn{1}{l|}{250} & \multicolumn{1}{l|}{100}  & \multicolumn{1}{l|}{20}   & \multicolumn{1}{l|}{0\%}      \\ \hline
+\multicolumn{1}{|l|}{Sparse rand U{[}0,1{)}} & \multicolumn{1}{l|}{250} & \multicolumn{1}{l|}{100}  & \multicolumn{1}{l|}{91}   & \multicolumn{1}{l|}{99\%}      \\ \hline
 \multicolumn{1}{|l|}{CBCL}            & \multicolumn{1}{l|}{361} & \multicolumn{1}{l|}{2429} & \multicolumn{1}{l|}{361}  & \multicolumn{1}{l|}{0\%}      \\ \hline
+\multicolumn{1}{|l|}{Olivetti Faces}     & \multicolumn{1}{l|}{4096}    & \multicolumn{1}{l|}{400}     & \multicolumn{1}{l|}{400}     & \multicolumn{1}{l|}{0\%}         \\ \hline
 \multicolumn{1}{|l|}{top30\_news}     & \multicolumn{1}{l|}{}    & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}         \\ \hline
 \end{tabular}
 \caption{Summary of the datasets used in the experiments.}
@@ -17,13 +17,18 @@
 
 \section{Synthetic data}
 We generate a matrix $V \in \R^{m \times n}$ with as $V = WH$ where $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$, with $m = 250, n = 100$, and $r = 20$.
-The entries of $W$ and $H$ are generated from a uniform distribution over the interval $[0,1)$. The matices are generated using the method form numpy library \texttt{numpy.random.rand}, the seed is set to $15$ for reproducibility.
+The entries of $W$ and $H$ are generated from a uniform distribution over the interval $[0,1)$. This matrix is generated using the method \texttt{numpy.random.rand}\footnote{{\url{https://numpy.org/doc/stable/reference/random/generated/numpy.random.rand.html}}} from the numpy library., the seed is set to $15$ for reproducibility.
+We generate another matrix $V_{sparse} \in \R^{m \times n}$ with the same dimensions as $V$ but with a sparsity of $99\%$, meaning that only $1\%$ of its entries are non-zero, those entries are sampled form a uniform distribution $[0,1)$.
+This matrix is generated using the method \texttt{scipy.sparse.random\_array}\footnote{{\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.random_array.html}}} from the scipy library, and the seed is set to $15$ for reproducibility.
 We then run the MU algorithm with the Frobenius norm \ref{MU for Frobenius}, the Hierarchical Alternating Least Squares (HALS) algorithm \ref{HALS}, the Alternating Least Squares (ALS) algorithm \ref{ALS}, and the Projected Gradient Descent method (PGD) \ref{Projected Gradient} for $1000$ iterations.
-Each algorithm is run $10$ times with $10$ different random initialization of $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$ from a uniform distribution in $[0,1)$.
+Each algorithm is run $10$ times with $10$ different random initialization of $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$ sampled from a uniform distribution in $[0,1)$.
 The errors are averaged over the $10$ runs and plotted against the number of iterations.
-The results are shown in Figure \ref{fig:Random init comparison}.
+The results for the dense case are shown in Figure \ref{fig:Random init comparison}, and in \ref{fig:Sparse uniform data random init} for the sparse case.
 \subsection{Dense Matrix}
 In this setting, the matrix $V$ is dense, meaning most of its entries are non-zero.
+For this experiment we fit a NMF model with reconstruction rank $r  = 20$, we compare the performance of the algorithms in terms of the reconstruction error given by the Frobenius norm $||V - WH||_F^2$ as a function of the number of iterations.
+Recall from section \ref{initialization section} that the initialization of the factor matrices $W$ and $H$ can have a significant impact on the convergence and performance of NMF algorithms.
+In order to reduce the variance of the results due to random initialization, we run each algorithm $10$ times with $10$ different random initializations and we average the reconstruction error over those runs.
 
 
 \begin{figure}[ht]
@@ -36,9 +41,11 @@ In this setting, the matrix $V$ is dense, meaning most of its entries are non-ze
 
 By looking at the left part of the figure \ref{fig:Random init comparison} we can see that the MU algorithm with Frobenius norm converges the slowest among all algorithms and HALS is the fastest.
 On the right part of the figure \ref{fig:Random init comparison} we can see which algorithm reaches the lowest reconstruction error after $1000$ iterations, in this case it is the PGD algorithm followed by HALS and MU with Frobenius norm, which are very close.
-Meanwhile, the ALS performs poorly, this is a known result in the case of dense matrices see [...].
+Meanwhile, the ALS performs poorly.
  
-\subsection{initializations comparison}
+\subsection{initializations comparison}\label{init comparison section}
+Now, we wonder whether we can observe a significant difference in the convergence speed and the final reconstruction error if we choose the NNDSVD initialization strategy defined in \ref{NNDSVD}.
+We decide to run this test with the HALS algorithm. 
 We generate a dense matrix $V \in \R^{m \times n}$ as before with $m = 250, n = 100$, and $r = 20$ and we fit a NMF model with reconstruction rank rank $= 20$ using the HALS algorithm as solver with two different initialization strategies:
 \begin{enumerate}
     \item random initialization: $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$ are initialized from a uniform distribution in $[0,1)$.
@@ -72,13 +79,34 @@ To observe how the reconstruction error evolves with respect to the rank of the 
 
 \section{The CBCL dataset}
 In this section we use the CBCL face dataset used in \cite{Lee1999}, see \ref{Example feature extraction NMF} for more details.
-The dataset contains $361$ grayscale images of faces with a resolution of $19 \times 19$ pixels. The tot
+The dataset contains $361$ gray-scale images of faces with a resolution of $19 \times 19$ pixels. The total number of elements in the dataset is $361 \times 19 \times 19 = 130441$.
+We fit a NMF model with reconstruction rank $r = 49$ using the MU algorithm with Frobenius norm \ref{MU for Frobenius}, the Hierarchical Alternating Least Squares (HALS) algorithm \ref{HALS}, the Alternating Least Squares (ALS) algorithm \ref{ALS}, and the Projected Gradient Descent method (PGD) \ref{Projected Gradient} for $1000$ iterations.
+The results are shown in figure \ref{fig:CBCL dataset}.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{Imgs/Chapter 5/CBCL_random_init.png}
+    \caption{Average reconstruction error for different algorithms averaged over 10 random initializations on the CBCL dataset.}
+    \label{fig:CBCL dataset}
+\end{figure}
 
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=1\textwidth]{Imgs/Chapter 5/CBCL_dataset_random_init.png}
-%     \caption{Average reconstruction error for different algorithms averaged over 10 random initializations on the CBCL dataset.}
-%     \label{fig:CBCL dataset}
-% \end{figure}
-
+As expected the HALS algorithm converges the fastest and reaches the lowest reconstruction error after $1000$ iterations, while the ALS algorithm performs the worst, this is a known result in the case of dense matrices, see \cite{gillis2020nonnegative} section 8.4.3.
+\par
+We apply the same procedure to the Olivetti faces dataset\footnote{{\url{https://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html}}}, which contains $400$ gray-scale images of faces with a resolution of $64 \times 64$ pixels, for a total of $400 \times 64 \times 64 = 1638400$ elements.
+The reconstruction rank is set t $r = 30$ producing two matrices $W \in \R^{4096 \times 30}$ and $H \in \R^{30 \times 400}$.
+The plot of the reconstruction error is very similar to the one obtained with the CBCL dataset and it is included in the appendix \ref{fig:Olivetti dataset}.
 \section{Sparse matrices}
+
+In this section we use the sparse matrix $V_{sparse}$ generated as described in the beginning of this chapter, with a sparsity of $99\%$.
+We fit a NMF model with reconstruction rank $r = 30$ using the MU algorithm \ref{MU for Frobenius}, HALS \ref{HALS}, ALS \ref{ALS}, and PGD \ref{Projected Gradient} for $1000$ iterations.
+The results are shown in figure \ref{fig:Sparse uniform data random init}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{Imgs/Chapter 5/Sparse_Uniform_1000_randm_init.png}
+    \caption{Average reconstruction error for different algorithms averaged over 10 random initializations for a sparse matrix.}
+    \label{fig:Sparse uniform data random init}
+\end{figure}
+
+In this case, we observe that the HALS algorithm converges the fastest and reaches the lowest reconstruction error after $1000$ iterations, 
+Comparing this plot with the one obtained in the dense matrix case \ref{fig:Random init comparison}, we can see that MU converges much faster in this case, moreover the ALS algorithm performs much better than in the dense case,
+and converges faster than PGD and MU, the average relative reconstruction error after $1000$ iteration is approximately the same for ALS, PGD and MU, and it is lower for the HALS algorithm.

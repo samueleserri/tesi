@@ -638,5 +638,10 @@ and with respect to \( W \) is given by:
 The cost of computing the gradient with respect to \( H \) is $O(mnr)$ and the cost of computing the gradient with respect to \( W \) is also $O(mnr)$.
 \section*{}
 During the last decades, many algorithm have been proposed to solve the NMF problem, in this chapter we derived and presented the most important ones.
-There are different variant of the algorithm presented here, notably some algorithm can be accelerated.
-\cite{gillis2012accelerated}.
+There are different variant of the algorithm presented here, notably some algorithm can be accelerated, \cite{gillis2012accelerated}.
+Furthermore, all the algorithms presented here are part of a class of algorithms called first-order methods, that is, they only use the first order information of the objective function, however there are also second-order methods that use the second order information of the objective function,in the context of NMF, first-order methods are the most popular ones
+however some second-order methods have been proposed in the literature, see \cite{huang2019low} and \cite{fu2020computing} for a more general survey.
+Finally, one can observe that all the algorithms presented here compute the gradient of the objective function exactly at each iteration, 
+however one can wonder what happens if we decide to compute the gradient approximately, by just using a subset of the data, this leads to the class of stochastic algorithms for NMF, that are particularly useful when the data matrix \( V \) is very large.
+One obvious fact is that the computational cost at each iteration will be reduced, in particular suppose that we want to compute the gradient of the objective function with respect to $H$, then we consider the objective function with a subset $I$ of the columns of \( V \) and \( W \):
+$\|V[:,I] - W H[:,I]\|_F^2$ then the cost of computing the gradient will be $O(|I|nr)$ instead of $O(mnr)$, usually with $|I| \ll m$.
