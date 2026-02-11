@@ -1,23 +1,23 @@
 \chapter{Background}
-The aim of this chapter is to introduce the mathematical background and notation necessary for understanding the Non-negative Matrix Factorization (NMF) problem, and for deriving the algorithms to tackle it in a 
+The aim of this chapter is to introduce the mathematical background and notation necessary for understanding the Non-negative Matrix Factorization (NMF) problem, and for deriving the algorithms to tackle it, in a 
 way such that the content is self-contained, and all the concepts used in the subsequent chapters are properly defined.
 \par
-In particular this chapter is organized as follows: first in section \ref{Linear algebra and matrix decomposition section} the basic concepts of linear algebra are introduced, specifically the problem of matrix decomposition is presented together with the most known decomposition technique: the Singular Value Decomposition (SVD). This last result will be
+In particular this chapter is organized as follows: first in section \ref{Linear algebra and matrix decomposition section} the basic concepts of linear algebra are introduced, together with the most known decomposition technique: the Singular Value Decomposition (SVD). This last result will be
 used when discussing some technique for the initialization of the factors in NMF algorithms in chapter \ref{ALGO CHAPTER}.
-Then in section \ref{optimization section} the taxonomy of optimization problems is presented along with some important results regarding the Least Squares problem \ref{least squares} and the Gradient Descent algorithm \ref{Gradient descent section}.
+Then in section \ref{optimization section} the taxonomy of optimization problems is presented along with some important results regarding the Least Squares problem \ref{least squares} and the Gradient Descent algorithm \ref{Gradient descent section} along with the convergence result in the case of a general smooth function.
 \par
 Clearly this chapter is not mean to be an exhaustive introduction to linear algebra and optimization, and it is assumed that the reader is already familiar with most of the concepts presented here, therefore only those results that are essential are included. 
-Finally the point of view adopted here is mainly computational and from a data analysis perspective.
+One last disclaimer is that the point of view adopted here is mainly computational and from a data analysis perspective.
 \par
 The main reference for organizing this chapter have been the book by S. Wright and B. Recht \cite{wright2022optimization},
 and the book by A. Quarteroni, R. Sacco, F. Saleri, and P. Gervasio \cite{quarteroni2010matematica}. We refer to those books for proofs and more detailed explanations on the topics presented here.
-\section{Linear Algebra and Matrix decomposition}\label{Linear algebra and matrix decomposition section}
+\section{Linear Algebra and Singular Value Decomposition}\label{Linear algebra and matrix decomposition section}
 This section briefly introduces the fundamentals of linear algebra from scratch;
-in section \ref{matrix decomposition section} the problem of matrix decomposition is introduced from a general perspective and the Singular Value Decomposition (SVD) is presented, it is shown how the SVD can be equivalently expressed as a sum of rank-one matrices and the Eckart-Young theorem \ref{Eckart-Young Theorem} is stated.
+in section \ref{matrix decomposition section} the problem of matrix decomposition is introduced from a general perspective and the Singular Value Decomposition (SVD) is presented, it is shown how the SVD can be equivalently expressed as a sum of rank-one matrices and the Eckart-Young theorem \ref{Eckart-Young Theorem} is stated, which is important for the theory of Low-Rank Approximations.
 \subsection{Basics of Linear Algebra}
 \begin{definition}[Matrix]
     Given two numbers $m,n \in N$, a matrix $A \in \R^{m \times n}$ is a rectangular array of real numbers with $m$ rows and $n$ columns.
-\end{definition}
+
 \begin{equation*}
     A = \begin{bmatrix}
     a_{11} & a_{12} & \cdots & a_{1n} \\
@@ -26,6 +26,11 @@ in section \ref{matrix decomposition section} the problem of matrix decompositio
     a_{m1} & a_{m2} & \cdots & a_{mn}
     \end{bmatrix}
 \end{equation*}
+\end{definition}
+We denote by $A[i,j]$ the entry of the matrix $A$ in the $i$-th row and $j$-th column, that is $A[i,j] = a_{ij}$.
+\begin{definition}[Rank of a matrix]
+    The rank of a matrix $A \in \R^{m \times n}$, denoted by $rank(A)$, is the maximum number of linearly independent columns of $A$.
+\end{definition}
 \begin{definition}[Transpose of a matrix]
     Given a matrix $A \in \R^{m \times n}$, the transpose of $A$, denoted by $A^\top$, is the matrix obtained by swapping the rows and columns of $A$.
     That is, the matrix $A^\top$ is a matrix such that $A[i,j] = A^\top[j,i]$ for all $1 \leq i \leq m$ and $1 \leq j \leq n$.
@@ -33,12 +38,9 @@ in section \ref{matrix decomposition section} the problem of matrix decompositio
 \begin{observation}
     The transpose of a matrix $A \in \R^{m \times n}$ is a matrix $A^\top \in \R^{n \times m}$.
 \end{observation}
-\begin{definition}[Product of matrices]
-    Given two matrices $A \in \R^{m \times n}$ and $B \in \R^{n \times p}$, the product of $A$ and $B$, denoted by $AB$, is the matrix $C \in \R^{m \times p}$ such that:
-    \begin{equation*}
-    C[i,j] = \sum_{k=1}^{n} A[i,k] B[k,j]
-    \end{equation*}
-    for all $1 \leq i \leq m$ and $1 \leq j \leq p$.
+\begin{definition}[Inverse of a matrix]
+    Given a square matrix $A \in \R^{n \times n}$, the inverse of $A$, denoted by $A^{-1}$, is the matrix such that $AA^{-1} = A^{-1}A = I_n$, where $I_n$ is the identity matrix of size $n$.
+    A matrix is invertible if and only if it is square and has full rank.   
 \end{definition}
 \begin{definition}[Column vector]
     A column vector $x \in \R^m$ is a matrix with $m$ rows and 1 column. (i.e. $x \in \R^{m \times 1}$)
@@ -112,9 +114,19 @@ in section \ref{matrix decomposition section} the problem of matrix decompositio
     \| A \|_\infty = \max_{1 \leq i \leq m} \sum_{j=1}^{n} |a_{ij}|
     \end{equation}
 \end{example}
-\subsection{Matrix decomposition} \label{matrix decomposition section}
-TODO.
-\subsubsection{Singular Value Decomposition (SVD)}
+% \subsubsection{Eigenvalues and eigenvectors}
+% \begin{definition}[Eigenvalues and eigenvectors]
+%     Given a square matrix $A \in \R^{n \times n}$, a scalar $\lambda \in \R$ is called an eigenvalue of $A$ if there exists a non-zero vector $x \in \R^n$ such that:
+%     \begin{equation}
+%         Ax = \lambda x
+%     \end{equation}
+%     In this case, the vector $x$ is called an eigenvector of $A$ corresponding to the eigenvalue $\lambda$.    
+% \end{definition}
+\subsection{Singular Value Decomposition (SVD)}\label{matrix decomposition section}
+In linear algebra, with matrix decomposition we refer to the problem of expressing a given matrix as a product of two or more matrices.
+The problem of matrix decomposition is widely studied in linear algebra and it is a fundamental tool for many applications.
+In this section we present the Singular Value Decomposition (SVD), that is one of the most known and widely used matrix decomposition techniques.
+\par
 The Singular Value decomposition (SVD) of a matrix $A \in \R^{m \times n}$ takes the form:
 \begin{equation}
     A = U \Sigma V^\top = 
@@ -132,13 +144,12 @@ where \begin{itemize}
     \item $\Sigma \in \R^{m \times n}$ is a diagonal matrix whose diagonal entries are the singular values of $A$, arranged in descending order.
     \item $V \in \R^{n \times n}$ is the orthogonal matrix that diagonalizes $AA^\top$. The columns of $V$ are called the right singular vectors of $A$.
 \end{itemize}
-\begin{observation}
-    We can equivalently write the SVD as a sum of rank-one matrices:
+\par
+An SVD can be equivalently expressed as a sum of rank-one matrices:
     \begin{equation}
         A = \sum_{i=1}^{r} \sigma_i u_i v_i^\top
     \end{equation}
     where $r$ is the rank of $A$, $\sigma_i$ are the singular values, and $u_i$ and $v_i$ are the corresponding left and right singular vectors.
-\end{observation}
 We have the following important theorem regarding the SVD:
 \begin{theorem}[\cite{schmidt1907theorie} Eckart-Young Theorem] \label{Eckart-Young Theorem}
     Let $A \in \R^{m \times n}$ be a matrix with singular value decomposition $A = U \Sigma V^\top$. For any integer $k$ such that $1 \leq k \leq rank(A)$, the best rank-$k$ approximation of $A$ in terms of the Frobenius norm is given by:
@@ -146,8 +157,8 @@ We have the following important theorem regarding the SVD:
         A_k = \sum_{i=1}^{k} \sigma_i u_i v_i^\top
     \end{equation}
 \end{theorem}
-
-\section{Optimization} \label{optimization section}
+This means that the rank-$k$ matrix $A_k$ obtained by keeping only the top $k$ singular values and their corresponding singular vectors is the closest matrix to $A$ in terms of the Frobenius norm among all matrices of rank at most $k$.
+\section{Mathematical Optimization} \label{optimization section}
 In this section the taxonomy of optimization problems is introduced: we give the definition of an optimization problem in its general form \ref{optimization problem definition}, and the definitions of global \ref{global optimum definition} and local \ref{local optimum definition} optima; then the 
 Least Squares problem is presented \ref{least squares} along with its closed-form solution \ref{normal equations}, this result will be useful in designing some of the algorithms presented in chapter \ref{ALGO CHAPTER}.
 Finally, the gradient descent algorithm \ref{Gradient descent section} is introduced along with a convergence result for general smooth functions \ref{GD convergence theorem}.
@@ -186,7 +197,7 @@ Finally, the gradient descent algorithm \ref{Gradient descent section} is introd
 \begin{theorem}[solution of the linear least squares problem] \label{normal equations}
     The solution of the linear least squares problem $\min_{x \in \R^n} \| Ax - b \|_2^2$ is given by:
     \begin{equation}
-        x^* = (A^\top A)^{-1} A^\top b = A^\dagger A^\top b
+        x^* = (A^\top A)^{-1} A^\top b
     \end{equation}
     provided that $A^\top A$ is invertible.
     This solution is also known as the normal equations solution.
@@ -251,7 +262,7 @@ We have the following convergence result for gradient descent:
     \end{equation*}
     where $\bar{x}$ is a stationary point of $f$, i.e., $\nabla f(\bar{x}) = 0$.
 \end{theorem}
-\subsection{Low Rank Matrix Approximation}
+\subsection{Low Rank Matrix Approximation} \label{LRMA section}
 An important optimization problem that is relevant for this thesis, and that often arise in the context of data analysis and data compression, is the problem of low rank matrix approximation, that is the problem of approximating a given matrix $A \in \R^{m \times n}$ of rank $r$ with a matrix of lower rank.
 In particular this is an optimization problem \ref{optimization problem definition} where the objective function is a matrix norm and the feasible set is the set of matrices with rank less than or equal to a given integer $k < r$.
 \begin{definition}[Low rank matrix approximation]
