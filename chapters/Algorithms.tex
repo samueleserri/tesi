@@ -147,6 +147,7 @@ The algorithm can be summarized as follows:
         \State \Return \( W^{(0)}, H^{(0)} \)
     \end{algorithmic}
 \end{algorithm}
+See chapter \ref{Experiments chapter} section \ref{init comparison section} for a comparison between random and NNDSVD initializations with the HALS algorithm.
 \section{Multiplicative Updates (MU)} \label{MU derivation section}
 The multiplicative updates (MU) were first introduced by Lee and Seung in \cite{Lee1999}. They are one of the most popular algorithms for NMF.
 In this section we will derive the MU algorithm for two different cost functions: the Frobenius norm and the Kullback-Leibler divergence.
@@ -636,8 +637,10 @@ and with respect to \( W \) is given by:
     \nabla_W D_{\beta}(V, WH) = \left( (WH)^{\beta - 1} - V \circ (WH)^{\beta - 2} \right) H^\top
 \end{equation}
 The cost of computing the gradient with respect to \( H \) is $O(mnr)$ and the cost of computing the gradient with respect to \( W \) is also $O(mnr)$.
-\section*{}
-During the last decades, many algorithm have been proposed to solve the NMF problem, in this chapter we derived and presented the most important ones.
+\section{Summary and extensions}
+During the last decades, many algorithm have been proposed to solve the NMF problem, 
+in this chapter we derived and presented the general framework for designing NMF algorithms \ref{2-BCD},
+and derived the most important ones, namely the multiplicative updates with beta divergence \ref{MU for beta}, which includes the MU for the Frobenius norm and the Kullback-Leibler divergence as special cases for $\beta = 2$ and $\beta = 1$ respectively, the alternating non-negative least squares method \ref{ANLS}, the alternating least squares method \ref{ALS}, the projected gradient descent method \ref{Projected Gradient}, and the hierarchical alternating least squares method \ref{HALS}.
 There are different variant of the algorithm presented here, notably some algorithm can be accelerated, \cite{gillis2012accelerated}.
 Furthermore, all the algorithms presented here are part of a class of algorithms called first-order methods, that is, they only use the first order information of the objective function, however there are also second-order methods that use the second order information of the objective function,in the context of NMF, first-order methods are the most popular ones
 however some second-order methods have been proposed in the literature, see \cite{huang2019low} and \cite{fu2020computing} for a more general survey.
