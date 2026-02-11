@@ -15,8 +15,9 @@ the second approach is to first solve the sub-problems without the non-negativit
 \section{Two blocks coordinate descent (2-BCD)} \label{2-BCD general framework}
 The most common setting for NMF is the so called two-blocks coordinate descent, in this setting the factors \( W \) and \( H \) are updated alternately, fixing one while updating the other.
 
-\begin{algorithm}[ht]\label{2-BCD}
+\begin{algorithm}[ht]
     \caption{Two-blocks coordinate descent for NMF}
+    \label{2-BCD}
     \begin{algorithmic}[1]
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
@@ -39,8 +40,9 @@ Overall this approach is much easier to handle than trying to update both factor
 \subsection{Exact 2-BCD}
 If the subproblems of \ref{2-BCD} are solved exactly at each iteration, the method is called exact 2-BCD. 
 And takes the following form:
-\begin{algorithm}[ht]\label{Exact 2-BCD}
+\begin{algorithm}[ht] 
     \caption{Exact two-blocks coordinate descent for NMF}
+    \label{Exact 2-BCD}
     \begin{algorithmic}[1]
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
@@ -92,7 +94,7 @@ Another effective stopping criterion is to check the norm of the difference betw
 Again a small value for $tol$, for instance $10^{-4}$, and $T = 10$ are reasonable choices in practice.
 \par
 The complete algorithm with the stopping criterion \ref{stopping criterion I} is summarized in the following pseudo-code:
-\begin{algorithm}[ht]\label{2-BCD}
+\begin{algorithm}[ht]
     \caption{Two-blocks coordinate descent for NMF with stopping criteria \ref{stopping criterion I}}
     \begin{algorithmic}[1]
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \), tolerance \( tol \), lag \( T \), maximum iterations \( \text{max\_iter} \)
@@ -218,8 +220,9 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     \boxed{H^{(k+1)} = H^{(k)} \circ \frac{W^\top V}{W^\top W H^{(k)}}}
 \end{equation}
 \par The complete MU algorithm is summarized in the following algorithm:
-\begin{algorithm}[ht]\label{MU for Frobenius}
+\begin{algorithm}[ht] 
     \caption{Multiplicative Updates for NMF with the Frobenius norm}
+    \label{MU for Frobenius}
     \begin{algorithmic}[1]
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
@@ -314,8 +317,9 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
     \boxed{H^{(k+1)} = H^{(k)} \circ \frac{W^{(k) \top} \frac{V}{W^{(k)} H^{(k)}}}{W^{(k) \top} \textbf{1}}}
 \end{equation}
 \par The complete MU algorithm is summarized in the following algorithm:
-\begin{algorithm}[ht]\label{MU for KL}
+\begin{algorithm}[ht]
     \caption{Multiplicative Updates for NMF with the Kullback-Leibler divergence}
+    \label{MU for KL}
     \begin{algorithmic}[1]
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
@@ -350,8 +354,9 @@ and
     H^{(k + 1)} = \arg\min_{H \geq 0} \|V - W^{(k)}H\|_F^2
 \end{equation}
 The algorithm can be summarized as follows:
-\begin{algorithm}[ht]\label{ANLS}
+\begin{algorithm}[ht]
     \caption{Alternating Non-Negative Least Squares for NMF}
+    \label{ANLS}
     \begin{algorithmic}[1]
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
@@ -379,8 +384,9 @@ This is very easy to implement since most programming languages have built-in fu
 In python, that is the language used in the repository associated with this thesis, the method \textit {`numpy.linalg.lstsq'    } is used to solve least squares problems.
 \par
 The ALS algorithm can be summarized as follows:
-\begin{algorithm}[ht]\label{ALS}
+\begin{algorithm}[ht]
     \caption{Alternating Least Squares for NMF}
+    \label{ALS}
     \begin{algorithmic}[1]
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \
 in \mathbb{R}_+^{r \times n} \)
@@ -422,8 +428,9 @@ and
     W \leftarrow \max\left(0, W - \frac{1}{\|H\|_2^2} \nabla_W \frac{1}{2   } \|V - WH\|_F^2 \right)
 \end{equation}
 The complete projected gradient descent algorithm is summarized in the following algorithm:
-\begin{algorithm}[ht]\label{Projected Gradient}
+\begin{algorithm}[ht]
     \caption{Projected Gradient Descent for NMF}
+    \label{Projected Gradient}
     \begin{algorithmic}[1] 
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
@@ -514,8 +521,9 @@ Similarly, for updating the column $W[:,\ell]$ we obtain:
 Where now $\tilde{R}_{\ell} = V - \sum_{k\not=\ell}W[:,k]H[k,:]$ is the residual matrix with respect to the rank one matrix $W[:,\ell]H[\ell,:]$.
 \par
 The complete HALS algorithm is summarized in the following algorithm:
-\begin{algorithm}[ht]\label{HALS}
+\begin{algorithm}[ht]
     \caption{Hierarchical Alternating Least Squares for NMF}
+    \label{HALS}
     \begin{algorithmic}[1]
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
@@ -581,8 +589,9 @@ and
 \end{equation}
 \par
 The complete MU algorithm is summarized in the following algorithm:
-\begin{algorithm}[ht]\label{MU for beta}
+\begin{algorithm}[ht]
     \caption{Multiplicative Updates for NMF with the beta divergence}
+    \label{MU for beta}
     \begin{algorithmic}[1]
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \), parameter \( \beta \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
