@@ -1,2 +1,276 @@
+\lstdefinestyle{terminal}{
+  backgroundcolor=\color{black},
+  basicstyle=\ttfamily\color{white}\small,
+  keywordstyle=\color{white},
+  commentstyle=\color{white},
+  stringstyle=\color{white},
+  showstringspaces=false,
+  numbers=none,
+  frame=single,
+  rulecolor=\color{black},
+  xleftmargin=0pt,
+  xrightmargin=0pt,
+  breaklines=true,
+  columns=fullflexible
+}
+
+
+
 \chapter{Code Documentation}\label{code documentation appendix}
 % The documentation of the code used in this thesis is provided in this appendix. It includes explanations of the main classes and functions implemented, as well as instructions on how to use the code for reproducing the experiments discussed in the main chapters.   
+In this chapter the documentation of the code associated with this thesis is provided, in section \ref{Repo structure section} an overview of the repository content is given, and in section \ref{nmf package section} the main package of the repo is described in details.
+Thi chapter concludes showing some examples on how the code can be used.
+
+\par
+The code is hosted on GitHub at the following link:
+\begin{center}
+    \fbox{\url{https://github.com/samueleserri/NMF.git}}
+\end{center}
+\section{Getting Started}
+To get started, clone the repository and navigate to the project directory:
+\begin{lstlisting}
+git clone https://github.com/samueleserri/NMF.git 
+cd NMF
+\end{lstlisting}    
+or download the ZIP file and extract it.
+Then, navigate to the project directory:
+\begin{lstlisting}
+cd NMF
+\end{lstlisting}
+\subsection{Install in a virtual environment}
+It is recommended to install this package in a virtual environment to avoid conflicts with other packages. To do this, create a virtual environment using \texttt{venv} \footnote{To read more about python virtual environments visit \url{https://docs.python.org/3/library/venv.html}}; open your terminal and (inside the \texttt{NMF} directory) run:
+\begin{lstlisting}
+python -m venv venv
+\end{lstlisting}
+Then activate your virtual environment:
+\begin{lstlisting}
+source venv/bin/activate  # On macOS/Linux
+\end{lstlisting}
+Finally, inside the virtual environment, install the package in editable mode using pip:
+\begin{lstlisting}
+pip install -e .
+\end{lstlisting}
+This will install all required dependencies as well; this command uses the toml file.
+To verify the installation, you can run:
+\begin{lstlisting}
+pip list
+\end{lstlisting}
+to see the installed packages. You should a package named \texttt{NMF} and its dependencies.
+
+\section{Repository Structure}\label{Repo structure section}
+
+%* begin repo structure
+\fbox{%
+  \begin{minipage}{\linewidth\fboxsep\fboxrule}
+\textbf{NMF/}
+    \begin{itemize}
+      \item \texttt{src/}
+        \begin{itemize}
+          \item \texttt{nmf/}
+            \begin{itemize}
+              \item {\_\_init\_\_.py}
+              \item \texttt{NMF.py} \hfill -- base NMF class
+              \item \texttt{RegularizedNMF.py} \hfill -- NMF subclass with regularization
+              \item \texttt{SparseNMF.py}  \hfill -- NMF subclass for sparse NMF models
+              \item \texttt{NonNegMatrix.py} \hfill -- non-negative \texttt{numpy.ndarray}
+            \end{itemize}
+          \item \texttt{utils/}
+            \begin{itemize}
+              \item {\_\_init\_\_.py}
+              \item \texttt{beta\_divergence.py} \hfill -- compute beta-divergence
+              \item \texttt{display.py} \hfill -- helper to display images
+              \item \texttt{measure\_sparsity.py} \hfill -- measure matrix sparsity
+            \end{itemize}
+          \item \texttt{examples/}
+            \begin{itemize}
+              \item \texttt{minimal\_examples/}
+                \begin{itemize}
+                  \item \texttt{minimal\_example.py} % \hfill -- basic usage of \texttt{NMF}
+                  \item \texttt{example\_regularizer.py} % \hfill -- use \texttt{RegularizedNMF} with a custom regulariser
+                \end{itemize}    
+                  \item \texttt{example\_feature\_extraction.py} % \hfill -- feature extraction from the CBCL dataset
+                  \item \texttt{example\_feature\_extraction\_olivetti\_dataset.py} % \hfill -- feature extraction from the Olivetti dataset
+                  \item \texttt{example\_topics\_extraction.py} % \hfill -- topic extraction from the 20‑newsgroups dataset
+                  \item \texttt{example\_top\_30.py} % \hfill -- topic modelling with the top‑30 news dataset
+            \end{itemize}
+        \end{itemize}
+      \item \texttt{data/}
+        \begin{itemize}
+          \item \texttt{CBCL.csv} \hfill -- face dataset used by \cite{Lee1999}
+          \item \texttt{Swimmer.csv} \hfill -- 220 $\times$ 256-pixel swimmer images
+          \item \texttt{tdt2\_top30.mat} \hfill -- top-30 news dataset for topic modelling
+        \end{itemize}
+      \item \texttt{tests/}
+        \begin{itemize}
+          \item \texttt{beta\_divergence\_plot.py} \hfill -- script to plot the beta-divergence
+        \end{itemize}
+      \item \texttt{README.md}
+    \end{itemize}
+  \end{minipage}%
+}
+%* END REPO STRUCTURE
+
+\subsection{The nmf package} \label{nmf package section}
+The \texttt{nmf} package contains the main modules with the implementation of the NMF algorithms.
+\subsubsection{NMF.py}
+The \texttt{NMF.py} module contains the base class for Non-negative Matrix Factorization. This class provides methods for fitting the model to data and plotting the results.
+\par
+Attributes:
+\begin{itemize}
+    \item \texttt{V}: input non-negative data matrix.
+    \item \texttt{rank}: desired rank for the factorization.
+    \item \texttt{max\_iter}: maximum number of iterations for the fitting process. (default: 1000).
+    \item \texttt{tol}: tolerance used in the stopping criterion. (default: 1e-4).
+    \item \texttt{T}: lag used in the stopping criterion. (default: 10).
+    \item \texttt{column\_stochastic}: if True, normalizes the columns of the input matrix to sum to 1. (default: False).
+    \item \texttt{init}: Initialization method for factor matrices W and H. Supported values:
+        \begin{itemize}
+        \item "random": random initialization with uniform distribution in $[0,1)$.
+        \item "nndsvd": Non-negative Double Singular Value Decomposition initialization.
+        \item "custom": User will set W and H manually.
+    \end{itemize} (default random)
+    \item \texttt{W0}: Initial matrix for W if init = "custom". (default: None)
+    \item \texttt{H0}: Initial matrix for H if init = "custom". (default: None)
+\end{itemize}
+Public Methods:
+\begin{itemize}
+    \item \texttt{fit(self, solver: "str", beta: Optional[float] = None)}: fits the NMF model to the input data using the specified solver.
+    \item \texttt{plot\_errors()}: plots the normalized reconstruction error on a logarithmic y-scale against iterations.
+    \item \texttt{reconstruct()}: reconstructs the input matrix from the factorized matrices.
+    \item \texttt{get\_factors()}: getter for the factors matrices W and H.
+    \item \texttt{get\_final\_error()}: returns the final normalized reconstruction error.
+\end{itemize}
+The available solvers are:
+\begin{itemize}
+    \item \texttt{"MU"}: Multiplicative Updates with Frobenius norm.
+    \item \texttt{"HALS"}: Hierarchical Alternating Least Squares.
+    \item \texttt{"ALS"}: Alternating Least Squares.
+    \item \texttt{"PGD"}: Projected Gradient Descent.
+    \item \texttt{"beta\_MU"}: Beta-divergence Multiplicative Updates (requires beta parameter).
+\end{itemize}
+The solvers are implemented as private methods within the class (double underscore prefix).
+\subsubsection{RegularizedNMF}
+The \texttt{RegularizedNMF.py} module contains a subclass of the NMF class that allows for regularization in the cost function. This class extends the base NMF class and adds support for $\ell_1$ and $\ell_2$ regularization on the factor matrices $W$ and $H$.
+Moreover, it allows for the definition of custom regularizers by the user, which can be added to the cost function and optimized during the fitting process.
+\par
+Attributes:
+\begin{itemize}
+    \item \texttt{alpha\_W}: regularization parameter for matrix W.
+    \item \texttt{alpha\_H}: regularization parameter for matrix H.
+    \item \texttt{regularizer}: a string that specifies the type of regularization to apply. Supported values:
+    \begin{itemize}   
+        \item "ell\_1": applies $\ell_1$ regularization to both W and H.
+        \item "ell\_2": applies $\ell_2$ regularization to both W and H.
+        \item "custom": allows the user to define a custom regularizer function.
+    \end{itemize}
+    \item \texttt{custom\_regularizer}: a user-defined function that takes W and H as input and returns a scalar value representing the regularization term to be added to the cost function. This is used only if regularizer is set to "custom".
+\end{itemize}
+\subsubsection{SparseNMF}
+The \texttt{SparseNMF.py} module contains a subclass of the NMF class that handles sparse matrices with the \texttt{scipy.sparse\_array}\footnote{This is the latest release \url{https://docs.scipy.org/doc/scipy/reference/sparse.html} fully compatible with NumPy arrays, 
+the older release was did not have full compatibility, for more information visit \url{https://docs.scipy.org/doc/scipy/reference/sparse.migration_to_sparray.html migration-to-sparray}} interface.
+\section{Examples Usage}
+\subsection{Basic Usage Example}
+First import the NMF class from the nmf package:
+\begin{lstlisting}
+from nmf import NMF
+import numpy as np
+\end{lstlisting}
+Then create a non-negative data matrix, in this example we generate a random matrix sampled from a uniform distribution:
+\begin{lstlisting}
+V = np.random.rand(100, 20) @ np.random.rand(20, 100)
+\end{lstlisting}
+Then instantiate the NMF class with the data matrix and desired rank, in this case we set rank=20 because we constructed V as the product of two matrices of rank at most 20:
+\begin{lstlisting}
+model = NMF(V, rank=20, max_iter=10000, tol=1e-4, T=10)
+\end{lstlisting}
+To fit the model we simply call the fit method with the desired solver, in this case we use the Multiplicative Updates (MU) algorithm and the Kullback-Leibler divergence (beta=1):
+\begin{lstlisting}
+model.fit(solver="beta_MU", beta=1)
+print(f"Final error: {model.get_final_error()}")
+\end{lstlisting}
+You should see the output:
+\begin{lstlisting}[style=terminal]
+Fitting with beta_MU algorithm
+value of beta: 1
+Fit completed in 3.8579 s, iterations: 10000, avg time/iter: 3.8579e-04 s
+Max iter reached: you may try to increase the value
+Final error: 1.33448729119308e-05
+\end{lstlisting}
+Suppose now that you want to add a regularization term to the Frobenius norm, for instance the $\ell_1$ norm of the factors, then you objective become:
+\begin{equation*}
+  D(V, WH) = \|V - WH\|_F^2 + \alpha_W \|W\|_1 + \alpha_H \|H\|_1
+\end{equation*}
+Fitting this model is straightforward: we instantiate a new model from \texttt{RegularizedNMF} specifying the values for $\alpha_W$ and $\alpha_H$, with the desired regularizer, in this case we pass the string \texttt{"ell\_1"} for saying that we want to use the $\ell_1$ norm of the factors as regularization term.
+\begin{lstlisting}
+reg_model = RegularizedNMF(V, 20, max_iter=1000, alpha_W=0.01, alpha_H=0.01, regularizer="ell_1")  
+\end{lstlisting}
+Similarly to the previous example, it is sufficient to just call the \texttt{fit} method:
+\begin{lstlisting}
+reg_model.fit(solver="beta_MU", beta = 2)
+\end{lstlisting}
+the factors can be retrieved by calling:
+\begin{lstlisting}
+factors = reg_model.get_factors()
+\end{lstlisting}
+\par
+this return a dictionary where to the key ``W'' corresponds the matrix $W$ and to the key ``H'' corresponds the matrix $H$.
+\subsection{Two More Sophisticated Examples} 
+\subsubsection{Learning part of faces from the CBCL dataset}
+We talk again about the example presented in \ref{Example feature extraction NMF}; recall that this example was originally presented in the seminal paper on NMF by Lee and Seung \cite{Lee1999}. 
+Here we reproduce the results using our implementation of NMF with the MU algorithm and the Kullback-Leibler divergence.
+\par
+First, we need to import the necessary modules: \texttt{pandas}\footnote{\url{https://pandas.pydata.org/docs/}} here is used to read the dataset that is provided as a CSV file in the \texttt{data} folder, the resulting matrix is then converted to a \texttt{np.ndarray};
+the function \texttt{display} from the \texttt{utils} package is an helper function and it is used only to visualize the images.
+\begin{lstlisting}
+import numpy as np
+import pandas as pd
+from nmf import NonNegMatrix, NMF
+from utils import display
+\end{lstlisting}
+First, we need to load the dataset; to do so we define the following function:
+\begin{lstlisting}
+def load_dataset(path: str = "data/CBCL.csv") -> NonNegMatrix:
+    """
+    Load the CBCL face dataset from csv file and return it as NonNegMatrix
+    return: NonNegMatrix of shape (361, 2429)
+    361 = 19 x 19 pixels
+    2429 = number of images
+    -------------------
+    dataset path: data/CBCL.csv
+    -------------------
+    """
+    return  NonNegMatrix(pd.read_csv(path, header=None).to_numpy())  
+\end{lstlisting}
+Next, we define a function that: \begin{enumerate}
+    \item loads the dataset using the function defined above;
+    \item optionally displays the original images;
+    \item instantiates and fits the NMF model using the specified solver and rank.
+\end{enumerate}
+\begin{lstlisting}
+def fit_model(rank:int, show: bool = False, solver: str = "beta_MU", beta: float = 1) -> NMF:
+    """
+    param rank: factorization rank
+    param show: shows the original images before fitting the model if true
+    param solver: NMF solver to use (in the original paper MU is used)
+    return: fitted NMF model
+    """ 
+    V = load_dataset()    
+    if show: # original images displayed if True
+        display(V[:, :rank], perrow=7, height=19, width=19)
+    # instantiate and fit model
+    model = NMF(V, rank)
+    model.fit(solver, beta)
+    return model    
+\end{lstlisting}
+Finally, by calling the function just defined, we can fit the model. The rank used in the original paper \cite{Lee1999} is 49, so we set it accordingly:
+\begin{lstlisting}
+reconstruction_rank = 49
+fitted_model = fit_model(reconstruction_rank, solver="beta_MU")
+\end{lstlisting}
+The $49$ columns of $W$ can be reshaped into $19 \times 19$ images and displayed, to do so we can use the \texttt{display} function again with the same parameters, but this time on the matrix W obtained from the fitted model:
+\begin{lstlisting}
+display(fitted_model.W[:,:reconstruction_rank], perrow=7, height=19, width=19)
+\end{lstlisting}
+The output shows the learned parts of faces as in Figure \ref{fig:CBCL columns of W}
+\subsubsection{Topic modeling }
+TODO
