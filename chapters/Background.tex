@@ -1,10 +1,10 @@
 \chapter{Background}
-The aim of this chapter is to introduce the mathematical background and notation necessary for understanding the Non-negative Matrix Factorization (NMF) problem, and for deriving the algorithms to tackle it, in a 
+The aim of this chapter is to introduce the mathematical background and notation necessary for understanding the Non-negative Matrix Factorization (NMF) problem, and for deriving the algorithms to undertake it, in a 
 way such that the content is self-contained, and all the concepts used in the subsequent chapters are properly defined.
 \par
 In particular this chapter is organized as follows: first in section \ref{Linear algebra and matrix decomposition section} the basic concepts of linear algebra are introduced, together with the most known decomposition technique: the Singular Value Decomposition (SVD). This last result will be
 used when discussing some technique for the initialization of the factors in NMF algorithms in chapter \ref{ALGO CHAPTER}.
-Then in section \ref{optimization section} the taxonomy of optimization problems is presented along with some important results regarding the Least Squares problem \ref{least squares} and the Gradient Descent algorithm \ref{Gradient descent section} along with the convergence result in the case of a general smooth function.
+Then in section \ref{optimization section} the taxonomy of optimization problems is presented along with some important results regarding the Least Squares problem and the Gradient Descent algorithm along with the convergence result in the case of a general smooth function.
 \par
 Clearly this chapter is not mean to be an exhaustive introduction to linear algebra and optimization, and it is assumed that the reader is already familiar with most of the concepts presented here, therefore only those results that are essential are included. 
 One last disclaimer is that the point of view adopted here is mainly computational and from a data analysis perspective.
@@ -12,8 +12,8 @@ One last disclaimer is that the point of view adopted here is mainly computation
 The main reference for organizing this chapter have been the book by S. Wright and B. Recht \cite{wright2022optimization},
 and the book by A. Quarteroni, R. Sacco, F. Saleri, and P. Gervasio \cite{quarteroni2010matematica}. We refer to those books for proofs and more detailed explanations on the topics presented here.
 \section{Linear Algebra and Singular Value Decomposition}\label{Linear algebra and matrix decomposition section}
-This section briefly introduces the fundamentals of linear algebra from scratch;
-in section \ref{matrix decomposition section} the problem of matrix decomposition is introduced from a general perspective and the Singular Value Decomposition (SVD) is presented, it is shown how the SVD can be equivalently expressed as a sum of rank-one matrices and the Eckart-Young theorem \ref{Eckart-Young Theorem} is stated, which is important for the theory of Low-Rank Approximations.
+This section briefly introduces the fundamentals notions of linear algebra relevant to this thesis;
+in subsection \ref{matrix decomposition section} the problem of matrix decomposition is introduced from a general perspective and the Singular Value Decomposition (SVD) is presented, it is shown how the SVD can be equivalently expressed as a sum of rank-one matrices and the Eckart-Young theorem \ref{Eckart-Young Theorem} is stated, which is important for the theory of Low-Rank Approximations.
 \subsection{Basics of Linear Algebra}
 \begin{definition}[Matrix]
     Given two numbers $m,n \in N$, a matrix $A \in \R^{m \times n}$ is a rectangular array of real numbers with $m$ rows and $n$ columns.
@@ -114,18 +114,13 @@ We denote by $A[i,j]$ the entry of the matrix $A$ in the $i$-th row and $j$-th c
     \| A \|_\infty = \max_{1 \leq i \leq m} \sum_{j=1}^{n} |a_{ij}|
     \end{equation}
 \end{example}
-% \subsubsection{Eigenvalues and eigenvectors}
-% \begin{definition}[Eigenvalues and eigenvectors]
-%     Given a square matrix $A \in \R^{n \times n}$, a scalar $\lambda \in \R$ is called an eigenvalue of $A$ if there exists a non-zero vector $x \in \R^n$ such that:
-%     \begin{equation}
-%         Ax = \lambda x
-%     \end{equation}
-%     In this case, the vector $x$ is called an eigenvector of $A$ corresponding to the eigenvalue $\lambda$.    
-% \end{definition}
+
+%* DISTINZIONE TRA NORME INDOTTE E NORMA DI FROBENIUS
+
 \subsection{Singular Value Decomposition (SVD)}\label{matrix decomposition section}
 In linear algebra, with matrix decomposition we refer to the problem of expressing a given matrix as a product of two or more matrices.
 The problem of matrix decomposition is widely studied in linear algebra and it is a fundamental tool for many applications.
-In this section we present the Singular Value Decomposition (SVD), that is one of the most known and widely used matrix decomposition techniques.
+In this section we present the Singular Value Decomposition (SVD), that is, one of the most known and widely used matrix decomposition techniques.
 \par
 The Singular Value decomposition (SVD) of a matrix $A \in \R^{m \times n}$ takes the form:
 \begin{equation}
@@ -141,7 +136,7 @@ The Singular Value decomposition (SVD) of a matrix $A \in \R^{m \times n}$ takes
 \end{equation}
 where \begin{itemize}
     \item $U \in \R^{m \times m}$ is the orthogonal matrix that diagonalizes $A^\top A$. The columns of $U$ are called the left singular vectors of $A$.
-    \item $\Sigma \in \R^{m \times n}$ is a diagonal matrix whose diagonal entries are the singular values of $A$, arranged in descending order.
+    \item $\Sigma \in \R^{m \times n}$ is a diagonal matrix whose diagonal entries are the singular values of $A$, arranged in descending order. $(\sigma_1 \geq \sigma_2\geq\dots\sigma_r>\sigma_{r+1}=\dots=\sigma_p = 0)$, with $p = \min(m,n)$.
     \item $V \in \R^{n \times n}$ is the orthogonal matrix that diagonalizes $AA^\top$. The columns of $V$ are called the right singular vectors of $A$.
 \end{itemize}
 \par
@@ -149,7 +144,7 @@ An SVD can be equivalently expressed as a sum of rank-one matrices:
     \begin{equation}
         A = \sum_{i=1}^{r} \sigma_i u_i v_i^\top
     \end{equation}
-    where $r$ is the rank of $A$, $\sigma_i$ are the singular values, and $u_i$ and $v_i$ are the corresponding left and right singular vectors.
+    where $r$ is the rank of $A$, $\sigma_i$ are the nonzero singular values, and $u_i$ and $v_i$ are the corresponding left and right singular vectors.
 We have the following important theorem regarding the SVD:
 \begin{theorem}[\cite{schmidt1907theorie} Eckart-Young Theorem] \label{Eckart-Young Theorem}
     Let $A \in \R^{m \times n}$ be a matrix with singular value decomposition $A = U \Sigma V^\top$. For any integer $k$ such that $1 \leq k \leq rank(A)$, the best rank-$k$ approximation of $A$ in terms of the Frobenius norm is given by:
@@ -159,9 +154,9 @@ We have the following important theorem regarding the SVD:
 \end{theorem}
 This means that the rank-$k$ matrix $A_k$ obtained by keeping only the top $k$ singular values and their corresponding singular vectors is the closest matrix to $A$ in terms of the Frobenius norm among all matrices of rank at most $k$.
 \section{Mathematical Optimization} \label{optimization section}
-In this section the taxonomy of optimization problems is introduced: we give the definition of an optimization problem in its general form \ref{optimization problem definition}, and the definitions of global \ref{global optimum definition} and local \ref{local optimum definition} optima; then the 
-Least Squares problem is presented \ref{least squares} along with its closed-form solution \ref{normal equations}, this result will be useful in designing some of the algorithms presented in chapter \ref{ALGO CHAPTER}.
-Finally, the gradient descent algorithm \ref{Gradient descent section} is introduced along with a convergence result for general smooth functions \ref{GD convergence theorem}.
+In this section the taxonomy of optimization problems is introduced: we give the definition of an optimization problem in its general form, and the definitions of global and local optima; then the 
+Least Squares problem is presented along with its closed-form solution (Theorem \ref{normal equations}), this result will be useful in designing some of the algorithms presented in chapter \ref{ALGO CHAPTER}.
+Finally, the gradient descent algorithm is introduced along with a convergence result for general smooth functions (Theorem \ref{GD convergence theorem}).
 \subsection*{}
 \begin{definition}[Optimization problem] \label{optimization problem definition}
     An optimization problem is defined as:
@@ -174,7 +169,7 @@ Finally, the gradient descent algorithm \ref{Gradient descent section} is introd
     \end{itemize}
 \end{definition}
 \begin{terminology}
-    In other context the objective function is also referred to as cost function, loss function, or energy function. Here will use them interchangeably.
+    In other context the objective function is also referred to as cost function, loss function, or energy function. Here we will use them interchangeably.
 \end{terminology}
 \begin{definition}[Global optimum]\label{global optimum definition}
     A point $x^* \in X$ is a global optimum of the optimization problem $\min_{x \in X}f(x)$ if:
@@ -251,6 +246,9 @@ The high-level idea of this method is to iteratively update the position of the 
     where $\eta_k > 0$ is the step size (or learning rate) at iteration $k$ and $\nabla f(x_k)$ is the gradient of the objective function at point $x_k$.
 \end{definition}
 We have the following convergence result for gradient descent:
+
+%* TODO: CHECK THIS THEOREM
+
 \begin{theorem} [GD convergence for a general smooth function] \label{GD convergence theorem} 
     Let $f: \R^n \rightarrow \R$ be a differentiable function with $L$-Lipschitz continuous gradient, i.e., there exists a constant $L > 0$ such that for all $x, y \in \R^n$:
     \begin{equation*}
@@ -264,7 +262,7 @@ We have the following convergence result for gradient descent:
 \end{theorem}
 \subsection{Low Rank Matrix Approximation} \label{LRMA section}
 An important optimization problem that is relevant for this thesis, and that often arise in the context of data analysis and data compression, is the problem of low rank matrix approximation, that is the problem of approximating a given matrix $A \in \R^{m \times n}$ of rank $r$ with a matrix of lower rank.
-In particular this is an optimization problem \ref{optimization problem definition} where the objective function is a matrix norm and the feasible set is the set of matrices with rank less than or equal to a given integer $k < r$.
+In particular this is an optimization problem where the objective function is a matrix norm and the feasible set is the set of matrices with rank less than or equal to a given integer $k < r$.
 \begin{definition}[Low rank matrix approximation]
     Given a matrix $A \in \R^{m \times n}$ of rank $r$ and an integer $k < r$, the low rank matrix approximation problem is defined as:
     \begin{equation}
