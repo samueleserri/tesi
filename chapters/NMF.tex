@@ -1,14 +1,14 @@
 \chapter{Non-Negative Matrix Factorization}
 In this chapter the formulation of the non-negative matrix factorization (NMF) problem is presented along with the main results that characterize it.
 \par
-In section \ref{Metrics section} the most common metrics used in the NMF literature are discussed, specifically the Frobenius norm \ref{Frobenius norm section}, the Kullback-Leibler divergence \ref{Kullback-Leibler section}, and the $\beta$-divergence \ref{Beta divergence section}.
+In section \ref{Metrics section} the most common metrics used in the NMF literature are discussed, specifically the Frobenius norm, the Kullback-Leibler divergence, and the $\beta$-divergence.
 In section \ref{complexity of NMF section} the main result on the computational complexity of NMF is presented, namely that this problem is NP-hard in general \cite{vavasis2007complexitynonnegativematrixfactorization}.
 Section \ref{Non-negative rank section} contains the important definition of the non-negative rank of a non-negative matrix.
 Then, section \ref{identifiability section} discusses the identifiability problem of NMF, that is the non-uniqueness of the solutions of the NMF problem in general.
 Section \ref{Geometric interpretation section} concerns the geometric interpretation of NMF, in particular a linear dimensionality reduction perspective is given along with a brief overview of the geometric interpretation with cones.
-Finally in \ref{two applications of NMF section} two applications of NMF are presented: feature extraction from a dataset of grey scale faces images \ref{Example feature extraction NMF} and topic modeling from a collection of documents \ref{Topic modeling section}.
+Finally in section \ref{two applications of NMF section} two applications of NMF are presented: feature extraction from a dataset of grey scale faces images and topic modeling from a collection of documents.
 \section{Definition}
-In its more general form the Non-negative matrix factorization problem can be defined as follows: given a non-negative matrix $V \in \R_+^{m \times n}$ and a factorization rank $r \in \N$ find two matrices
+In its more general form the Non-negative matrix factorization problem can be defined as follows: given a non-negative matrix $V \in \R_+^{m \times n}$ and a factorization rank $r \in \N$, find two matrices
 $W \in \R_+^{m \times r}$ and $H \in \R_+^{r \times n}$, constrained to be non-negative, such that their product $WH$ approximates $V$ as closely as possible according to some distance measure $D$.
 \par
 This problem can be formulated as an optimization problem as follows:
@@ -21,9 +21,9 @@ a given cost function $D(V, WH)$, that is:
 where $D$ is a distance measure between matrices.
 \end{definition}
 \begin{remark}
-    $\R_+^{m \times n}$ denotes the set of all $m \times n$ matrices with non-negative entries, the problem \ref{NMF optimization problem} is a constrained optimization problem where the optimization variables $W$ and $H$ are constrained to be non-negative matrices: $W \geq 0$, $H \geq 0$.
+    $\R_+^{m \times n}$ denotes the set of all $m \times n$ matrices with non-negative entries, the problem (\ref{NMF optimization problem}) is a constrained optimization problem where the optimization variables $W$ and $H$ are constrained to be non-negative matrices: $W \geq 0$, $H \geq 0$.
 \end{remark}
-After solving the optimization problem \ref{NMF optimization problem}, as result we obtain two matrices $W \in \R_+^{m \times r}$ and $H \in \R_+^{r \times n}$ such that their product $WH \in \R_+^{m \times n}$ is an approximation of the original matrix $V \in \R_+^{m \times n}$.
+After solving the optimization problem (\ref{NMF optimization problem}), as result we obtain two matrices $W \in \R_+^{m \times r}$ and $H \in \R_+^{r \times n}$ such that their product $WH \in \R_+^{m \times n}$ is an approximation to the original matrix $V \in \R_+^{m \times n}$.
 \par
 The column of the original non-negative matrix $V \in R^{m \times n}_+$ are then approximated as non-negative linear combinations of the columns of $W$ weighted by the coefficients in the corresponding column of $H$:
 \begin{equation}\label{formula for j-th column of V}
@@ -39,7 +39,8 @@ Adopting this point of view is useful to understand the geometric interpretation
 This section discusses three metrics commonly used in the NMF literature as objective functions for the optimization problem (\ref{NMF optimization problem}).
 As we will see in chapter \ref{ALGO CHAPTER} the Frobenius norm is the most widely used metric in NMF algorithms. In addition, here we also present the Kullback-Leibler divergence and the $\beta$-divergence, which generalizes both.
 \par
-Ideally the choice of the distance measure $D$ should be made according to the distribution of the data contained in the matrix $V$ and the noise that affects it. However in practice these distributions are often unknown, in subsection \ref{Frobenius norm section} we show that the Frobenius norm is the maximum likelihood estimator when the data is affected by i.i.d. Gaussian noise, which is a common and reasonable assumption in many applications.
+Ideally the choice of the distance measure $D$ should be made according to the distribution of the data contained in the matrix $V$ and the noise that affects it. However, since in practice these distributions are often unknown assumptions need to be made.
+In subsection \ref{Frobenius norm section} we show that the Frobenius norm is the maximum likelihood estimator when the data is affected by i.i.d. Gaussian noise, which is a common and reasonable assumption in many applications.
 See \cite{gillis2020nonnegative} chapter $5$ for a detailed discussion on NMF model and in particular section 5.1 for a discussion on error measures.
 \par
 For some applications it is sometimes useful to add a penalty term to the cost function, in this settings the optimization problem (\ref{NMF optimization problem}) can be reformulated as follows:
@@ -86,7 +87,7 @@ is equivalent to minimizing the sum of squared errors:
 which is exactly the Frobenius norm.
 \par
 \subsection{The Kullback-Leibler divergence}\label{Kullback-Leibler section}
-Another popular choice for the distance measure $D$ in the NMF problem \ref{NMF optimization problem} is the Kullback-Leibler (KL) divergence:
+Another popular choice for the distance measure $D$ in the NMF problem (\ref{NMF optimization problem}) is the Kullback-Leibler (KL) divergence:
 \begin{equation}
     D(V, WH) = D_{KL}(V \| WH) = \sum_{i=1}^{m} \sum_{j=1}^{n} \left( V[i,j] \log \frac{V[i,j]}{(WH)[i,j]} - V[i,j] + (WH)[i,j] \right) 
 \end{equation}
@@ -112,13 +113,10 @@ where
 \end{equation}
 It easy to show that for $\beta = 2$ the $\beta$-divergence reduces to the squared Frobenius norm and for $\beta = 1$ it reduces to the Kullback-Leibler divergence.
 The case where $\beta = 0$ is known as the Itakura-Saito divergence\footnote{\href{https://en.wikipedia.org/wiki/Itakura\%E2\%80\%93Saito\_distance}{https://en.wikipedia.org/wiki/Itakura Saito distance}}.
-
-%* change caption
-
 \begin{figure}
     \centering
     \includegraphics[width=1.0\textwidth]{Imgs/Beta_diveregence_plot.png}
-    \caption{Plot of the $\beta$-divergence($1,x,\beta$) for $\beta$ values of $0$, $1$ $\frac{1}{2}$, $2$, and $3$.}
+    \caption{Plot of the $\beta$-divergence $d_{\beta}(1,x)$ for $\beta$ values of $0$, $1$ $\frac{1}{2}$, $2$, and $3$.}
     \label{beta_divergence_plot}
 \end{figure}
 
@@ -147,12 +145,12 @@ the Exact NMF formulation has a nice \textit{geometric interpretation} that will
 \par
 Since the NMF problem as stated in \ref{NMF optimization problem} is a generalization of the exact NMF problem, the NP-hardness of exact NMF implies the NP-hardness of NMF.
 To use the words of Vavasis \cite{vavasis2007complexitynonnegativematrixfactorization} in the introduction of his paper:
-\begin{center}
+%\begin{center}
 {<<\textit{Observe that for any reasonable definition of the approximation version of NMF A $\approx$ WH, [...], an optimal algorithm when presented with an
 A whose rank is exactly k ought to solve the exact NMF problem. Thus, the ``standard''
 NMF problem using any norm is a generalization of EXACT NMF. Therefore, any hardness result that applies to exact NMF (such as our hardness result) would presumably
 apply to most approximation versions as well.}>>}
-\end{center}
+%\end{center}
 \section{Non-negative rank}\label{Non-negative rank section}
 In linear algebra the rank of a matrix is equal to the number of linearly independent rows or columns of the matrix and is equal to the dimension of the vector space spanned by its rows or columns.
 In the context of NMF, it is useful to define the non-negative rank of a non-negative matrix. This is a similar concept to the rank of a matrix but with the additional constraint that the coefficients must be non-negative.
@@ -248,7 +246,7 @@ This contradicts the assumption that the exact NMF of $V$ is unique.
 \end{proof}
 Now we present a sufficient condition for identifiability known as the \textit{separability} condition.
 \begin{theorem}
-[Sufficient condition for identifiability: Separability]\label{Sufficient condition for identifiability}
+[Sufficient condition for identifiability: separability]\label{Sufficient condition for identifiability}
 Let $V \in \R_+^{m \times n}$ be a non-negative matrix and let $V = WH$ be an exact NMF of $V$ of size $r$.
 The matrices $W$ and $H$ contain non-singular diagonal sub-matrices of size $r \times r$, then the NMF solutions are identifiable.
 \end{theorem}
@@ -257,7 +255,7 @@ The matrices $W$ and $H$ contain non-singular diagonal sub-matrices of size $r \
 \end{proof}
 An equivalent definition of separability is the following:
 \begin{definition}[Separable NMF]
-An NMF $V = WH$ is said to be separable if there exists a set of indices $\{j_1, j_2, \ldots, j_r\} \subseteq \{1, 2, \ldots, n\}$ of size $r$ such that:
+An NMF $V = WH$ is said to be separable if there exists a set of $r$ indices $\{j_1, j_2, \ldots, j_r\} \subseteq \{1, 2, \ldots, n\}$ such that:
 \begin{equation}
     V = W H = V[:, \{j_1, j_2, \ldots, j_r\}]\tilde{H}
 \end{equation}
@@ -372,30 +370,39 @@ That is we wish to find $r$ basis vectors (columns of $W$) such that each data p
 \caption{NMF seeks a low-dimensional non-negative subspace (red area) spanned by basis vectors (red arrows) such that data points (blue dots) lie close to this subspace. Each data point can be approximated as a non-negative linear combination of the basis vectors.}
 \label{fig:dimensionality_reduction interpretation}
 \end{figure}
+
+
 In this sense NMF can be thought of as a linear dimensionality reduction technique for matrices of non-negative data.
 \subsection{Geometric interpretation with cones}
-In linear algebra a convex cone is a subset of a vector space that is closed with respect to the operation of positive scalar multiplication.
-\begin{definition}[Convex cone]
-A set $C \subseteq \R^m$ is a convex cone if for any $x \in C$ and any non-negative scalars $\alpha \geq 0$ it holds that:
+In linear algebra a cone is a subset of a vector space that is closed with respect to the operation of positive scalar multiplication.
+\begin{definition}[Cone]
+A set $C \subseteq \R^m$ is a cone if for any $x \in C$ and any non-negative scalars $\alpha \geq 0$ it holds that:
 \begin{equation}
-    \alpha x \in C
+    \alpha x \in C.
 \end{equation}
+\end{definition}
+A convex cone is a subset of a vector space that is closed under linear combinations with positive coefficients.
+\begin{definition}[Convex cone]
+    A set $C \subseteq \R^m$ is a convex cone if it is a cone and additionally closed under addition. That is for any $x, y \in C$ and any non-negative scalars $\alpha, \beta \geq 0$ it holds that:
+    \begin{equation}
+        \alpha x + \beta y \in C.
+    \end{equation}
 \end{definition}
 Given a matrix $A \in \R^{m \times n}$, the convex cone generated by the columns of $A$ is defined as:
 \begin{equation}
-    \text{cone}(A) = \{ Ax | x \in \R_+^{n} \}
+    \text{cone}(A) = \{ Ax | x \in \R_+^{n} \}.
 \end{equation}
 \begin{observation}
-    $dim(\text{cone}(A)) = rank(A)$
+    $dim(\text{cone}(A)) = rank(A)$.
 \end{observation}
-As seen in \ref{formula for j-th column of V} the $j$-th column of $V$ can be expressed as:
+As seen in (\ref{formula for j-th column of V}) the $j$-th column of $V$ can be expressed as:
 \begin{equation}
-    V[:,j] = WH[:,j] \ \forall j = 1, \ldots, n
+    V[:,j] = WH[:,j], \quad \forall j = 1, \ldots, n.
 \end{equation}
 This means that each column of $V$ lies in the convex cone generated by the columns of $W$.
 In other words:
 \begin{equation}
-    \text{cone}(V) \subseteq \text{cone}(W)
+    \text{cone}(V) \subseteq \text{cone}(W).
 \end{equation}
 % Figure \ref{fig:cone_interpretation} illustrates this concept in two dimensions with $r = 3$.
 \par
@@ -465,17 +472,12 @@ the first modern definition of the NMF problem is usually attributed to the work
 This early work arose in the field of analytical chemistry and the NMF model as a modern data analysis tool remained relatively unknown until the seminal paper of Lee and Seung in 1999 \cite{Lee1999}.
 \par
 In their work Lee and Seung introduce the NMF model to the machine learning community and proposed an easy to implement algorithm based on multiplicative updates to find local minima of the NMF optimization problem (\ref{NMF optimization problem}).
-Their work is especially famous because they  demonstrate an algorithm for non-negative matrix factorization that is able to learn parts of faces, in contrast to other decomposition methods like PCA or SVD that learn holistic features.
-Their results are also reproduced in this thesis in subsection \ref{Example feature extraction NMF} to show a prominent example of NMF's application.
-
-
-
-
+Their work is especially famous because they  demonstrate an algorithm for non-negative matrix factorization that is able to learn parts of faces, in contrast to other decomposition methods like PCA or SVD that learn holistic features. Their results are also reproduced in this thesis in subsection \ref{Example feature extraction NMF} to show a prominent example of NMF's application.
 \section{Two applications of NMF}\label{two applications of NMF section}
 In this section two applications of NMF are presented: the first one is the well-known example of learning parts of faces introduced by Lee and Seung in \cite{Lee1999},
 while the second one is an application of NMF to text mining, in particular to topic modeling.
 \subsection{Learning parts of faces} \label{Example feature extraction NMF}
-The dataset used in this example is the CBCL face dataset \footnote{See \ref{code documentation appendix} for data availability and details on the code used}.
+The dataset used in this example is the CBCL face dataset \footnote{See appendix \ref{code documentation appendix} for data availability and details on the code used}.
 This dataset has size $361 \times 2429$ where each column represent a $19 \times 19$ gray-scale image of a face.
 \begin{figure}
     \centering
@@ -485,7 +487,7 @@ This dataset has size $361 \times 2429$ where each column represent a $19 \times
 \end{figure}
 The NMF model is applied to this dataset with a factorization rank of $r = 49$,  the algorithm used is the multiplicative updates with the Kullback-Leibler divergence as distance measure.
 After fitting the model we obtain two matrices: $W \in \R_+^{361 \times 49}$ and $H \in \R_+^{49 \times 2429}$.
-The non-negativity constraints of the NMF problem \ref{NMF optimization problem} allows one to interpret the columns of $W$ in the same way as the original data, that is each column of $W$ can be reshaped to form a $19 \times 19$ gray-scale image and displayed.
+The non-negativity constraints of the NMF problem (\ref{NMF optimization problem}) allows one to interpret the columns of $W$ in the same way as the original data, that is each column of $W$ can be reshaped to form a $19 \times 19$ gray-scale image and displayed.
 \begin{figure}
     \centering
     \includegraphics[width=0.75\textwidth]{Imgs/CBCL_colums_of_W.png}
@@ -493,7 +495,7 @@ The non-negativity constraints of the NMF problem \ref{NMF optimization problem}
     \label{fig:CBCL columns of W}
 \end{figure}
 As can be seen in Figure \ref{fig:CBCL columns of W} the pixels of the images formed by the columns of $W$ are active only in certain regions, for example some columns represent eyes, others noses, mouths and so on.
-This is the reason why it is said that Non-negative matrix factorization is able to learn a ``part based'' representation of faces.
+This is the reason why it is said that non-negative matrix factorization is able to learn a ``part based'' representation of faces.
 \par
 \begin{figure}
     \centering
@@ -506,7 +508,7 @@ The $j$-th column of the original data matrix $V$ can be approximated as:
 \begin{equation}
     V[:,j] \approx W H[:,j] = \sum_{k=1}^{r} H[k,j] W[:, k]
 \end{equation}
-This is a linear combination of the columns of $W$ weighted by the coefficients in the $j$-th column of $H$.
+this is a linear combination of the columns of $W$ weighted by the coefficients in the $j$-th column of $H$.
 \begin{equation}
     \begin{bmatrix}
         v_{1,j} \\
@@ -531,7 +533,7 @@ This is a linear combination of the columns of $W$ weighted by the coefficients 
         w_{2,r} \\
         \vdots \\
         w_{m,r}
-    \end{bmatrix}
+    \end{bmatrix}.
 \end{equation}
 Note that the number of columns of $V$ is equal to the number of columns of $H$. That means that there is a one-to-one correspondence between the columns of $V$ and the columns of $H$ containing the weights to reconstruct each image.
 \subsection{Topic modeling}\label{Topic modeling section}
@@ -541,24 +543,14 @@ Topic modeling is a technique used in natural language processing and text minin
 The dataset used in this example is the TDT2 corpus, a collection of documents collected in $1998$ \cite{tdt2_corpus} from 6 different sources of american news and only the top (largest) 30 categories are kept. 
 The matrix has shape $V \in \R_+^{m \times n}$ where $m = 19528$ is the number of unique words in the vocabulary and $n = 9394$ is the number of documents.
 Each column of $V$ represents a document. This is called a word count matrix where each element $V[i,j]$ represents the number of times word $i$ appears in document $j$.
-\bigskip    
-\begin{longtable}{|c|p{10cm}|}
-\caption{Top 10 words extracted by NMF for some of the 30 topics in the TDT2 corpus} \label{tab:nmf_topics} \\
+\medskip
+\begin{table}[htbp]
+\centering
+\caption{Top 10 words extracted by NMF for some of the 30 topics in the TDT2 corpus}
+\label{tab:nmf_topics}
+\begin{tabular}{|c|p{10cm}|}
 \hline
 \textbf{Topic} & \textbf{Top 10 Words} \\ \hline
-\endfirsthead
-
-\multicolumn{2}{c}{\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
-\hline
-\textbf{Topic} & \textbf{Top 10 Words} \\ \hline
-\endhead
-
-\hline \multicolumn{2}{r}{\textit{Continued on next page}} \\
-\endfoot
-
-\hline
-\endlastfoot
-
 1 & iraq, saddam, military, gulf, war, iraqi, arab, hussein, support, attack \\ \hline
 2 & cuba, pope, cuban, castro, visit, church, john, paul, popes, havana \\ \hline
 3 & tobacco, industry, companies, smoking, bill, legislation, cigarette, congress, senate, settlement \\ \hline
@@ -569,7 +561,8 @@ Each column of $V$ represents a document. This is called a word count matrix whe
 8 & united, states, american, nations, officials, washington, americans, administration, canada, countries \\ \hline
 9 & percent, stock, market, stocks, points, investors, funds, companies, index, fund \\ \hline
 10 & israel, israeli, netanyahu, palestinian, peace, palestinians, arafat, bank, talks, west \\ \hline
-\end{longtable}
+\end{tabular}
+\end{table}
 
 The NMF model is applied to this dataset with a factorization rank of $r = 30$, the algorithm used is the multiplicative updates with the Frobenius norm as distance measure.
 After fitting the model we obtain two matrices: $W \in \R_+^{19528 \times 30}$ and $H \in \R_+^{30 \times 9394}$.
@@ -578,8 +571,8 @@ To extract the top words for each topic we sort the entries of each column of $W
 Table \ref{tab:nmf_topics} shows the top 10 words for some of the topics extracted by NMF.
 The quality of the clusters can be evaluated by looking at the top words for each topic and checking if they are semantically related, for example in topic 1 we can see that the top words are related to the Iraq war, in topic 2 the top words are related to Cuba and the Pope, in topic 3 the top words are related to the tobacco industry and so on.
 \par
-The input matrix $V$ is an example of a sparse matrix, because most words do not appear in most documents hence most entries are zero.
-In this case the Separability assumption is approximately satisfied because each topic contains some unique words that do not appear in other topics.
+This is an example of application of a sparse NMF model, since most words do not appear in most documents most entries of the input matrix $V$ are zero.
+In this case the separability assumption is approximately satisfied because each topic contains some unique words that do not appear in other topics.
 This is one of the reasons why NMF works well for topic modeling tasks.
 In this case there exists very efficient algorithms to find the NMF solution, see \cite{arora2013practical}.
 
@@ -693,4 +686,4 @@ The NMF problem is formulated as a constrained optimization problem where the go
 An NMF model requires to choose a distance measure and a reconstruction rank; NMF model can be extremely versatile and can be adapted to different applications by choosing the appropriate distance measure, possibly with regularization terms, and approximation rank.
 To better understand the problem is useful to analyze the exact version of the NMF, known as the exact NMF problem, where the goal is to find two non-negative matrices $W$ and $H$ such that their product is exactly equal to the original data matrix $V$.
 In this restricted exact version of the problem, it naturally arises the definition of non-negative rank and the exact-NMF is used for (1) geometric interpretation of the NMF problem, and (2) to study the computational complexity of the NMF problem, the result is, in short, that the NMF belongs to the class of NP-hard problems, as showed by Vavasis \cite{vavasis2007complexitynonnegativematrixfactorization}. 
-In the same paper, Vavasis also showed that a polynomial-time local search heuristic exists. In the next chapter we will see the most important algorithms to undertake the NMF problem, and it will be clear that they come with no global (?) guarantees.
+In the same paper, Vavasis also showed that a polynomial-time local search heuristic exists. In the next chapter we will see the most important algorithms to undertake the NMF problem, and it will be clear that they come with no guarantees of global optimality.
