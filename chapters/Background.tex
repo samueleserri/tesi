@@ -1,10 +1,10 @@
 \chapter{Background}
-The aim of this chapter is to introduce the mathematical background and notation necessary for understanding the Non-negative Matrix Factorization (NMF) problem, and for deriving the algorithms to undertake it, in a 
+The aim of this chapter is to introduce the mathematical background and notation necessary for understanding the non-negative matrix factorization (NMF) problem, and for deriving the algorithms to undertake it, in a 
 way such that the content is self-contained, and all the concepts used in the subsequent chapters are properly defined.
 \par
-In particular this chapter is organized as follows: first in section \ref{Linear algebra and matrix decomposition section} the basic concepts of linear algebra are introduced, together with the most known decomposition technique: the Singular Value Decomposition (SVD). This last result will be
+In particular this chapter is organized as follows: first in section \ref{Linear algebra and matrix decomposition section} the basic concepts of linear algebra are introduced, together with the most known decomposition technique: the singular value decomposition (SVD). This last result will be
 used when discussing some technique for the initialization of the factors in NMF algorithms in chapter \ref{ALGO CHAPTER}.
-Then in section \ref{optimization section} the taxonomy of optimization problems is presented along with some important results regarding the Least Squares problem and the Gradient Descent algorithm along with the convergence result in the case of a general smooth function.
+Then in section \ref{optimization section} the taxonomy of optimization problems is presented along with some important results regarding the linear least squares problem and the gradient descent (GD), algorithm along with the convergence result in the case of a general smooth function.
 \par
 Clearly this chapter is not mean to be an exhaustive introduction to linear algebra and optimization, and it is assumed that the reader is already familiar with most of the concepts presented here, therefore only those results that are essential are included. 
 One last disclaimer is that the point of view adopted here is mainly computational and from a data analysis perspective.
@@ -13,11 +13,10 @@ The main reference for organizing this chapter have been the book by S. Wright a
 and the book by A. Quarteroni, R. Sacco, F. Saleri, and P. Gervasio \cite{quarteroni2010matematica}. We refer to those books for proofs and more detailed explanations on the topics presented here.
 \section{Linear Algebra and Singular Value Decomposition}\label{Linear algebra and matrix decomposition section}
 This section briefly introduces the fundamentals notions of linear algebra relevant to this thesis;
-in subsection \ref{matrix decomposition section} the problem of matrix decomposition is introduced from a general perspective and the Singular Value Decomposition (SVD) is presented, it is shown how the SVD can be equivalently expressed as a sum of rank-one matrices and the Eckart-Young theorem \ref{Eckart-Young Theorem} is stated, which is important for the theory of Low-Rank Approximations.
+in subsection \ref{matrix decomposition section} the problem of matrix decomposition is introduced from a general perspective and the singular value decomposition (SVD) is presented, it is shown how the SVD can be equivalently expressed as a sum of rank-one matrices and the Eckart-Young theorem \ref{Eckart-Young Theorem} is stated, which is important for the theory of low-rank approximations.
 \subsection{Basics of Linear Algebra}
 \begin{definition}[Matrix]
     Given two numbers $m,n \in N$, a matrix $A \in \R^{m \times n}$ is a rectangular array of real numbers with $m$ rows and $n$ columns.
-
 \begin{equation*}
     A = \begin{bmatrix}
     a_{11} & a_{12} & \cdots & a_{1n} \\
@@ -122,7 +121,7 @@ In linear algebra, with matrix decomposition we refer to the problem of expressi
 The problem of matrix decomposition is widely studied in linear algebra and it is a fundamental tool for many applications.
 In this section we present the Singular Value Decomposition (SVD), that is, one of the most known and widely used matrix decomposition techniques.
 \par
-The Singular Value decomposition (SVD) of a matrix $A \in \R^{m \times n}$ takes the form:
+The singular value decomposition (SVD) of a matrix $A \in \R^{m \times n}$ takes the form:
 \begin{equation}
     A = U \Sigma V^\top = 
 \begin{bmatrix}u_{11}&\cdots&u_{1m}\\\vdots&\ddots&\vdots\\u_{m1}&\cdots&u_{mm}\end{bmatrix}
@@ -136,7 +135,7 @@ The Singular Value decomposition (SVD) of a matrix $A \in \R^{m \times n}$ takes
 \end{equation}
 where \begin{itemize}
     \item $U \in \R^{m \times m}$ is the orthogonal matrix that diagonalizes $A^\top A$. The columns of $U$ are called the left singular vectors of $A$.
-    \item $\Sigma \in \R^{m \times n}$ is a diagonal matrix whose diagonal entries are the singular values of $A$, arranged in descending order. $(\sigma_1 \geq \sigma_2\geq\dots\sigma_r>\sigma_{r+1}=\dots=\sigma_p = 0)$, with $p = \min(m,n)$.
+    \item $\Sigma \in \R^{m \times n}$ is a diagonal matrix whose diagonal entries are the singular values of $A$, arranged in descending order; $(\sigma_1 \geq \sigma_2\geq\dots\sigma_r>\sigma_{r+1}=\dots=\sigma_p = 0)$, with $p = \min(m,n)$.
     \item $V \in \R^{n \times n}$ is the orthogonal matrix that diagonalizes $AA^\top$. The columns of $V$ are called the right singular vectors of $A$.
 \end{itemize}
 \par
@@ -155,7 +154,7 @@ We have the following important theorem regarding the SVD:
 This means that the rank-$k$ matrix $A_k$ obtained by keeping only the top $k$ singular values and their corresponding singular vectors is the closest matrix to $A$ in terms of the Frobenius norm among all matrices of rank at most $k$.
 \section{Mathematical Optimization} \label{optimization section}
 In this section the taxonomy of optimization problems is introduced: we give the definition of an optimization problem in its general form, and the definitions of global and local optima; then the 
-Least Squares problem is presented along with its closed-form solution (Theorem \ref{normal equations}), this result will be useful in designing some of the algorithms presented in chapter \ref{ALGO CHAPTER}.
+linear least squares problem is presented along with its closed-form solution (Theorem \ref{normal equations}), this result will be useful in designing some of the algorithms presented in chapter \ref{ALGO CHAPTER}.
 Finally, the gradient descent algorithm is introduced along with a convergence result for general smooth functions (Theorem \ref{GD convergence theorem}).
 \subsection*{}
 \begin{definition}[Optimization problem] \label{optimization problem definition}
@@ -165,7 +164,7 @@ Finally, the gradient descent algorithm is introduced along with a convergence r
     \end{equation}
     where \begin{itemize}
         \item $X$ is the feasible set in which the solution must lie.
-        \item $f: X \rightarrow \R$ is the objective function to be minimized
+        \item $f: X \rightarrow \R$ is the objective function to be minimized.
     \end{itemize}
 \end{definition}
 \begin{terminology}
@@ -174,19 +173,19 @@ Finally, the gradient descent algorithm is introduced along with a convergence r
 \begin{definition}[Global optimum]\label{global optimum definition}
     A point $x^* \in X$ is a global optimum of the optimization problem $\min_{x \in X}f(x)$ if:
     \begin{equation}
-        f(x^*) \leq f(x) \quad \forall x \in X
+        f(x^*) \leq f(x), \quad \forall x \in X.
     \end{equation}
 \end{definition}
 \begin{definition}[Local optimum]\label{local optimum definition}
     A point $x^* \in X$ is a local optimum of the optimization problem $\min_{x \in X}f(x)$ if there exists a neighborhood $U$ of $x^*$ such that:
     \begin{equation}
-        f(x^*) \leq f(x) \quad \forall x \in U \cap X
+        f(x^*) \leq f(x), \quad \forall x \in U \cap X.
     \end{equation}
 \end{definition}
 \begin{example}[Linear least squares problem]\label{least squares}
     Given a matrix $A \in \R^{m \times n}$ and a vector $b \in \R^m$, the linear least squares problem is defined as:
     \begin{equation}
-        \min_{x \in \R^n} \| Ax - b \|_2^2
+        \min_{x \in \R^n} \| Ax - b \|_2^2.
     \end{equation}  
 \end{example}
 \begin{theorem}[solution of the linear least squares problem] \label{normal equations}
@@ -202,11 +201,11 @@ Finally, the gradient descent algorithm is introduced along with a convergence r
     \begin{equation*}
         f(x) = \| Ax - b \|_2^2 = (Ax - b)^\top (Ax - b) = x^\top A^\top A x - 2b^\top A x + b^\top b
     \end{equation*}
-    To find the minimum, we compute the gradient of $f(x)$ and set it to zero:
+    to find the minimum, we compute the gradient of $f(x)$ and set it to zero:
     \begin{equation*}
         \nabla f(x) = 2A^\top A x - 2A^\top b
     \end{equation*}
-    Setting the gradient to zero gives:
+    setting the gradient to zero gives:
     \begin{equation*}
         2A^\top A x - 2A^\top b = 0
     \end{equation*}
@@ -214,15 +213,15 @@ Finally, the gradient descent algorithm is introduced along with a convergence r
     \begin{equation*}
         A^\top A x = A^\top b
     \end{equation*}
-    Assuming that $A^\top A$ is invertible, we can solve for $x$:
+    assuming that $A^\top A$ is invertible, we can solve for $x$:
     \begin{equation*}
         x^* = (A^\top A)^{-1} A^\top b
     \end{equation*}
-    This completes the proof.
+    this completes the proof.
 \end{proof}
 % illustration of least squares
 The problem of linear least squares is known in statistics as the ordinary least square regression, and it allows to find the best-fitting line (or hyperplane in higher dimensions) to a set of data points by minimizing the sum of the squared vertical distances between the data points and the line (or hyperplane).
-In figure \ref{fig:least_squares} an illustration of the least squares regression line in a three-dimensional setting is shown.
+In Figure \ref{fig:least_squares} an illustration of the least squares regression line in a three-dimensional setting is shown.
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.5\textwidth]{Imgs/Least_squares.png}
@@ -240,7 +239,7 @@ Gradient descent is one of the so called first-order iterative algorithms, that 
 The high-level idea of this method is to iteratively update the position of the current point by taking a step in the opposite direction of the gradient of the objective function at that point, since the gradient points in the direction of the steepest ascent.
 \begin{definition}[Gradient descent]
     Gradient descent is an iterative optimization algorithm used to find a local minimum of a differentiable function. Given an initial point $x_0 \in X$, the algorithm updates the point iteratively using the following rule:
-    \begin{equation}
+    \begin{equation}\label{GD formula}
         x_{k+1} = x_k - \eta_k \nabla f(x_k)
     \end{equation}
     where $\eta_k > 0$ is the step size (or learning rate) at iteration $k$ and $\nabla f(x_k)$ is the gradient of the objective function at point $x_k$.
@@ -254,20 +253,23 @@ We have the following convergence result for gradient descent:
     \begin{equation*}
         \| \nabla f(x) - \nabla f(y) \|_2 \leq L \| x - y \|_2
     \end{equation*}
-    Let $\{x_k\}$ be the sequence generated s.t. $f(x_{k+1}) \leq f(x_k) - \frac{1}{2L} \| \nabla f(x_k) \|_2^2$; and suppose that $f$ is bounded below, then we have:
+    Let $\{x_k\}$ be the sequence generated by (\ref{GD formula}) s.t. $f(x_{k+1}) \leq f(x_k) - \frac{1}{2L} \| \nabla f(x_k) \|_2^2$; and suppose that $f$ is bounded below, then we have:
     \begin{equation*}
         f(x_k) \rightarrow f(\bar{x}) \quad \text{as} \quad k \rightarrow \infty
     \end{equation*}
     where $\bar{x}$ is a stationary point of $f$, i.e., $\nabla f(\bar{x}) = 0$.
 \end{theorem}
+\begin{proof}
+    ADD PROOF HERE.
+\end{proof}
 \subsection{Low Rank Matrix Approximation} \label{LRMA section}
 An important optimization problem that is relevant for this thesis, and that often arise in the context of data analysis and data compression, is the problem of low rank matrix approximation, that is the problem of approximating a given matrix $A \in \R^{m \times n}$ of rank $r$ with a matrix of lower rank.
 In particular this is an optimization problem where the objective function is a matrix norm and the feasible set is the set of matrices with rank less than or equal to a given integer $k < r$.
 \begin{definition}[Low rank matrix approximation]
-    Given a matrix $A \in \R^{m \times n}$ of rank $r$ and an integer $k < r$, the low rank matrix approximation problem is defined as:
+    Given a matrix $A \in \R^{m \times n}$ of rank $r$, and an integer $k < r$, the low rank matrix approximation problem is defined as:
     \begin{equation}
         \min_{B \in \R^{m \times n}, \text{rank}(B) \leq k} \| A - B \|
     \end{equation}
     where $\| \cdot \|$ is a matrix norm.
 \end{definition}
-In the particular case of $\|\cdot\| = \|\cdot\|_F$ being the Frobenius norm, the solution to the low rank matrix approximation problem is given by the truncated SVD of $A$, as stated in the Eckart-Young theorem \ref{Eckart-Young Theorem}.
+In the particular case of $\|\cdot\| = \|\cdot\|_F$ being the Frobenius norm, the solution to the low rank matrix approximation problem is given by the truncated SVD of $A$, as stated in Theorem \ref{Eckart-Young Theorem} (Eckart-Young).
