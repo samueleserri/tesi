@@ -1,6 +1,6 @@
 \chapter{Algorithms for NMF}\label{ALGO CHAPTER}
 This chapter describes all the algorithms studied in this thesis and used in the numerical simulations of chapter \ref{Experiments chapter}. For each algorithm we present the derivation and the convergence properties when available.
-The algorithms are listed here: multiplicative updates (MU) with the Frobenius norm (Algorithm \ref{MU for Frobenius}), with the Kullback-Leibler divergence (Algorithm \ref{MU for KL}) and with the $\beta$-divergence (Algorithm \ref{MU for beta}); alternating non-negative least squares (ANLS) (Algorithm \ref{ANLS}); alternating least squares (ALS) (Algorithm \ref{ALS}); projected gradient descent (PGD) (Algorithm \ref{Projected Gradient}); hierarchical alternating least squares (HALS) (Algorithm \ref{HALS}).
+The algorithms are listed here: multiplicative updates (MU) with the Frobenius norm, with the Kullback-Leibler divergence and with the $\beta$-divergence, alternating non-negative least squares (ANLS), alternating least squares (ALS), projected gradient descent (PGD), hierarchical alternating least squares (HALS).
 \par
 In section \ref{2-BCD general framework} the two-block coordinate descent framework is presented, which is the most common approach to design methods for solving the NMF optimization problem.
 In section \ref{Stopping criteria section} the stopping criteria commonly used in the literature are discussed.
@@ -12,9 +12,28 @@ They don't guarantee to converge to the global minimum.
 Furthermore the optimization problem (\ref{NMF optimization problem}) is a constrained optimization problem, since the factors \( W \) and \( H \) are constrained to be non-negative, (\( W \geq 0 \) and \( H \geq 0 \)).
 To handle the non-negativity constraints, the algorithms presented in this chapter use two main approaches: the first one is to design a scheme that ensure the non-negativity of the iterates at each step, this is the case of the MU, and ANLS;
 the second approach is to first solve the sub-problems without the non-negativity constraints and then project the solution onto the non-negative orthant, this is the case of the ALS, HALS, and PGD.
+
+% \begin{table}
+%     \centering
+%     \caption{Summary of the NMF algorithms presented in this chapter.}
+%     \label{tab:algo_summary}
+%     \begin{tabular}{|l|c|}
+%         \hline
+%         \textbf{Algorithm} & \textbf{Reference} \\
+%         \hline
+%         MU (Frobenius) & Algorithm \ref{MU for Frobenius} \\
+%         MU (Kullback-Leibler) & Algorithm \ref{MU for KL} \\
+%         MU ($\beta$-divergence) & Algorithm \ref{MU for beta} \\
+%         ANLS & Algorithm \ref{ANLS} \\
+%         ALS & Algorithm \ref{ALS} \\
+%         PGD & Algorithm \ref{Projected Gradient} \\
+%         HALS & Algorithm \ref{HALS} \\
+%         \hline
+%     \end{tabular}
+% \end{table}
+
 \section{Two blocks coordinate descent (2-BCD)} \label{2-BCD general framework}
 The most common setting for NMF is the so called two-blocks coordinate descent, in this setting the factors \( W \) and \( H \) are updated alternately, fixing one while updating the other.
-
 \begin{algorithm}
     \caption{Two-blocks coordinate descent for NMF}
     \label{2-BCD}
@@ -348,19 +367,35 @@ The complete MU algorithm is summarized in Algorithm \ref{MU for KL}.
 \subsubsection{Computational cost}
 In the case of the Kullback-Leibler divergence, the computational cost of the MU algorithm is given by the computation of the gradients: $\frac{V}{WH} H^\top$ and $\textbf{1} H^\top$ for the update of $W$.
 The term $\textbf{1} H^\top$ can be computed in $O(mr)$ operations and the term $\frac{V}{WH} H^\top$ requires $O(mnr)$ operations.
+
 \section{Alternating Non-Negative Least Squares (ANLS)}
 The alternating non-negative least squares (ANLS) method consists in solving exactly the non-negative least squares sub-problems at each iteration of the two-blocks coordinate descent scheme (Algorithm \ref{2-BCD}), this is a case of exact 2-BCD (Algorithm \ref{Exact 2-BCD}).
 This scheme was originally proposed in \cite{paatero1994positive}.
 \par
 The metric used in this case is the Frobenius norm $D(V, WH) = \|V - WH\|_F^2$, and the subproblem to solve at each iteration are:
-\begin{equation}
+\begin{equation}\label{ANLS subproblem I}
     W^{(k + 1)} = \arg\min_{W \geq 0} \|V - WH^{(k)}\|_F^2
 \end{equation}
 and
-\begin{equation}
-    H^{(k + 1)} = \arg\min_{H \geq 0} \|V - W^{(k)}H\|_F^2
+\begin{equation}\label{ANLS subproblem II}
+    H^{(k + 1)} = \arg\min_{H \geq 0} \|V - W^{(k)}H\|_F^2.
 \end{equation}
-The algorithm can be summarized as follows:
+The subproblem (\ref{ANLS subproblem II}) can be decoupled into $n$ independent non-negative linear least squares problems.
+The derivation of this decoupling is as follows:
+\begin{align}
+    &\|V - W^{(k)}H\|_F^2 = \sum_{j=1}^n \|V(:,j) - W^{(k)}H(:,j)\|_2^2
+\end{align}
+where $V(:,j)$ and $H(:,j)$ denote the $j$-th column of $V$ and $H$ respectively.
+Then the update for $H$ can be computed by solving $n$ independent non-negative linear least squares problems of the form:
+\begin{equation}
+    H(:,j) = \arg\min_{h \geq 0} \|V(:,j) - W^{(k)}h\|_2^2, \quad \text{for } j = 1, \ldots, n.
+\end{equation}
+Analogously, the update for $W$ can be computed by solving $m$ independent non-negative linear least squares problems of the form:
+\begin{equation}
+    W(i,:) = \arg\min_{w \geq 0} \|V(i,:) - w H^{(k)}\|_2^2, \quad \text{for } i = 1, \ldots, m.
+\end{equation}
+However, solving exactly the constrained least-squares sub-problems is non-trivial; see \cite{kim2008nonnegative} for an example of an algorithm based on active-set methods to solve non-negative least squares problems.
+The algorithm is summarized in Algorithm \ref{ANLS}.
 \begin{algorithm}
     \caption{Alternating Non-Negative Least Squares for NMF}
     \label{ANLS}
@@ -374,7 +409,7 @@ The algorithm can be summarized as follows:
         \State \Return \( W, H \)
     \end{algorithmic}
 \end{algorithm}
-However, solving exactly the constrained least-squares sub-problems is non-trivial; see \cite{kim2008nonnegative} for an example of an algorithm based on active-set methods to solve non-negative least squares problems.
+
 \section{Projected methods}
     Since the non-negative least squares sub-problems of Algorithm \ref{ANLS} are non trivial to solve, a possible approach is to solve the subproblems without the non-negativity constraints and then project the solution onto the non-negative orthant.
     This leads to the projected gradient descent methods for NMF where the solution of each subproblem takes the following form:
@@ -385,7 +420,7 @@ However, solving exactly the constrained least-squares sub-problems is non-trivi
     \begin{equation}
         H^{(k + 1)} = \max\left(0, \arg\min_H \|V - W^{(k + 1)}H^{(k)}\|_F^2  \right).
     \end{equation}
-    \subsection{Alternating Least squares ALS}
+\subsection{Alternating Least squares ALS}
 The alternating least squares (ALS) method is a projected method where the sub-problems are solved using the linear least squares solution (\ref{linear least sqaures equation}) and then projected onto the non-negative orthant.
 This is very easy to implement since most programming languages have built-in functions to solve least squares problems. For instance in MATLAB one can use the backslash operator `$\backslash$' to solve linear least squares problems. 
 In python, that is the language used to create the repository associated with this thesis, the method \textit {`numpy.linalg.lstsq'} is used to solve linear least squares problems.
@@ -653,7 +688,7 @@ while the gradient with respect to \( W \) is given by:
     \nabla_W D_{\beta}(V, WH) = \left( (WH)^{\beta - 1} - V \circ (WH)^{\beta - 2} \right) H^\top.
 \end{equation}
 The cost of computing the gradient with respect to \( H \) is $O(mnr)$ and the cost of computing the gradient with respect to \( W \) is also $O(mnr)$.
-\section{Summary and extensions}
+\section*{Summary and extensions}
 During the last decades, many algorithm have been proposed to solve the NMF problem, 
 in this chapter we derived and presented the general framework for designing NMF algorithms,
 and derived the most important ones, namely the multiplicative updates with beta divergence (Algorithm \ref{MU for beta}), which includes the MU for the Frobenius norm and the Kullback-Leibler divergence as special cases for $\beta = 2$ and $\beta = 1$ respectively, the alternating non-negative least squares method (Algorithm \ref{ANLS}), the alternating least squares method (Algorithm \ref{ALS}), the projected gradient descent method (Algorithm \ref{Projected Gradient}), and the hierarchical alternating least squares method (Algorithm \ref{HALS}).
