@@ -12,7 +12,7 @@ In its more general form the non-negative matrix factorization problem can be de
 $W \in \R_+^{m \times r}$ and $H \in \R_+^{r \times n}$, constrained to be non-negative, such that their product $WH$ approximates $V$ as closely as possible according to some distance measure $D$.
 \par
 This problem can be formulated as an optimization problem as follows:
-\begin{definition}[Non-Negative Matrix Factorization optimization problem]\label{NMF optimization problem}
+\begin{definition}[Non-negative matrix factorization optimization problem]\label{NMF optimization problem}
 Given a non-negative matrix $V \in \R_+^{m \times n}$ and a factorization rank $r \in \N$, find two non-negative matrices $W \in \R_+^{m \times r}$ and $H \in \R_+^{r \times n}$ that minimize 
 a given cost function $D(V, WH)$, that is:
 \begin{equation}
@@ -130,7 +130,7 @@ See \cite{fevotte2015nonlinear} and \cite{vincent2009adaptive} for examples.
 \section{Complexity of NMF} \label{complexity of NMF section}
 The main result was proved by Vavasis in \cite{vavasis2007complexitynonnegativematrixfactorization} where it is shown that the NMF problem is NP-hard in general.
 To do so Vavasis considers the exact NMF problem, a particular case of NMF where the distance measure is such that $D(V, WH) = 0$ if and only if $V = WH$ and $D(V, WH) > 0$ otherwise.
-\begin{definition}[Exact non-Negative Matrix Factorization problem]\label{Exact NMF definition}
+\begin{definition}[Exact non-negative matrix factorization problem]\label{Exact NMF definition}
       Given a nonnegative matrix $V \in \R^{m\times n}_+$ and a factorization rank $r$,
 compute, if possible, two nonnegative matrices
 $W \in \R^{m \times r}_+$ and $H \in \R^{r \times n}_+$
@@ -310,7 +310,7 @@ hyperspectral imaging \cite{boardman1995mapping}, and for some computer vision t
 \par
 There are other sufficient conditions that are not included in this thesis, for instance the so called \textit{sufficiently scattered condition} (SCC). The interested reader may refer to \cite{huang2013non} for a geometrical perspective on uniqueness results.
 
-\section{Geometric Interpretation}\label{Geometric interpretation section}
+\section{Geometric interpretation}\label{Geometric interpretation section}
 The aim of this section is to provide a geometric intuition on the NMF problem and provide references to the existent literature that addresses this topic.
 Because the topic is so expansive, this section provides only a brief overview. For a more detailed discussion on the geometric interpretation of NMF see \cite{gillis2020nonnegative} chapter $2$ and the references therein.
 \subsection{Linear dimensionality reduction interpretation}
@@ -376,7 +376,7 @@ That is we wish to find $r$ basis vectors (columns of $W$) such that each data p
 
 
 In this sense NMF can be thought of as a linear dimensionality reduction technique for matrices of non-negative data.
-\subsection{Geometric interpretation with cones}
+\subsection{Geometric interpretation with convex cones}
 In linear algebra a cone is a subset of a vector space that is closed with respect to the operation of positive scalar multiplication.
 \begin{definition}[Cone]
 A set $C \subseteq \R^m$ is a cone if for any $x \in C$ and any non-negative scalars $\alpha \geq 0$ it holds that:
@@ -680,7 +680,7 @@ In this case there exists very efficient algorithms to find the NMF solution, se
     }
     \label{fig:document_matrix}
 \end{figure}
-
+\newpage
 \section*{Summary}
 
 NMF models are able to extract meaningful features and substantial information from non-negative data in many applications. 

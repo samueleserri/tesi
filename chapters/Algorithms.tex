@@ -172,7 +172,7 @@ The algorithm can be summarized in Algorithm \ref{NNDSVD}.
     \end{algorithmic}
 \end{algorithm}
 See chapter \ref{Experiments chapter}, section \ref{init comparison section} for a comparison between random and NNDSVD initializations with the HALS algorithm.
-\section{Multiplicative Updates (MU)} \label{MU derivation section}
+\section{Multiplicative updates (MU)} \label{MU derivation section}
 The multiplicative updates (MU) were first introduced by Lee and Seung in \cite{Lee1999}. They are one of the most popular algorithms for NMF.
 In this section we derive the MU algorithm for two different cost functions: the Frobenius norm and the Kullback-Leibler divergence.
 In \cite{lee2000algorithms} Lee and Seung proved the convergence of Mu algorithm for the Frobenius and the Kullback-Leibler divergence.
@@ -368,7 +368,7 @@ The complete MU algorithm is summarized in Algorithm \ref{MU for KL}.
 In the case of the Kullback-Leibler divergence, the computational cost of the MU algorithm is given by the computation of the gradients: $\frac{V}{WH} H^\top$ and $\textbf{1} H^\top$ for the update of $W$.
 The term $\textbf{1} H^\top$ can be computed in $O(mr)$ operations and the term $\frac{V}{WH} H^\top$ requires $O(mnr)$ operations.
 
-\section{Alternating Non-Negative Least Squares (ANLS)}
+\section{Alternating non-negative least squares (ANLS)}
 The alternating non-negative least squares (ANLS) method consists in solving exactly the non-negative least squares sub-problems at each iteration of the two-blocks coordinate descent scheme (Algorithm \ref{2-BCD}), this is a case of exact 2-BCD (Algorithm \ref{Exact 2-BCD}).
 This scheme was originally proposed in \cite{paatero1994positive}.
 \par
@@ -420,7 +420,7 @@ The algorithm is summarized in Algorithm \ref{ANLS}.
     \begin{equation}
         H^{(k + 1)} = \max\left(0, \arg\min_H \|V - W^{(k + 1)}H^{(k)}\|_F^2  \right).
     \end{equation}
-\subsection{Alternating Least squares ALS}
+\subsection{Alternating least squares ALS}
 The alternating least squares (ALS) method is a projected method where the sub-problems are solved using the linear least squares solution (\ref{linear least sqaures equation}) and then projected onto the non-negative orthant.
 This is very easy to implement since most programming languages have built-in functions to solve least squares problems. For instance in MATLAB one can use the backslash operator `$\backslash$' to solve linear least squares problems. 
 In python, that is the language used to create the repository associated with this thesis, the method \textit {`numpy.linalg.lstsq'} is used to solve linear least squares problems.
@@ -447,7 +447,7 @@ Although the ALS algorithm is very popular in practice due to its simplicity, it
 The computational cost of the ALS algorithm is given by the cost of solving the least squares problems at each iteration.
 Using the normal equations method \ref{normal equations} the cost of solving the least squares problem for \( W \) is $O(mnr + mr^2 + r^3)$ and for \( H \) is $O(mnr + nr^2 + r^3)$. 
 Thus the total cost per iteration is $O(2mnr + (m+n)r^2 + 2r^3)$.
-\subsection{Projected Gradient Descent (PGD)}
+\subsection{Projected gradient descent (PGD)}
 The projected gradient descent method consists in performing a gradient descent step for each block of variables and then projecting the result onto the non-negative orthant.
 This method is discussed in a detailed way in \cite{lin2007projected}.
 \par
@@ -498,8 +498,8 @@ Since this is a gradient descent method with a Lipschitz step size with a projec
 Theorem \ref{GD convergence theorem} can be applied to ensure the convergence of the projected gradient descent method for NMF to a stationary point of the objective function.
 \subsubsection{Computational cost}
 The complexity analysis here is similar to the one presented for the MU algorithm with the Frobenius norm in section \ref{MU derivation section}, since the main cost is in the computation of the gradients. The total cost per iteration is $O(mnr)$ for each update of $W$ and $H$.
-\subsection{Hierarchical Alternating Least Squares (HALS)}
-The Hierarchical Alternating Least Squares (HALS) method is a projected method where each column of \( W \) and each row of \( H \) are updated sequentially by solving a non-negative least squares problem for each column/row while keeping the other columns/rows fixed.
+\subsection{Hierarchical alternating least squares (HALS)}
+The hierarchical alternating least squares (HALS) method is a projected method where each column of \( W \) and each row of \( H \) are updated sequentially by solving a non-negative least squares problem for each column/row while keeping the other columns/rows fixed.
 The algorithm was originally proposed in \cite{cichocki2007hierarchical}.
 \par
 The main idea derive from the observation that for a fixed column $V[:,j] = v$ of the matrix \( V \), the optimization problem
@@ -587,7 +587,7 @@ The convergence of the HALS algorithm to a stationary point of the NMF problem w
 \subsubsection{Computational cost}
 The computational cost of the HALS algorithm is essentially the same of the MU algorithm with the Frobenius norm discussed in section \ref{MU derivation section}, since the main cost is in the computation of the residual matrices $\tilde{R}_{\ell}$,
 the cost is $O(mnr)$ per iteration. In practice HALS is generally faster than MU while having the same computational cost per iteration. See \cite{gillis2020nonnegative}, subsection 8.3.3.
-\section{MU with beta divergence} \label{MU beta section}
+\section{MU with \texorpdfstring{$\beta$-divergence}{beta-divergence}} \label{MU beta section}
 The $\beta$-divergence is a family of cost functions with a single parameter $\beta$ that generalizes several common cost functions used in NMF, including the Frobenius norm and the Kullback-Leibler divergence.
 For the definition of the beta divergence see subsection \ref{Beta divergence section}.
 \par

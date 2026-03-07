@@ -4,17 +4,17 @@ way such that the content is self-contained, and all the concepts used in the su
 \par
 In particular this chapter is organized as follows: first in section \ref{Linear algebra and matrix decomposition section} the basic concepts of linear algebra are introduced, together with the most known decomposition technique: the singular value decomposition (SVD). This last result will be
 used when discussing some technique for the initialization of the factors in NMF algorithms in chapter \ref{ALGO CHAPTER}.
-Then in section \ref{optimization section} the taxonomy of optimization problems is presented along with some important results regarding the linear least squares problem and the gradient descent (GD), algorithm along with the convergence result in the case of a general smooth function.
+Then in section \ref{optimization section} the taxonomy of optimization problems is presented along with some important results regarding the linear least squares problem and the gradient descent (GD) algorithm, along with the convergence result in the case of a general smooth function.
 \par
 Clearly this chapter is not mean to be an exhaustive introduction to linear algebra and optimization, and it is assumed that the reader is already familiar with most of the concepts presented here, therefore only those results that are essential are included. 
 One last disclaimer is that the point of view adopted here is mainly computational and from a data analysis perspective.
 \par
-The main reference for organizing this chapter have been the book by S. Wright and B. Recht \cite{wright2022optimization},
+The main references for organizing this chapter have been the book by S. Wright and B. Recht \cite{wright2022optimization},
 and the book by A. Quarteroni, R. Sacco, F. Saleri, and P. Gervasio \cite{quarteroni2010matematica}. We refer to those books for proofs and more detailed explanations on the topics presented here.
-\section{Linear Algebra and Singular Value Decomposition}\label{Linear algebra and matrix decomposition section}
+\section{Linear algebra and singular value decomposition}\label{Linear algebra and matrix decomposition section}
 This section briefly introduces the fundamentals notions of linear algebra relevant to this thesis;
-in subsection \ref{matrix decomposition section} the problem of matrix decomposition is introduced from a general perspective and the singular value decomposition (SVD) is presented, it is shown how the SVD can be equivalently expressed as a sum of rank-one matrices and the Eckart-Young theorem \ref{Eckart-Young Theorem} is stated, which is important for the theory of low-rank approximations.
-\subsection{Basics of Linear Algebra}
+in subsection \ref{matrix decomposition section} the problem of matrix decomposition is introduced from a general perspective and the singular value decomposition (SVD) is presented, it is shown how the SVD can be equivalently expressed as a sum of rank-one matrices and the Eckart-Young theorem is stated, which is an important result for the theory of low-rank approximations.
+\subsection{Basics of linear algebra}
 \begin{definition}[Matrix]
     Given two numbers $m,n \in N$, a matrix $A \in \R^{m \times n}$ is a rectangular array of real numbers with $m$ rows and $n$ columns.
 \begin{equation*}
@@ -23,7 +23,7 @@ in subsection \ref{matrix decomposition section} the problem of matrix decomposi
     a_{21} & a_{22} & \cdots & a_{2n} \\
     \vdots & \vdots & \ddots & \vdots \\
     a_{m1} & a_{m2} & \cdots & a_{mn}
-    \end{bmatrix}
+    \end{bmatrix}.
 \end{equation*}
 \end{definition}
 We denote by $A[i,j]$ the entry of the matrix $A$ in the $i$-th row and $j$-th column, that is $A[i,j] = a_{ij}$.
@@ -53,7 +53,7 @@ We denote by $A[i,j]$ the entry of the matrix $A$ in the $i$-th row and $j$-th c
     x_{2} \\
     \vdots \\
     x_{m}
-    \end{bmatrix}
+    \end{bmatrix}.
 \end{equation*}
 \begin{definition}[Row vector]
     A row vector $y \in \R^n$ is the transpose of a column vector. (i.e. $y \in \R^{1 \times n}$)
@@ -66,7 +66,7 @@ We denote by $A[i,j]$ the entry of the matrix $A$ in the $i$-th row and $j$-th c
     y_n
     \end{bmatrix}^\top =\begin{bmatrix}
     y_{1} & y_{2} & \cdots & y_{n}
-    \end{bmatrix}
+    \end{bmatrix}.
 \end{equation*}
 \subsubsection{Norms}
 \begin{definition}[Norm of a vector]
@@ -80,15 +80,15 @@ We denote by $A[i,j]$ the entry of the matrix $A$ in the $i$-th row and $j$-th c
 \begin{example}
     The Euclidean norm (or 2-norm) of a vector $x \in \R^n$ is defined as:  
     \begin{equation}
-    \| x \|_2 = \sqrt{\sum_{i=1}^{n} x_i^2}
+    \| x \|_2 = \sqrt{\sum_{i=1}^{n} x_i^2}.
     \end{equation}
     The 1-norm of a vector $x \in \R^n$ is defined as:
     \begin{equation}
-    \| x \|_1 = \sum_{i=1}^{n} |x_i|
+    \| x \|_1 = \sum_{i=1}^{n} |x_i|.
     \end{equation}
     The infinity norm of a vector $x \in \R^n$ is defined as:
     \begin{equation}
-    \| x \|_\infty = \max_{1 \leq i \leq n} |x_i|
+    \| x \|_\infty = \max_{1 \leq i \leq n} |x_i|.
     \end{equation}
 \end{example}
 \begin{definition}[Norm of a matrix]
@@ -102,24 +102,24 @@ We denote by $A[i,j]$ the entry of the matrix $A$ in the $i$-th row and $j$-th c
 \begin{example}
     The Frobenius norm of a matrix $A \in \R^{m \times n}$ is defined as:
     \begin{equation}
-    \| A \|_F = \sqrt{\sum_{i=1}^{m} \sum_{j=1}^{n} a_{ij}^2}
+    \| A \|_F = \sqrt{\sum_{i=1}^{m} \sum_{j=1}^{n} a_{ij}^2}.
     \end{equation}
     The 1-norm of a matrix $A \in \R^{m \times n}$ is defined as:
     \begin{equation}
-    \| A \|_1 = \max_{1 \leq j \leq n} \sum_{i=1}^{m} |a_{ij}|
+    \| A \|_1 = \max_{1 \leq j \leq n} \sum_{i=1}^{m} |a_{ij}|.
     \end{equation}
     The infinity norm of a matrix $A \in \R^{m \times n}$ is defined as:
     \begin{equation}
-    \| A \|_\infty = \max_{1 \leq i \leq m} \sum_{j=1}^{n} |a_{ij}|
+    \| A \|_\infty = \max_{1 \leq i \leq m} \sum_{j=1}^{n} |a_{ij}|.
     \end{equation}
 \end{example}
 
 %* DISTINZIONE TRA NORME INDOTTE E NORMA DI FROBENIUS
 
-\subsection{Singular Value Decomposition (SVD)}\label{matrix decomposition section}
+\subsection{Singular value decomposition (SVD)}\label{matrix decomposition section}
 In linear algebra, with matrix decomposition we refer to the problem of expressing a given matrix as a product of two or more matrices.
 The problem of matrix decomposition is widely studied in linear algebra and it is a fundamental tool for many applications.
-In this section we present the Singular Value Decomposition (SVD), that is, one of the most known and widely used matrix decomposition techniques.
+In this section we present the singular value decomposition (SVD), that is, one of the most known and widely used matrix decomposition techniques.
 \par
 The singular value decomposition (SVD) of a matrix $A \in \R^{m \times n}$ takes the form:
 \begin{equation}
@@ -152,7 +152,7 @@ We have the following important theorem regarding the SVD:
     \end{equation}
 \end{theorem}
 This means that the rank-$k$ matrix $A_k$ obtained by keeping only the top $k$ singular values and their corresponding singular vectors is the closest matrix to $A$ in terms of the Frobenius norm among all matrices of rank at most $k$.
-\section{Mathematical Optimization} \label{optimization section}
+\section{Mathematical optimization} \label{optimization section}
 In this section the taxonomy of optimization problems is introduced: we give the definition of an optimization problem in its general form, and the definitions of global and local optima; then the 
 linear least squares problem is presented along with its closed-form solution (Theorem \ref{normal equations}), this result will be useful in designing some of the algorithms presented in chapter \ref{ALGO CHAPTER}.
 Finally, the gradient descent algorithm is introduced along with a convergence result for general smooth functions (Theorem \ref{GD convergence theorem}).
@@ -262,7 +262,7 @@ We have the following convergence result for gradient descent:
 \begin{proof}
     ADD PROOF HERE.
 \end{proof}
-\subsection{Low Rank Matrix Approximation} \label{LRMA section}
+\subsection{Low rank matrix approximation} \label{LRMA section}
 An important optimization problem that is relevant for this thesis, and that often arise in the context of data analysis and data compression, is the problem of low rank matrix approximation, that is the problem of approximating a given matrix $A \in \R^{m \times n}$ of rank $r$ with a matrix of lower rank.
 In particular this is an optimization problem where the objective function is a matrix norm and the feasible set is the set of matrices with rank less than or equal to a given integer $k < r$.
 \begin{definition}[Low rank matrix approximation]

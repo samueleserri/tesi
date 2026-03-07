@@ -1,11 +1,11 @@
 \chapter{Numerical Experiments} \label{Experiments chapter}
 
 In this chapter we run numerical simulations to compare the performance of the different algorithms described in chapter \ref{ALGO CHAPTER}, in terms of convergence speed and relative reconstruction error.
-As error measure, we use the relative error for the $t$-th step of the algorithm with the Frobenius norm. This is defined as:
+As error measure, we use the relative reconstruction error for the $t$-th step of the algorithm with the Frobenius norm. This is defined as:
 \begin{equation}\label{relative fro error}
     e_t = \frac{||V - W_t H_t||_F^2}{||V||_F^2}
 \end{equation}
-The simulations are run with Python 3.14 on a Intel Core™ i7-1260P Processor; for the documentation and code availability refer to the ``Code Documentation'' chapter in the appendix \ref{code documentation appendix} of this thesis.
+The simulations are run with Python 3.14 on a Intel Core™ i7-1260P processor; for the documentation and code availability refer to the ``Code Documentation'' chapter in the appendix \ref{code documentation appendix} of this thesis.
 \par
 Following the literature, specifically the approach of N. Gillis \cite{gillis2020nonnegative}, we distinguish between the dense and the sparse case.
 As a benchmark for the dense case we use the CBCL dataset and the Olivetti faces dataset. For the sparse case we use the tdt2 dataset.
@@ -39,19 +39,19 @@ The results are shown in Figure \ref{fig:CBCL dataset}.
     \centering
     \includegraphics[width=1\textwidth]{Imgs/Chapter 5/CBCL Low rank.png}
     \includegraphics[width=1\textwidth]{Imgs/Chapter 5/CBCL_random_init.png}
-    \caption{Average reconstruction error for different algorithms averaged over 10 random initializations on the CBCL dataset. Above the model with $r = 10$, below with $r = 49$}
+    \caption{Average relative reconstruction error for different algorithms averaged over 10 random initializations on the CBCL dataset. Above the model with $r = 10$, below with $r = 49$}
     \label{fig:CBCL dataset}
 \end{figure}
 
-As expected the HALS algorithm converges the fastest and reaches the lowest reconstruction error after $30$ seconds, while the ALS algorithm performs the worst, this is a known result in the case of dense matrices, see \cite{gillis2020nonnegative} section 8.4.3.
-PGD and MU have similar performance. 
+As expected the HALS algorithm converges the fastest and reaches the lowest relative reconstruction error within $30$ seconds, while the ALS algorithm performs the worst, this is a known result in the case of dense matrices, see \cite{gillis2020nonnegative} section 8.4.3.
+On the other hand, the PGD and MU have similar performance. 
 \par
 By looking at the average number of iterations and the average time for iteration, shown in Tables \ref{tab:CBCL results 10} and \ref{tab:CBCL results 49}, we can see that the ALS algorithm has a much higher time for iteration compared to the other algorithms.
 While the HALS algorithm is the one that achieve the highest number of iterations in the same time.
 \par
 We apply the same procedure to the Olivetti faces dataset\footnote{{\url{https://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html}}}, which contains $400$ gray-scale images of faces with a resolution of $64 \times 64$ pixels, for a total of $400 \times 64 \times 64 = 1638400$ elements.
 The reconstruction rank is set to $r = 30$ producing two matrices $W \in \R^{4096 \times 30}$ and $H \in \R^{30 \times 400}$.
-The plot of the reconstruction error is very similar to the one obtained with the CBCL dataset and it is included in the appendix \ref{fig:Olivetti dataset}.
+The plot of the average relative reconstruction error is very similar to the one obtained with the CBCL dataset and it is included in the appendix \ref{fig:Olivetti dataset}.
 
 \begin{table}[]
 \begin{tabular}{|l|l|l|l|}
@@ -80,7 +80,7 @@ PGD       & 282                          & $4.06 \times 10^{-1}     $           
 \end{table}
 
 
-\section{The Top 30 News dataset}
+\section{The top 30 news dataset}
 
 The tdt2\_top30 dataset is a benchmark dataset for performing topic detection, it was used in subsection \ref{Topic modeling section} as an example of the application of NMF in topic modeling.
 The dataset contains $9394$ documents represented as a term-document matrix with $19528$ terms, for a total of $19528 \times 9394 = 11.8345e+08$ elements, with a sparsity of $99.4\%$. 
@@ -91,7 +91,7 @@ The results are shown in Figure \ref{fig:Top30 news dataset}.
     \centering
     \includegraphics[width=1\textwidth]{Imgs/Chapter 5/Top30_news_random_init.png}
     \includegraphics[width=1\textwidth]{Imgs/Chapter 5/top30_60_seconds.png}
-    \caption{Average reconstruction error for different algorithms averaged over 10 random initializations on the Top 30 News dataset.
+    \caption{Average relative reconstruction error for different algorithms averaged over 10 random initializations on the Top 30 News dataset.
     Above the model fitted for 30 seconds, below the model fitted for 60 seconds.}
     \label{fig:Top30 news dataset}
 \end{figure}
@@ -123,20 +123,21 @@ PGD       & 27                       & $2.2 \times 10^{0}     $                &
 \label{tab:Top30 news results 60}
 \end{table}
 
-In this case, the lowest reconstruction error is achieved by the HALS algorithm, followed by ALS, PGD, and MU that are very close to each other.
+In this case, the lowest relative reconstruction error is achieved by the HALS algorithm, followed by ALS, PGD, and MU that are very close to each other.
 By looking at the average number of iterations and the average time for iteration, shown in Tables \ref{tab:Top30 news results 30} and \ref{tab:Top30 news results 60}, we can see that the ALS algorithm has a lower time for iteration compared to PGD and an higher average time for iteration compared to HALS and MU.
 The MU algorithm is the one that achieves the highest number of iterations in the same time, while PGD is the one with the lowest number of iterations in the same time. 
 
 
 
 \section{Comparison between random and NNDSVD initializations}\label{init comparison section}
-Now, we wonder whether we can observe a significant difference in the convergence speed and the final reconstruction error if we choose the NNDSVD initialization strategy described in Algorithm \ref{NNDSVD} instead of the random initialization.
+Now, we wonder whether we can observe a significant difference in the convergence speed and the final relative reconstruction error if we choose the NNDSVD initialization strategy described in Algorithm \ref{NNDSVD} instead of the random initialization.
 We decide to run this test with the HALS algorithm.
-We generate a dense matrix $V \in \R^{m \times n}$ as before with $m = 250, n = 100$, and $r = 20$ and we fit a NMF model with reconstruction rank equal to $20$ using the HALS algorithm as solver with two different initialization strategies:
+As data matrix we use the CBCL dataset and we fit a NMF model with reconstruction rank equal to $49$ using the HALS algorithm as solver with two different initialization strategies:
 \begin{enumerate}
     \item random initialization: $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$ are initialized from a uniform distribution in $[0,1)$.
     \item NNDSVD initialization \ref{NNDSVD} : $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$ are initialized using the NNDSVD method.
 \end{enumerate}
+Both algorithms are run for 10 seconds. The results are shown in Figure \ref{fig:Hals_init_comparison}.
 
 \begin{figure}[ht]
     \centering
@@ -145,11 +146,7 @@ We generate a dense matrix $V \in \R^{m \times n}$ as before with $m = 250, n = 
     \label{fig:Hals_init_comparison}
 \end{figure}
 
-We observe that in this case, the HALS algorithm initialized with NNDSVD converges faster and reaches a lower reconstruction error after $1000$ iterations compared to the random initialization, as shown in figure \ref{fig:Hals_init_comparison}.
-
-
-
-
+We observe that, in this case, the HALS algorithm initialized with NNDSVD converges faster and reaches a lower relative reconstruction error within the time limit compared to the random initialization.
 
 \section*{Summary}
 
@@ -160,3 +157,8 @@ HALS converges the fastest in both cases.
 MU and PGD have similar performance in the dense case, while in the sparse case MU performs better than PGD.
 \par
 In general there is high sensitivity to the initialization, sometimes using initialization techniques such as NNDSVD \ref{NNDSVD} can help performance.
+\par
+In the appendix \ref{Additional plots appendix} we include additional plots of the experiments described in this chapter.
+In particular, we include the plot of the average relative reconstruction error for each algorithm against the number of iterations and the plot of the final relative reconstruction error against the rank of the model.
+The data used for these plots are syntetic data generated as $V = WH$ with $W \in \R^{m \times r} $ and $H \in \R^{r \times n}$ with entries generated from a uniform distribution in $[0,1)$, with $m = 250$, $n = 100$, and $r = 20$.
+The matrix is generated using the method \texttt{numpy.random.rand} from the NumPy library, and the seed is set to 15 for reproducibility.

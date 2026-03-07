@@ -57,7 +57,7 @@ pip list
 \end{lstlisting}
 to see the installed packages. You should a package named \texttt{NMF} and its dependencies.
 
-\section{Repository Structure}\label{Repo structure section}
+\section{Repository structure}\label{Repo structure section}
 
 %* begin repo structure
 \fbox{%
@@ -168,8 +168,8 @@ Attributes:
 \subsubsection{SparseNMF}
 The \texttt{SparseNMF.py} module contains a subclass of the NMF class that handles sparse matrices with the \texttt{scipy.sparse\_array}\footnote{This is the latest release \url{https://docs.scipy.org/doc/scipy/reference/sparse.html} fully compatible with NumPy arrays, 
 the older release was did not have full compatibility, for more information visit \url{https://docs.scipy.org/doc/scipy/reference/sparse.migration_to_sparray.html migration-to-sparray}} interface.
-\section{Examples Usage}
-\subsection{Basic Usage Example}
+\section{Examples usage}
+\subsection{Basic usage Example}
 First import the NMF class from the nmf package:
 \begin{lstlisting}
 from nmf import NMF
@@ -214,7 +214,7 @@ factors = reg_model.get_factors()
 \end{lstlisting}
 \par
 this return a dictionary where to the key ``W'' corresponds the matrix $W$ and to the key ``H'' corresponds the matrix $H$.
-\subsection{Two More Sophisticated Examples} 
+\subsection{Two more sophisticated examples} 
 \subsubsection{Learning part of faces from the CBCL dataset}
 We talk again about the example presented in \ref{Example feature extraction NMF}; recall that this example was originally presented in the seminal paper on NMF by Lee and Seung \cite{Lee1999}. 
 Here we reproduce the results using our implementation of NMF with the MU algorithm and the Kullback-Leibler divergence.

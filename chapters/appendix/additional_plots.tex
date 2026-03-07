@@ -1,4 +1,4 @@
-\chapter{Additional plots}
+\chapter{Additional plots}\label{Additional plots appendix}
 
 \begin{figure}[ht]
     \centering
@@ -37,38 +37,36 @@
 \end{figure}
 
 
-% \subsection{HALS algorithm}
-
-
-\begin{figure}[h!]
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=1\textwidth]{Imgs/Chapter 5/Appendix plots/HALS_average_random_10init.png}
-    \caption{Reconstruction error vs. number of iterations for HALS algorithm on synthetic data.}
-    \label{fig:HALS_synthetic}
-\end{figure}
-
- % \subsection{PGD algorithm}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=1\textwidth]{Imgs/Chapter 5/Appendix plots/PGD_average_random_10init.png}
-    \caption{Reconstruction error vs. number of iterations for PGD algorithm on synthetic data.}
-    \label{fig:PGD_synthetic}
-\end{figure}
-% \subsection{ALS algorithm}
-
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=1\textwidth]{Imgs/Chapter 5/Appendix plots/ALS_average_random_10init.png}
-    \caption{Reconstruction error vs. number of iterations for ALS algorithm on synthetic data.}
-    \label{fig:ALS_synthetic}
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imgs/Chapter 5/Appendix plots/HALS_average_random_10init.png}
+        \caption{HALS}
+        \label{fig:HALS_synthetic}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imgs/Chapter 5/Appendix plots/PGD_average_random_10init.png}
+        \caption{PGD}
+        \label{fig:PGD_synthetic}
+    \end{subfigure}
+    \vspace{0.5cm}
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Imgs/Chapter 5/Appendix plots/ALS_average_random_10init.png}
+        \caption{ALS}
+        \label{fig:ALS_synthetic}
+    \end{subfigure}
+    \caption{Reconstruction error vs. number of iterations for HALS, PGD, and ALS algorithms on synthetic data.}
+    \label{fig:HALS_PGD_ALS_synthetic}
 \end{figure}
 
 
 % \subsection{Olivetti Dataset}
 
-\begin{figure}[h!]
+\begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{Imgs/Chapter 5/Appendix plots/Olivetti_dataset_random_init.png}
     \caption{Average reconstruction error for different algorithms averaged over 10 random initializations on the Olivetti dataset.}
