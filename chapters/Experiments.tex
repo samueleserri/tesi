@@ -1,7 +1,7 @@
 \chapter{Numerical Experiments} \label{Experiments chapter}
 
-In this chapter we run numerical simulations to compare the performance of the different algorithms described in chapter \ref{ALGO CHAPTER}, in terms of convergence speed and relative reconstruction error.
-As error measure, we use the relative reconstruction error for the $t$-th step of the algorithm with the Frobenius norm. This is defined as:
+In this chapter, we run numerical simulations to compare the performance of the different algorithms described in chapter \ref{ALGO CHAPTER}, in terms of convergence speed and relative reconstruction error.
+As error measure, we use the relative reconstruction error with the Frobenius norm. This is defined for the $t$-th iteration as:
 \begin{equation}\label{relative fro error}
     e_t = \frac{||V - W_t H_t||_F^2}{||V||_F^2}
 \end{equation}
@@ -10,13 +10,13 @@ The simulations are run with Python 3.14 on a Intel Core™ i7-1260P processor. 
 Following the literature, specifically the approach of N. Gillis \cite{gillis2020nonnegative}, we distinguish between the dense and the sparse case.
 As a benchmark for the dense case we use the CBCL dataset and the Olivetti faces dataset. For the sparse case we use the tdt2 dataset.
 
-In section \ref{init comparison section} the HALS algorithm is used to compare the influence of the initialization strategy on the convergence speed and the final relative reconstruction error, in particular we fit the same NMF model on the same data changing only the initialization method.
+In section \ref{init comparison section} the HALS algorithm is used to compare the influence of the initialization strategy on the convergence speed and the final relative reconstruction error, more specifically we fit the same NMF model on the same data changing only the initialization method.
 
 \begin{table}[ht]
 \centering
 \begin{tabular}{lllll}
 \hline
-\multicolumn{1}{|l|}{Dataset}         & \multicolumn{1}{l|}{m}   & \multicolumn{1}{l|}{n}    & \multicolumn{1}{l|}{rank} & \multicolumn{1}{l|}{Sparsity} \\ \hline
+\multicolumn{1}{|l|}{Dataset}         & \multicolumn{1}{l|}{m}   & \multicolumn{1}{l|}{n}    & \multicolumn{1}{l|}{rank} & \multicolumn{1}{l|}{sparsity} \\ \hline
 \multicolumn{1}{|l|}{CBCL}            & \multicolumn{1}{l|}{361} & \multicolumn{1}{l|}{2429} & \multicolumn{1}{l|}{361}  & \multicolumn{1}{l|}{0\%}      \\ \hline
 \multicolumn{1}{|l|}{Olivetti Faces}     & \multicolumn{1}{l|}{4096}    & \multicolumn{1}{l|}{400}     & \multicolumn{1}{l|}{400}     & \multicolumn{1}{l|}{0\%}         \\ \hline
 \multicolumn{1}{|l|}{tdt2\_top30}     & \multicolumn{1}{l|}{19528}    & \multicolumn{1}{l|}{9394}     & \multicolumn{1}{l|}{2078}     & \multicolumn{1}{l|}{99.4\%}         \\ \hline
@@ -24,18 +24,18 @@ In section \ref{init comparison section} the HALS algorithm is used to compare t
 \caption{Summary of the datasets used in the experiments.}
 \label{Summary of dataset}
 \end{table}
-The Summary of the datasets used in the experiments is shown in Table \ref{Summary of dataset}, where $m$ is the number of rows, $n$ is the number of columns, $rank$ is the (ordinary) rank of the matrix, and $Sparsity$ is the percentage of zero entries in the matrix.
+The Summary of the datasets used in the experiments is shown in Table \ref{Summary of dataset}, where $m$ is the number of rows, $n$ is the number of columns, $rank$ is the (ordinary) rank of the matrix, and $sparsity$ is the percentage of zero entries in the matrix.
 
 
 \section{The CBCL dataset}\label{CBCL dataset section}
-In this section we use the CBCL face dataset used in \cite{Lee1999}, see subsection \ref{Example feature extraction NMF} for more details.
+For this section, we use the CBCL face dataset used in \cite{Lee1999}, see subsection \ref{Example feature extraction NMF} for more details.
 The dataset contains $361$ gray-scale images of faces with a resolution of $19 \times 19$ pixels. The total number of elements in the dataset is $361 \times 19 \times 19 = 130441$.
-We fit two NMF models with reconstruction rank $r = 10,49$ using the MU algorithm with Frobenius norm ($\beta = 2$), the hierarchical alternating least squares (HALS) algorithm, the alternating least squares (ALS) algorithm, and the projected gradient descent method (PGD).
+We fit two NMF models with reconstruction rank $r = 10,49$ using the MU algorithm with Frobenius norm ($\beta = 2$), the hierarchical alternating least squares (HALS) algorithm, the alternating least squares (ALS) algorithm, and the projected gradient descent (PGD) algorithm.
 Recall from section \ref{initialization section} that the initialization of the matrices $W$ and $H$ can have a significant impact on the convergence and performance of the algorithms.
 In order to reduce the variance of the results due to random initialization, we run each algorithm 10 times with 10 different random initializations and we average the relative reconstruction errors over those runs.
 We let run each algorithm for 30 seconds.
 The results are shown in Figure \ref{fig:CBCL dataset}.
-\begin{figure}[ht]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=1\textwidth]{Imgs/Chapter 5/CBCL Low rank.png}
     \includegraphics[width=1\textwidth]{Imgs/Chapter 5/CBCL_random_init.png}
@@ -53,7 +53,7 @@ We apply the same procedure to the Olivetti faces dataset\footnote{{\url{https:/
 The reconstruction rank is set to $r = 30$ producing two matrices $W \in \R^{4096 \times 30}$ and $H \in \R^{30 \times 400}$.
 The plot of the average relative reconstruction error is very similar to the one obtained with the CBCL dataset and it is included in the appendix \ref{fig:Olivetti dataset}.
 
-\begin{table}[]
+\begin{table}[htbp]
 \begin{tabular}{|l|l|l|l|}
 \hline
 Algorithm & Average number of iterations & Average time for iteration (s) & time (s) \\ \hline
@@ -66,7 +66,7 @@ PGD       & 696                       & $4.31 \times 10^{-2}     $              
 \label{tab:CBCL results 10}
 \end{table}
 
-\begin{table}[]
+\begin{table}[htbp]
 \begin{tabular}{|l|l|l|l|}
 \hline
 Algorithm & Average number of iterations & Average time for iteration (s) & time (s) \\ \hline
@@ -97,7 +97,7 @@ The results are shown in Figure \ref{fig:Top30 news dataset}.
 \end{figure}
 
 
-\begin{table}[]
+\begin{table}[htbp]
 \begin{tabular}{|l|l|l|l|}
 \hline
 Algorithm & Average number of iterations & Average time for iteration (s) & time (s) \\ \hline
@@ -110,7 +110,7 @@ PGD       & 15                       & $2 \times 10^{0}     $                & 3
 \label{tab:Top30 news results 30}
 \end{table}
 
-\begin{table}[]
+\begin{table}[htbp]
 \begin{tabular}{|l|l|l|l|}
 \hline
 Algorithm & Average number of iterations & Average time for iteration (s) & time (s) \\ \hline
@@ -135,7 +135,7 @@ We decide to run this test with the HALS algorithm.
 As data matrix we use the CBCL dataset and we fit a NMF model with reconstruction rank equal to $49$ using the HALS algorithm as solver with two different initialization strategies:
 \begin{enumerate}
     \item random initialization: $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$ are initialized from a uniform distribution in $[0,1)$.
-    \item NNDSVD initialization \ref{NNDSVD} : $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$ are initialized using the NNDSVD method.
+    \item NNDSVD initialization: $W \in \R^{m \times r}$ and $H \in \R^{r \times n}$ are initialized using the NNDSVD method.
 \end{enumerate}
 Both algorithms are run for 10 seconds. The results are shown in Figure \ref{fig:Hals_init_comparison}.
 
@@ -155,6 +155,8 @@ In this chapter we compared the MU algorithm, the HALS algorithm, the ALS algori
 For sparse matrices, ALS performs more efficiently compared to dense matrices when it converges poorly.
 HALS converges the fastest in both cases. 
 MU and PGD have similar performance in the dense case, while in the sparse case MU performs better than PGD.
+From tables \ref{tab:CBCL results 10}, \ref{tab:CBCL results 49}, \ref{tab:Top30 news results 30}, and \ref{tab:Top30 news results 60} we can see that the time for iteration of ALS is much higher than the other algorithms in the dense case, while in the sparse case it is lower than PGD and higher than HALS and MU.
+In the dense case, HALS is the algorithm that achieves the highest number of iterations in the same time, while in the sparse case it is the MU algorithm that achieves the highest number of iterations in the same time.
 \par
 In general there is high sensitivity to the initialization, sometimes using initialization techniques such as NNDSVD can help performance.
 \par
