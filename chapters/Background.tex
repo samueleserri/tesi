@@ -100,22 +100,26 @@ We denote by $A[i,j]$ the entry of the matrix $A$ in the $i$-th row and $j$-th c
     \end{itemize}
 \end{definition}
 \begin{example}
-    The Frobenius norm of a matrix $A \in \R^{m \times n}$ is defined as:
-    \begin{equation}
-    \| A \|_F = \sqrt{\sum_{i=1}^{m} \sum_{j=1}^{n} a_{ij}^2}.
-    \end{equation}
     The 1-norm of a matrix $A \in \R^{m \times n}$ is defined as:
-    \begin{equation}
+    \begin{equation}\label{1-norm}
     \| A \|_1 = \max_{1 \leq j \leq n} \sum_{i=1}^{m} |a_{ij}|.
     \end{equation}
     The infinity norm of a matrix $A \in \R^{m \times n}$ is defined as:
-    \begin{equation}
+    \begin{equation}\label{infty-norm}
     \| A \|_\infty = \max_{1 \leq i \leq m} \sum_{j=1}^{n} |a_{ij}|.
     \end{equation}
 \end{example}
 
 %* DISTINZIONE TRA NORME INDOTTE E NORMA DI FROBENIUS
 
+The norms defined in equations (\ref{1-norm}) and (\ref{infty-norm}) are examples of induced norms, that is, norms that are defined in terms of the vector norms, and they are induced by the vectorial $1$-norm and the vectorial infinity norm respectively.
+\begin{example}
+    The Frobenius norm of a matrix $A \in \R^{m \times n}$ is defined as:
+    \begin{equation}
+    \| A \|_F = \sqrt{\sum_{i=1}^{m} \sum_{j=1}^{n} a_{ij}^2}.
+    \end{equation}
+\end{example}
+The Frobenius norm is not induced by any vector norm.
 \subsection{Singular value decomposition (SVD)}\label{matrix decomposition section}
 In linear algebra, with matrix decomposition we refer to the problem of expressing a given matrix as a product of two or more matrices.
 The problem of matrix decomposition is widely studied in linear algebra and it is a fundamental tool for many applications.
@@ -145,13 +149,14 @@ An SVD can be equivalently expressed as a sum of rank-one matrices:
     \end{equation}
     where $r$ is the rank of $A$, $\sigma_i$ are the nonzero singular values, and $u_i$ and $v_i$ are the corresponding left and right singular vectors.
 We have the following important theorem regarding the SVD:
-\begin{theorem}[\cite{schmidt1907theorie} Eckart-Young Theorem] \label{Eckart-Young Theorem}
+\begin{theorem}[\cite{schmidt1907theorie} Eckart-Young theorem for the Frobenius norm] \label{Eckart-Young Theorem}
     Let $A \in \R^{m \times n}$ be a matrix with singular value decomposition $A = U \Sigma V^\top$. For any integer $k$ such that $1 \leq k \leq rank(A)$, the best rank-$k$ approximation of $A$ in terms of the Frobenius norm is given by:
     \begin{equation}
         A_k = \sum_{i=1}^{k} \sigma_i u_i v_i^\top
     \end{equation}
 \end{theorem}
 This means that the rank-$k$ matrix $A_k$ obtained by keeping only the top $k$ singular values and their corresponding singular vectors is the closest matrix to $A$ in terms of the Frobenius norm among all matrices of rank at most $k$.
+The result presented in Theorem \ref{Eckart-Young Theorem} is a special case of a more general result that holds for any unitarily invariant norm.
 \section{Mathematical optimization} \label{optimization section}
 In this section the taxonomy of optimization problems is introduced: we give the definition of an optimization problem in its general form, and the definitions of global and local optima; then the 
 linear least squares problem is presented along with its closed-form solution (Theorem \ref{normal equations}), this result will be useful in designing some of the algorithms presented in chapter \ref{ALGO CHAPTER}.
@@ -234,7 +239,7 @@ to minimize the sum of the squared vertical distances between each vector
 \end{figure}
 \newpage
 \subsection{Gradient descent}\label{Gradient descent section}
-Often optimization problems do not admit an analytical solution, therefore iterative procedures are used to find a local minimum of the objective function.
+Often, optimization problems do not admit an analytical solution, therefore iterative procedures are used to find a local minimum of the objective function.
 Gradient descent is one of the so called first-order iterative algorithms, that is an algorithm that only uses the first derivative of the objective function to compute the next iterate.
 The high-level idea of this method is to iteratively update the position of the current point by taking a step in the opposite direction of the gradient of the objective function at that point, since the gradient points in the direction of the steepest ascent.
 \begin{definition}[Gradient descent]
@@ -245,9 +250,6 @@ The high-level idea of this method is to iteratively update the position of the 
     where $\eta_k > 0$ is the step size (or learning rate) at iteration $k$ and $\nabla f(x_k)$ is the gradient of the objective function at point $x_k$.
 \end{definition}
 We have the following convergence result for gradient descent:
-
-%* TODO: CHECK THIS THEOREM
-
 \begin{theorem} [GD convergence for a general smooth function] \label{GD convergence theorem} 
     Let $f: \R^n \rightarrow \R$ be a differentiable function with $L$-Lipschitz continuous gradient, i.e., there exists a constant $L > 0$ such that for all $x, y \in \R^n$:
     \begin{equation*}
@@ -260,7 +262,7 @@ We have the following convergence result for gradient descent:
     where $\bar{x}$ is a stationary point of $f$, i.e., $\nabla f(\bar{x}) = 0$.
 \end{theorem}
 \begin{proof}
-    ADD PROOF HERE.
+    The proof can be found in \cite{wright2022optimization}, section 3.3.
 \end{proof}
 \subsection{Low rank matrix approximation} \label{LRMA section}
 An important optimization problem that is relevant for this thesis, and that often arise in the context of data analysis and data compression, is the problem of low rank matrix approximation, that is the problem of approximating a given matrix $A \in \R^{m \times n}$ of rank $r$ with a matrix of lower rank.

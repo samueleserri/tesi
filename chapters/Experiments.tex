@@ -5,7 +5,7 @@ As error measure, we use the relative reconstruction error for the $t$-th step o
 \begin{equation}\label{relative fro error}
     e_t = \frac{||V - W_t H_t||_F^2}{||V||_F^2}
 \end{equation}
-The simulations are run with Python 3.14 on a Intel Core™ i7-1260P processor; for the documentation and code availability refer to the ``Code Documentation'' chapter in the appendix \ref{code documentation appendix} of this thesis.
+The simulations are run with Python 3.14 on a Intel Core™ i7-1260P processor. For the documentation and code availability refer to the ``Code Documentation'' chapter in the appendix \ref{code documentation appendix} of this thesis.
 \par
 Following the literature, specifically the approach of N. Gillis \cite{gillis2020nonnegative}, we distinguish between the dense and the sparse case.
 As a benchmark for the dense case we use the CBCL dataset and the Olivetti faces dataset. For the sparse case we use the tdt2 dataset.
@@ -156,7 +156,7 @@ For sparse matrices, ALS performs more efficiently compared to dense matrices wh
 HALS converges the fastest in both cases. 
 MU and PGD have similar performance in the dense case, while in the sparse case MU performs better than PGD.
 \par
-In general there is high sensitivity to the initialization, sometimes using initialization techniques such as NNDSVD \ref{NNDSVD} can help performance.
+In general there is high sensitivity to the initialization, sometimes using initialization techniques such as NNDSVD can help performance.
 \par
 In the appendix \ref{Additional plots appendix} we include additional plots of the experiments described in this chapter.
 In particular, we include the plot of the average relative reconstruction error for each algorithm against the number of iterations and the plot of the final relative reconstruction error against the rank of the model.

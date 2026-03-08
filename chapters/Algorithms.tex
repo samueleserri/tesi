@@ -4,14 +4,14 @@ The algorithms are listed here: multiplicative updates (MU) with the Frobenius n
 \par
 In section \ref{2-BCD general framework} the two-block coordinate descent framework is presented, which is the most common approach to design methods for solving the NMF optimization problem.
 In section \ref{Stopping criteria section} the stopping criteria commonly used in the literature are discussed.
-In section \ref{initialization section} the sensitivity of NMF algorithms to the initialization in general is highlighted, and the non-negative Double Singular Value Decomposition (NNDSVD) initialization method is presented (Algorithm \ref{NNDSVD}).
+In section \ref{initialization section} the sensitivity of NMF algorithms to the initialization in general is highlighted, and the non-negative double singular value decomposition (NNDSVD) initialization method is presented.
 \par
 Recall that the NMF problem (\ref{NMF optimization problem}) is NP-hard \cite{vavasis2007complexitynonnegativematrixfactorization}, hence all the Algorithms presented in this chapter are heuristics that aim to find a local minimum of the optimization problem.
 More precisely, they are iterative schemes that start from an initial guess of the factors \( W_0 \) and \( H_0 \) and iteratively update them to reduce the value of the objective function, converging to a local minimum.
 They don't guarantee to converge to the global minimum.
 Furthermore the optimization problem (\ref{NMF optimization problem}) is a constrained optimization problem, since the factors \( W \) and \( H \) are constrained to be non-negative, (\( W \geq 0 \) and \( H \geq 0 \)).
-To handle the non-negativity constraints, the algorithms presented in this chapter use two main approaches: the first one is to design a scheme that ensure the non-negativity of the iterates at each step, this is the case of the MU, and ANLS;
-the second approach is to first solve the sub-problems without the non-negativity constraints and then project the solution onto the non-negative orthant, this is the case of the ALS, HALS, and PGD.
+To handle the non-negativity constraints, the algorithms presented in this chapter use two main approaches: the first one is to design a scheme that ensures the non-negativity of the iterates at each step, this is the case of the MU, and ANLS.
+The second approach is to first solve the sub-problems without the non-negativity constraints and then project the solution onto the non-negative orthant, this is the case of the ALS, HALS, and PGD.
 
 % \begin{table}
 %     \centering
@@ -52,7 +52,7 @@ The most common setting for NMF is the so called two-blocks coordinate descent, 
 This general scheme is widely used, and we present different ways to update the factors \( W \) and \( H \). There are mainly two observations that justify this approach:
 \begin{enumerate}
     \item When one of the factors is fixed, the optimization subproblem is convex for most of the common cost functions. That makes it easier to design algorithms to solve it.
-    \item Due to the symmetry of the problem $V = WH \iff V^T = H^T W^T$ the value of the cost function is the same if we swap \( W \) and \( H \) and transpose the input matrix \( V \). $D(V, WH) = D(V^T, H^T W^T)$.
+    \item Due to the symmetry of the problem $V = WH \iff V^T = H^T W^T$ the value of the cost function is the same if we swap \( W \) and \( H \) and transpose the input matrix \( V \): $D(V, WH) = D(V^T, H^T W^T)$.
     Therefore, it is sufficient to design an update rule for one of the factors, the other can be obtained by swapping the roles of \( W \) and \( H \) and transposing \( V \).
 \end{enumerate}
 Overall this approach is much easier to handle than trying to update both factors simultaneously. % See \cite{mukkamala2019alternatingupdatesmatrixfactorization}.
@@ -96,11 +96,11 @@ However, others stopping criteria can be used in addition to the maximum number 
 \par
 A common stopping criterion is to check the relative error at each step and stop the algorithm if no significant improvement is observed for a given number of steps $T$.
 For instance, we can use the following rule:
-\begin{equation}
+\begin{equation} \label{stopping criterion I}
     |e(t - T) - e(t)| \leq tol\times e(t)
 \end{equation}
 Where $e(t)$ is the relative error at iteration $t$. This is equal to:
-\begin{equation}  \label{stopping criterion I}
+\begin{equation}  
     e(t) = \frac{\|V - W^{(t)}H^{(t)}\|_F^2}{\|V\|_F^2}
 \end{equation}
 in the case of the Frobenius norm; 
@@ -139,12 +139,12 @@ The complete algorithm with the stopping criterion (\ref{stopping criterion I}) 
 \end{algorithm}
 \section{Initialization} \label{initialization section}
 The algorithms commonly used for NMF are iterative methods that require an initial guess for the factors \( W^{(0)} \) and \( H^{(0)} \). These algorithms are generally sensitive to the initialization.
-A very common yet effective initialization often used in the literature is to initialize \( W^{(0)} \) and \( H^{(0)} \) with random non-negative values sampled from a uniform distribution $[0,1]$.
+A very common yet effective initialization, often used in the literature, is to initialize \( W^{(0)} \) and \( H^{(0)} \) with random non-negative values sampled from a uniform distribution $[0,1]$.
 \par
-In this section we present a slightly more sophisticated initialization method called non-negative double singular value decomposition (NNDSVD) \cite{boutsidis2008svd}.
-Recall that the Eckart-Young theorem states that the best rank-$r$ approximation of a matrix $V$ in the Frobenius norm sense is given by its truncated SVD \cite{schmidt1907theorie}; then the idea behind NNDSVD is to use the SVD of $V$ to compute a non-negative initialization for the factors \( W^{(0)} \) and \( H^{(0)} \).
+In this section, we present a slightly more sophisticated initialization method called non-negative double singular value decomposition (NNDSVD) \cite{boutsidis2008svd}.
+Recall that the Eckart-Young theorem states that the best rank-$r$ approximation of a matrix $V$ in the Frobenius norm sense, is given by its truncated SVD \cite{schmidt1907theorie}; then the idea behind NNDSVD is to use the SVD of $V$ to compute a non-negative initialization for the factors \( W^{(0)} \) and \( H^{(0)} \).
 \par
-The algorithm can be summarized in Algorithm \ref{NNDSVD}.
+The algorithm is summarized in Algorithm \ref{NNDSVD}.
 \begin{algorithm}
     \caption{Non-negative Double Singular Value Decomposition (NNDSVD) for NMF initialization}
     \label{NNDSVD}
@@ -237,7 +237,7 @@ and substituting in equation (\ref{GD MU updates}) we obtain the MU update for \
 \begin{equation}
     W^{(k+1)} = W^{(k)} - \frac{W^{(k)}}{W^{(k)} H H^\top} \circ (W^{(k)} H H^\top - V H^\top)
 \end{equation}
-simplifying we obtain the update rule for \( W \):
+simplifying, we can finally write the update rule for \( W \) as:
 \begin{equation}
     \boxed{W^{(k+1)} = W^{(k)} \circ \frac{V H^\top}{W^{(k)} H H^\top}.}
 \end{equation}
@@ -262,7 +262,7 @@ Analogously, we can derive the MU update for \( H \) and using the gradient $\na
 \subsubsection{Convergence of MU with the Frobenius norm}
 \begin{theorem}[\cite{lee2000algorithms}, Theorem 1] \label{MU convergence Fro}
     The value of the objective function $D(V, WH) = \|V - WH \|_F^2$ is non-increasing when $W^{(k)}, H^{(k)}$ are produced by Multiplicative updates as in Algorithm \ref{MU for Frobenius}.
-    Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under the iterative scheme (Algorithm \ref{MU for Frobenius}).
+    Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under this iterative scheme.
 \end{theorem}
 \begin{proof}
     The proof of this theorem can be found in \cite{lee2000algorithms} section 6.
@@ -277,7 +277,7 @@ Recall that the dimensions of the matrices are:
     \item \( H \in \mathbb{R}_+^{r \times n} \)
 \end{itemize}
 When computing $WHH^\top$ one should pay attention to compute $W(HH^\top)$ instead of $(WH)H^\top$ to reduce the computational cost.
-The cost of the latter is $O(mnr + mnr^2)$ while the cost of the former is $O(mr^2 + r^2 n) = O(r^2(m+n))$. And in most NMF applications $r \ll \min(m,n)$.
+The cost of the latter is $O(2mnr)$ while the cost of the former is $O(mr^2 + r^2 n) = O(r^2(m+n))$. And in most NMF applications $r \ll \min(m,n)$.
 The second term $VH^\top$ requires $O(mnr)$ operations.
 \subsection{MU with the Kullback-Leibler divergence}
 In this section we derive the MU iterative scheme for the case where
@@ -334,7 +334,7 @@ and substituting in equation (\ref{GD MU updates KL}) we obtain the MU update fo
 \begin{equation}
     W^{(k+1)} = W^{(k)} - \frac{W^{(k)}}{\textbf{1} H^\top} \circ (\textbf{1} H^\top - \frac{V}{W^{(k)}H} H^\top)
 \end{equation}
-simplifying we obtain the update rule for \( W \):
+simplifying, we can finally write the update rule for \( W \) as:
 \begin{equation}
     \boxed{W^{(k+1)} = W^{(k)} \circ \frac{\frac{V}{W^{(k)}H} H^\top}{\textbf{1} H^\top}.}
 \end{equation}
@@ -358,8 +358,8 @@ The complete MU algorithm is summarized in Algorithm \ref{MU for KL}.
 \end{algorithm}
 \subsubsection{Convergence of MU with the Kullback-Leibler divergence}
 \begin{theorem}[\cite{lee2000algorithms}, Theorem 2] \label{MU convergence KL}
-    The value of the objective function $D(V, WH) = D_{KL}(V \| WH)$ is non-increasing when $W^{(k)}, H^{(k)}$ are produced by multiplicative updates (Algorithm \ref{MU for KL}).
-    Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under the iterative scheme (Algorithm \ref{MU for KL}).
+    The value of the objective function $D(V, WH) = D_{KL}(V \| WH)$ is non-increasing when $W^{(k)}, H^{(k)}$ are produced by multiplicative updates as in Algorithm \ref{MU for KL}.
+    Furthermore $W^{(k)}$ and $H^{(k)}$ are stationary points of the objective $D(V, WH)$ if and only if the distance is invariant under this iterative scheme.
 \end{theorem}
 \begin{proof}
     The proof of this theorem can be found in \cite{lee2000algorithms} section 6.
@@ -381,7 +381,7 @@ and
     H^{(k + 1)} = \arg\min_{H \geq 0} \|V - W^{(k)}H\|_F^2.
 \end{equation}
 The subproblem (\ref{ANLS subproblem II}) can be decoupled into $n$ independent non-negative linear least squares problems.
-The derivation of this decoupling is as follows:
+That is, we can equally write the objective as:
 \begin{align}
     &\|V - W^{(k)}H\|_F^2 = \sum_{j=1}^n \|V(:,j) - W^{(k)}H(:,j)\|_2^2
 \end{align}
@@ -403,8 +403,14 @@ The algorithm is summarized in Algorithm \ref{ANLS}.
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
         \While{stopping criterion not met}
-            \State \( W^{(k + 1)} \leftarrow \arg\min_{W \geq 0} \|V - WH^{(k)}\|_F^2 \)
-            \State \( H^{(k + 1)} \leftarrow \arg\min_{H \geq 0} \|V - W^{(k + 1)}H\|_F^2 \)
+            \For i = 1 to m
+                \State \( W(i,:) \leftarrow \arg\min_{w \geq 0} \|V(i,:) - w H^{(k)}\|_2^2 \)
+            \EndFor
+            \For j = 1 to n
+                \State \( H(:,j) \leftarrow \arg\min_{h \geq 0} \|V(:,j) - W^{(k)}h\|_2^2 \)
+            \EndFor
+            %\State \( W^{(k + 1)} \leftarrow \arg\min_{W \geq 0} \|V - WH^{(k)}\|_F^2 \)
+            %\State \( H^{(k + 1)} \leftarrow \arg\min_{H \geq 0} \|V - W^{(k + 1)}H\|_F^2 \)
         \EndWhile
         \State \Return \( W, H \)
     \end{algorithmic}
@@ -420,36 +426,50 @@ The algorithm is summarized in Algorithm \ref{ANLS}.
     \begin{equation}
         H^{(k + 1)} = \max\left(0, \arg\min_H \|V - W^{(k + 1)}H^{(k)}\|_F^2  \right).
     \end{equation}
+    Or equivalently, we can write the updates in the decoupled form as:
+    \begin{equation}
+        W(i,:) = \max\left(0, \arg\min_{w} \|V(i,:) - w H^{(k)}\|_2^2 \right), \quad \text{for } i = 1, \ldots, m.
+    \end{equation}
+and
+\begin{equation}
+    H(:,j) = \max\left(0, \arg\min_{h} \|V(:,j) - W^{(k)}h\|_2^2 \right), \quad \text{for } j = 1, \ldots, n.
+\end{equation}
 \subsection{Alternating least squares ALS}
 The alternating least squares (ALS) method is a projected method where the sub-problems are solved using the linear least squares solution (\ref{linear least sqaures equation}) and then projected onto the non-negative orthant.
 This is very easy to implement since most programming languages have built-in functions to solve least squares problems. For instance in MATLAB one can use the backslash operator `$\backslash$' to solve linear least squares problems. 
 In python, that is the language used to create the repository associated with this thesis, the method \textit {`numpy.linalg.lstsq'} is used to solve linear least squares problems.
+The ALS algorithm is summarized in Algorithm \ref{ALS}.
 \par
-The ALS algorithm is summarized in Algorithm \ref{ALS}:
+This is the default solver used in MATLAB \footnote{Version R2025b.} for non-negative matrix factorization via the function \textit{`nnmf'}. 
 \begin{algorithm}
     \caption{Alternating Least Squares for NMF}
     \label{ALS}
-    \begin{algorithmic}[1]
+    \begin{algorithmic}
         \Require \( V \in \mathbb{R}_+^{m \times n} \), rank \( r \), initial factors \( W^{(0)} \in \mathbb{R}_+^{m \times r} \), \( H^{(0)} \
 \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
         \While{stopping criterion not met}
-            \State \( W^{(k + 1)} \leftarrow \max\left(0, \arg\min_W \|V - WH^{(k)}\|_F^2  \right) \)
-            \State \( H^{(k + 1)} \leftarrow \max\left(0, \arg\min_H \|V -  W^{(k + 1)}H\|_F^2  \right) \)
+            \For i = 1 to m
+                \State \( W(i,:) \leftarrow \max\left(0, \arg\min_{w} \|V(i,:) - w H^{(k)}\|_2^2 \right) \)
+            \EndFor
+            \For j = 1 to n
+                \State \( H(:,j) \leftarrow \max\left(0, \arg\min_{h} \|V(:,j) - W^{(k)}h\|_2^2 \right) \)
+            \EndFor
+            % \State \( W^{(k + 1)} \leftarrow \max\left(0, \arg\min_W \|V - WH^{(k)}\|_F^2  \right) \)
+            % \State \( H^{(k + 1)} \leftarrow \max\left(0, \arg\min_H \|V -  W^{(k + 1)}H\|_F^2  \right) \)
         \EndWhile
         \State \Return \( W, H \)
     \end{algorithmic}
 \end{algorithm}
-This is the default solver used in MATLAB \footnote{Version R2025b.} for non-negative matrix factorization via the function \textit{`nnmf'}. 
 \subsubsection{Convergence}
 Although the ALS algorithm is very popular in practice due to its simplicity, it does not have any convergence guarantees. See \cite{gillis2020nonnegative}, subsection 8.3.2 for an example.
 \subsubsection{Computational cost}
 The computational cost of the ALS algorithm is given by the cost of solving the least squares problems at each iteration.
-Using the normal equations method \ref{normal equations} the cost of solving the least squares problem for \( W \) is $O(mnr + mr^2 + r^3)$ and for \( H \) is $O(mnr + nr^2 + r^3)$. 
+Using the normal equations, the cost of solving the least squares problem for \( W \) is $O(mnr + mr^2 + r^3)$ and for \( H \) is $O(mnr + nr^2 + r^3)$. 
 Thus the total cost per iteration is $O(2mnr + (m+n)r^2 + 2r^3)$.
 \subsection{Projected gradient descent (PGD)}
 The projected gradient descent method consists in performing a gradient descent step for each block of variables and then projecting the result onto the non-negative orthant.
-This method is discussed in a detailed way in \cite{lin2007projected}.
+This method is discussed in detail in \cite{lin2007projected}.
 \par
 As seen in section \ref{MU derivation section}, the gradient of the Frobenius norm with respect to \( H \) is given by:
 \begin{equation}
@@ -554,7 +574,11 @@ Then we can rewrite the problem (\ref{HALS optimization problem}) as:
 \end{align}
 this has the same form as the problem previously solved for a fixed column of \( V \), thus the solution is given by:
 \begin{equation}
-    H[\ell,j] = \max\left(0, \frac{\tilde{R}_{\ell}[:,j]^\top W[:,\ell]}{W[:,\ell]^\top W[:,\ell]} \right).
+    H[\ell,j] = \max\left(0, \frac{W[:,\ell]^\top\tilde{R}_{\ell}[:,j]}{W[:,\ell]^\top W[:,\ell]} \right).
+\end{equation}
+Which can be written in matrix form as:
+\begin{equation}
+    H[\ell,:] = \max\left(0, \frac{\tilde{R}_{\ell}^\top W[:,\ell]}{W[:,\ell]^\top W[:,\ell]} \right).
 \end{equation}
 Similarly, for updating the column $W[:,\ell]$ we obtain:
 \begin{equation}
@@ -562,6 +586,7 @@ Similarly, for updating the column $W[:,\ell]$ we obtain:
 \end{equation}
 where now $\tilde{R}_{\ell} = V - \sum_{k\not=\ell}W[:,k]H[k,:]$ is the residual matrix with respect to the rank one matrix $W[:,\ell]H[\ell,:]$.
 \par
+In HALS the columns of $W$ and the rows of $H$ are updates ciclically, thus the update for $H[\ell,:]$ is performed by using the most recent update of $W[:,\ell]$ and the update for $W[:,\ell]$ is performed by using the most recent update of $H[\ell,:]$.
 The complete HALS algorithm is summarized in Algorithm \ref{HALS}.
 \begin{algorithm}
     \caption{Hierarchical Alternating Least Squares for NMF}
