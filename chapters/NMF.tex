@@ -222,7 +222,7 @@ Assume by contradiction that there exist two distinct columns $W[:,i]$ and $W[:,
 \begin{equation}
     \text{supp}(W[:,i]) \subseteq \text{supp}(W[:,j])
 \end{equation}
-Then we can construct a new pair of matrices $(\tilde{W}, \tilde{H})$ as follows:
+then we can construct a new pair of matrices $(\tilde{W}, \tilde{H})$ as follows:
 \begin{equation}
     \tilde{W}[:,k] = 
     \begin{cases}
@@ -240,7 +240,7 @@ Then we can construct a new pair of matrices $(\tilde{W}, \tilde{H})$ as follows
 such that $W[:,j] + \alpha W[:,i] \geq 0$ and $H[i,:] - \alpha H[j,:] \geq 0$ for some $\alpha > 0$.
 It is easy to see that $(\tilde{W}, \tilde{H})$ is another exact NMF of $V$ of size $r$:
 \begin{equation}
-    \tilde{W} \tilde{H} = W H = V
+    \tilde{W} \tilde{H} = W H = V.
 \end{equation}
 This contradicts the assumption that the exact NMF of $V$ is unique.
 \end{proof}
@@ -268,12 +268,13 @@ Their product is:
     13 & 12 \\
     11 & 8 \\
     2 & 2
-    \end{bmatrix}\end{equation}
-In this case the support of the first column of $W$ is contained in the support of the second column of $W$:
+    \end{bmatrix}.
+\end{equation}
+We can see that the support of the first column of $W$ is contained in the support of the second column of $W$:
 \begin{equation}
     \text{supp}(W[:,1]) \subseteq \text{supp}(W[:,2])
 \end{equation}
-thus we can construct another exact NMF of $WH$ as follows:
+thus, we can construct another exact NMF of $WH$ as follows:
 \begin{equation}    \tilde{W} = \begin{bmatrix}
     2 & \textcolor{blue}{5} & 0 \\
     1 & \textcolor{blue}{2} & 3 \\
@@ -294,7 +295,7 @@ Now we present a sufficient condition for identifiability known as the \textit{s
 \begin{theorem}
 [Sufficient condition for identifiability: separability]\label{Sufficient condition for identifiability}
 Let $V \in \R_+^{m \times n}$ be a non-negative matrix and let $V = WH$ be an exact NMF of $V$ of size $r$.
-The matrices $W$ and $H$ contain non-singular diagonal sub-matrices of size $r \times r$, then the NMF solutions are identifiable.
+If the matrices $W$ and $H$ contain non-singular diagonal sub-matrices of size $r \times r$, then the NMF solutions are identifiable.
 \end{theorem}
 \begin{proof}
     See \cite{donoho2003does}. The proof idea is to take advantage of the fact that the identity matrix $I$ has a unique NMF $I = I \times I$.
@@ -718,7 +719,7 @@ In this case there exists very efficient algorithms to find the NMF solution, se
         \node[text width=6cm, align=center] at (11,-1.5) {\small Weights of  \\ topics in documents};
         
     \end{tikzpicture}
-    \caption{Non-negative Matrix Factorization of the  word-count matrix $V$ into  the matrices $W$ and $H$.
+    \caption{Non-negative matrix factorization of the  word-count matrix $V$ into  the matrices $W$ and $H$.
     Each column of $V$ represents a document, each row represents a word, and each entry is the count of that word in that document.
     }
     \label{fig:document_matrix}
