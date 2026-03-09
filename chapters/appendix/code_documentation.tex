@@ -125,7 +125,8 @@ Attributes:
         \begin{itemize}
         \item "random": random initialization with uniform distribution in $[0,1)$.
         \item "nndsvd": Non-negative Double Singular Value Decomposition initialization.
-        \item "custom": User will set W and H manually.
+        \item "nndsvda": NNDSVD with zeros replaced by the average of the input matrix.
+        \item "custom": the user must set W and H manually.
     \end{itemize} (default random)
     \item \texttt{W0}: Initial matrix for W if init = "custom". (default: None)
     \item \texttt{H0}: Initial matrix for H if init = "custom". (default: None)
@@ -142,7 +143,7 @@ Public Methods:
 \end{itemize}
 The available solvers are:
 \begin{itemize}
-    \item \texttt{"MU"}: multiplicative updates with frobenius norm.
+    \item \texttt{"MU"}: multiplicative updates with Frobenius norm.
     \item \texttt{"HALS"}: hierarchical alternating least squares.
     \item \texttt{"ALS"}: alternating least squares.
     \item \texttt{"PGD"}: projected gradient descent.
@@ -213,7 +214,7 @@ the factors can be retrieved by calling:
 factors = reg_model.get_factors()
 \end{lstlisting}
 this method returns a dictionary where to the key ``W'' corresponds the matrix $W$ and to the key ``H'' corresponds the matrix $H$.
-\subsection{Two more sophisticated examples} 
+\subsection{One more sophisticated examples} 
 \subsubsection{Learning part of faces from the CBCL dataset}
 Here we talk again about the example presented in subsection \ref{Example feature extraction NMF}; recall that this example was originally presented in the seminal paper on NMF by Lee and Seung \cite{Lee1999}. 
 In this example, we reproduce the results using the package \texttt{NMF} with the MU algorithm and the Kullback-Leibler divergence.

@@ -47,7 +47,7 @@ As expected the HALS algorithm converges the fastest and reaches the lowest rela
 On the other hand, the PGD and MU have similar performance. 
 \par
 By looking at the average number of iterations and the average time for iteration, shown in Tables \ref{tab:CBCL results 10} and \ref{tab:CBCL results 49}, we can see that the ALS algorithm has a much higher time for iteration compared to the other algorithms.
-While the HALS algorithm is the one that achieve the highest number of iterations in the same time.
+While the HALS algorithm is the one that achieve the highest number of iterations within the time limit.
 \par
 We apply the same procedure to the Olivetti faces dataset\footnote{{\url{https://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html}}}, which contains $400$ gray-scale images of faces with a resolution of $64 \times 64$ pixels, for a total of $400 \times 64 \times 64 = 1638400$ elements.
 The reconstruction rank is set to $r = 30$ producing two matrices $W \in \R^{4096 \times 30}$ and $H \in \R^{30 \times 400}$.
@@ -125,12 +125,12 @@ PGD       & 27                       & $2.2 \times 10^{0}     $                &
 
 In this case, the lowest relative reconstruction error is achieved by the HALS algorithm, followed by ALS, PGD, and MU that are very close to each other.
 By looking at the average number of iterations and the average time for iteration, shown in Tables \ref{tab:Top30 news results 30} and \ref{tab:Top30 news results 60}, we can see that the ALS algorithm has a lower time for iteration compared to PGD and an higher average time for iteration compared to HALS and MU.
-The MU algorithm is the one that achieves the highest number of iterations in the same time, while PGD is the one with the lowest number of iterations in the same time. 
+The MU algorithm is the one that achieves the highest number of iterations within the time limit, while PGD is the one with the lowest number of iterations within the time limit. 
 
 
 
 \section{Comparison between random and NNDSVD initializations}\label{init comparison section}
-Now, we wonder whether we can observe a significant difference in the convergence speed and the final relative reconstruction error if we choose the NNDSVD initialization strategy described in Algorithm \ref{NNDSVD} instead of the random initialization.
+Finally, we wonder whether we can observe a significant difference in the convergence speed and the final relative reconstruction error if we choose the NNDSVD initialization strategy described in Algorithm \ref{NNDSVD} instead of the random initialization.
 We decide to run this test with the HALS algorithm.
 As data matrix we use the CBCL dataset and we fit a NMF model with reconstruction rank equal to $49$ using the HALS algorithm as solver with two different initialization strategies:
 \begin{enumerate}
@@ -156,11 +156,13 @@ For sparse matrices, ALS performs more efficiently compared to dense matrices wh
 HALS converges the fastest in both cases. 
 MU and PGD have similar performance in the dense case, while in the sparse case MU performs better than PGD.
 From tables \ref{tab:CBCL results 10}, \ref{tab:CBCL results 49}, \ref{tab:Top30 news results 30}, and \ref{tab:Top30 news results 60} we can see that the time for iteration of ALS is much higher than the other algorithms in the dense case, while in the sparse case it is lower than PGD and higher than HALS and MU.
-In the dense case, HALS is the algorithm that achieves the highest number of iterations in the same time, while in the sparse case it is the MU algorithm that achieves the highest number of iterations in the same time.
+In the dense case, HALS is the algorithm that achieves the highest number of iterations within the time limit, while in the sparse case it is the MU algorithm that achieves the highest number of iterations within the time limit.
 \par
 In general there is high sensitivity to the initialization, sometimes using initialization techniques such as NNDSVD can help performance.
+In this section we showed that for the HALS algorithm, the NNDSVD initialization strategy leads to a faster convergence and a lower relative reconstruction error within the time limit compared to the random initialization strategy.
+For the MU algorithm, the NNDSVD initialization is usually followed by a procedure that replaces the zero entries of $W$ and $H$ with small positive values, or with the average of $V$.
 \par
 In the appendix \ref{Additional plots appendix} we include additional plots of the experiments described in this chapter.
 In particular, we include the plot of the average relative reconstruction error for each algorithm against the number of iterations and the plot of the final relative reconstruction error against the rank of the model.
-The data used for these plots are syntetic data generated as $V = WH$ with $W \in \R^{m \times r} $ and $H \in \R^{r \times n}$ with entries generated from a uniform distribution in $[0,1)$, with $m = 250$, $n = 100$, and $r = 20$.
+The data used for these plots are synthetic data generated as $V = WH$ with $W \in \R^{m \times r} $ and $H \in \R^{r \times n}$ with entries generated from a uniform distribution in $[0,1)$, with $m = 250$, $n = 100$, and $r = 20$.
 The matrix is generated using the method \texttt{numpy.random.rand} from the NumPy library, and the seed is set to 15 for reproducibility.

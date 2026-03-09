@@ -436,8 +436,8 @@ and
 \end{equation}
 \subsection{Alternating least squares ALS}
 The alternating least squares (ALS) method is a projected method where the sub-problems are solved using the linear least squares solution (\ref{linear least sqaures equation}) and then projected onto the non-negative orthant.
-This is very easy to implement since most programming languages have built-in functions to solve least squares problems. For instance in MATLAB one can use the backslash operator `$\backslash$' to solve linear least squares problems. 
-In python, that is the language used to create the repository associated with this thesis, the method \textit {`numpy.linalg.lstsq'} is used to solve linear least squares problems.
+This is very easy to implement since most programming languages have built-in functions to solve linear least squares problems. For instance in MATLAB one can use the backslash operator `$\backslash$'. 
+In python, that is the language used to create the repository associated with this thesis, the method \textit {`numpy.linalg.lstsq'} is used. % to solve linear least squares problems.
 The ALS algorithm is summarized in Algorithm \ref{ALS}.
 \par
 This is the default solver used in MATLAB \footnote{Version R2025b.} for non-negative matrix factorization via the function \textit{`nnmf'}. 
@@ -479,7 +479,7 @@ and with respect to \( W \) is given by:
 \begin{equation}
     \nabla_W \frac{1}{2} \|V - WH\|_F^2 = (WH - V) H^\top = W H H^\top - V H^\top.
 \end{equation}
-In this case the step size is chosen to be the Lipschitz constant of the gradient.
+In the projected gradient algorithm, the step size is chosen to be the Lipschitz constant of the gradient.
 The Lipschitz constant of the gradient with respect to \( H \)  is equal to \( \|W\|_2^2 \) and with respect to \( W \) is equal to \( \|H\|_2^2 \).
 Thus the projected gradient updates for \( H \) and \( W \) are given by:
 \begin{equation}
@@ -537,7 +537,7 @@ taking the derivative with respect to $h$ and setting it to zero we obtain:
     \frac{\partial}{\partial h} v^\top v - 2h w^\top v + (wh)^\top (wh) &= -2v^\top w + 2h w^\top w = 0 \\
     \Rightarrow h &= \frac{v^\top w}{w^\top w}.
 \end{align}
-Note that in the unconstrained case the optimal solution can also be negative, however we can apply the projection idea to obtain a non-negative solution.
+Note that in the unconstrained case, for a generic vector $v \in \R^m$, the optimal solution can also be negative, however we can apply the projection idea to obtain a non-negative solution.
 Thus the non-negative solution is given by:
 \begin{equation}
     h = \max\left(0, \frac{v^\top w}{w^\top w} \right).
@@ -574,9 +574,9 @@ Then we can rewrite the problem (\ref{HALS optimization problem}) as:
 \end{align}
 this has the same form as the problem previously solved for a fixed column of \( V \), thus the solution is given by:
 \begin{equation}
-    H[\ell,j] = \max\left(0, \frac{W[:,\ell]^\top\tilde{R}_{\ell}[:,j]}{W[:,\ell]^\top W[:,\ell]} \right).
+    H[\ell,j] = \max\left(0, \frac{W[:,\ell]^\top\tilde{R}_{\ell}[:,j]}{W[:,\ell]^\top W[:,\ell]} \right)
 \end{equation}
-Which can be written in matrix form as:
+which can be written in matrix form as:
 \begin{equation}
     H[\ell,:] = \max\left(0, \frac{\tilde{R}_{\ell}^\top W[:,\ell]}{W[:,\ell]^\top W[:,\ell]} \right).
 \end{equation}
@@ -586,7 +586,7 @@ Similarly, for updating the column $W[:,\ell]$ we obtain:
 \end{equation}
 where now $\tilde{R}_{\ell} = V - \sum_{k\not=\ell}W[:,k]H[k,:]$ is the residual matrix with respect to the rank one matrix $W[:,\ell]H[\ell,:]$.
 \par
-In HALS the columns of $W$ and the rows of $H$ are updates ciclically, thus the update for $H[\ell,:]$ is performed by using the most recent update of $W[:,\ell]$ and the update for $W[:,\ell]$ is performed by using the most recent update of $H[\ell,:]$.
+In HALS the columns of $W$ and the rows of $H$ are updates cyclically.
 The complete HALS algorithm is summarized in Algorithm \ref{HALS}.
 \begin{algorithm}
     \caption{Hierarchical Alternating Least Squares for NMF}
@@ -681,7 +681,7 @@ For others values of $\beta$ we need to adjust the MU updates by a scaling facto
     \end{cases}
 \end{equation}
 and constraint the iterates to be greater than a small positive constant $\varepsilon > 0$ \cite{takahashi2014global}.
-The reason for this is that in this case the objective function $D_{\beta}(V \| WH)$ is guaranteed to be non-increasing under the adjusted MU update rules.
+The reason for this is that, in this case, the objective function $D_{\beta}(V \| WH)$ is guaranteed to be non-increasing under the adjusted MU update rules.
 This result is obtained in \cite{févotte2011algorithmsnonnegativematrixfactorization} using the majorization-minimization framework.
 \par
 Now we are ready to state the more general convergence theorem for MU with the beta divergence:
