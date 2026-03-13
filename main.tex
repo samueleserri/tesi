@@ -82,7 +82,7 @@
 \newcommand{\thesistitle}{TITOLO}
 \newcommand{\thesisauthor}{Samuele Serri}
 \newcommand{\thesismatricola}{SM3201369}
-\newcommand{\thesissupervisor}{Prof. Nome Cognome}
+\newcommand{\thesissupervisor}{\'Angeles Mart\'{\i}nez Calomardo}
 \newcommand{\thesisyear}{2024--2025}
 
 % useful math commands
@@ -137,7 +137,7 @@ Corso di Laurea in Intelligenza Artitificiale e Data Analytics \\
 \textsc{Tesi di laurea triennale}\\
 \vfill %%\vspace{3cm}
 \LARGE
-\textbf{\textsc{TITOLO}}\\
+\textbf{Exploring Non-Negative Matrix Factorization: Algorithms and Applications}\\
 \end{center}
 \vfill
 %%%%%%
@@ -152,10 +152,7 @@ Laureando:\\
 %%%%%% Qui va inserito il nome del relatore
 \begin{tabular}[t]{l}
 Relatore: \\
-\textbf{Prof. Nome Cognome} \\
-\\
-Correlatore: \\
-\textbf{Prof. Nome Cognome}
+\textbf{Prof. \'Angeles Mart\'{\i}nez Calomardo} \\
 \end{tabular}
 %%%%%%
 \vfill
@@ -170,8 +167,9 @@ ANNO ACCADEMICO 2024--2025
 
 \clearpage              
 \pagenumbering{roman}
-\shipout\null 
-\tableofcontents
+\shipout\null
+\include{chapters/Acknowledgments} 
+\tableofcontents\addcontentsline{toc}{chapter}{Table of Contents}
 \hypersetup{linkcolor=red} % restore red for other \ref links
 \bigskip
 % pagina pdflatex -interaction=nonstopmode main.texvuota
@@ -200,9 +198,8 @@ ANNO ACCADEMICO 2024--2025
 \hypersetup{linkcolor=black} 
 
 % Bibliography placeholder:
-\clearpage
-\pagenumbering{roman}
 \printbibliography
+\addcontentsline{toc}{chapter}{Bibliography }
 
 \end{document}
 

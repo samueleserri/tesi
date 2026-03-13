@@ -29,11 +29,10 @@ The Summary of the datasets used in the experiments is shown in Table \ref{Summa
 
 \section{The CBCL dataset}\label{CBCL dataset section}
 For this section, we use the CBCL face dataset used in \cite{Lee1999}, see subsection \ref{Example feature extraction NMF} for more details.
-The dataset contains $361$ gray-scale images of faces with a resolution of $19 \times 19$ pixels. The total number of elements in the dataset is $361 \times 19 \times 19 = 130441$.
 We fit two NMF models with reconstruction rank $r = 10,49$ using the MU algorithm with Frobenius norm ($\beta = 2$), the hierarchical alternating least squares (HALS) algorithm, the alternating least squares (ALS) algorithm, and the projected gradient descent (PGD) algorithm.
 Recall from section \ref{initialization section} that the initialization of the matrices $W$ and $H$ can have a significant impact on the convergence and performance of the algorithms.
 In order to reduce the variance of the results due to random initialization, we run each algorithm 10 times with 10 different random initializations and we average the relative reconstruction errors over those runs.
-We let run each algorithm for 30 seconds.
+We let each algorithm run for 30 seconds.
 The results are shown in Figure \ref{fig:CBCL dataset}.
 \begin{figure}[htbp]
     \centering
@@ -44,7 +43,7 @@ The results are shown in Figure \ref{fig:CBCL dataset}.
 \end{figure}
 
 As expected the HALS algorithm converges the fastest and reaches the lowest relative reconstruction error within $30$ seconds, while the ALS algorithm performs the worst, this is a known result in the case of dense matrices, see \cite{gillis2020nonnegative} section 8.4.3.
-On the other hand, the PGD and MU have similar performance. 
+On the other hand, the PGD and MU have similar performances. 
 \par
 By looking at the average number of iterations and the average time for iteration, shown in Tables \ref{tab:CBCL results 10} and \ref{tab:CBCL results 49}, we can see that the ALS algorithm has a much higher time for iteration compared to the other algorithms.
 While the HALS algorithm is the one that achieve the highest number of iterations within the time limit.
@@ -124,7 +123,7 @@ PGD       & 27                       & $2.2 \times 10^{0}     $                &
 \end{table}
 
 In this case, the lowest relative reconstruction error is achieved by the HALS algorithm, followed by ALS, PGD, and MU that are very close to each other.
-By looking at the average number of iterations and the average time for iteration, shown in Tables \ref{tab:Top30 news results 30} and \ref{tab:Top30 news results 60}, we can see that the ALS algorithm has a lower time for iteration compared to PGD and an higher average time for iteration compared to HALS and MU.
+By looking at the average number of iterations and the average time for iteration, shown in Tables \ref{tab:Top30 news results 30} and \ref{tab:Top30 news results 60}, we can see that the ALS algorithm has a lower time for iteration compared to PGD and a higher average time for iteration compared to HALS and MU.
 The MU algorithm is the one that achieves the highest number of iterations within the time limit, while PGD is the one with the lowest number of iterations within the time limit. 
 
 

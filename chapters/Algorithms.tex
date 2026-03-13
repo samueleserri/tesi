@@ -437,7 +437,7 @@ and
 \subsection{Alternating least squares ALS}
 The alternating least squares (ALS) method is a projected method where the subproblems are solved using the linear least squares solution (\ref{linear least sqaures equation}) and then projected onto the non-negative orthant.
 This is very easy to implement since most programming languages have built-in functions to solve linear least squares problems. For instance in MATLAB one can use the backslash operator `$\backslash$'. 
-In python, that is the language used to create the repository associated with this thesis, the method \textit {`numpy.linalg.lstsq'} is used. % to solve linear least squares problems.
+In Python, that is the language used to create the repository associated with this thesis, the method \textit {`numpy.linalg.lstsq'} is used. % to solve linear least squares problems.
 The ALS algorithm is summarized in Algorithm \ref{ALS}.
 \par
 This is the default solver used in MATLAB \footnote{Version R2025b.} for non-negative matrix factorization via the function \textit{`nnmf'}. 
@@ -514,7 +514,7 @@ The complete projected gradient descent algorithm is summarized in Algorithm \re
 \end{algorithm}
 \subsubsection{Convergence}
 % this is a gd with lipschitz step size, project gradient descent convergence theorem in the background chapter
-Since this is a gradient descent method with a Lipschitz step size with a projection onto a the non-negative orthant when the iterates go out of bounds,
+Since this is a gradient descent method with a Lipschitz step size with a projection onto the non-negative orthant when the iterates go out of bounds,
 Theorem \ref{GD convergence theorem} can be applied to ensure the convergence of the projected gradient descent method for NMF to a stationary point of the objective function.
 \subsubsection{Computational cost}
 The complexity analysis here is similar to the one presented for the MU algorithm with the Frobenius norm in section \ref{MU derivation section}, since the main cost is in the computation of the gradients. The total cost per iteration is $O(mnr)$ for each update of $W$ and $H$.
@@ -522,7 +522,7 @@ The complexity analysis here is similar to the one presented for the MU algorith
 The hierarchical alternating least squares (HALS) method is a projected method where each column of \( W \) and each row of \( H \) are updated sequentially by solving a non-negative least squares problem for each column/row while keeping the other columns/rows fixed.
 The algorithm was originally proposed in \cite{cichocki2007hierarchical}.
 \par
-The main idea derive from the observation that for a fixed column $V[:,j] = v$ of the matrix \( V \), the optimization problem
+The main idea derives from the observation that for a fixed column $V[:,j] = v$ of the matrix \( V \), the optimization problem
 \begin{equation}
     \min_{h} \| v - wh \|_2^2
 \end{equation}
@@ -611,7 +611,7 @@ The complete HALS algorithm is summarized in Algorithm \ref{HALS}.
 The convergence of the HALS algorithm to a stationary point of the NMF problem with the Frobenius norm is guaranteed by Theorem \ref{Exact 2-BCD theorem} since HALS is an instance of exact 2-BCD.
 \subsubsection{Computational cost}
 The computational cost of the HALS algorithm is essentially the same of the MU algorithm with the Frobenius norm discussed in section \ref{MU derivation section}, since the main cost is in the computation of the residual matrices $\tilde{R}_{\ell}$,
-the cost is $O(mnr)$ per iteration. In practice HALS is generally faster than MU while having the same computational cost per iteration. See \cite{gillis2020nonnegative}, subsection 8.3.3.
+the cost is $O(mnr)$ per iteration. In practice HALS is generally faster than MU while having the same computational cost per iteration, (see \cite{gillis2020nonnegative}, subsection 8.3.3).
 \section{MU with \texorpdfstring{$\beta$-divergence}{beta-divergence}} \label{MU beta section}
 The $\beta$-divergence is a family of cost functions with a single parameter $\beta$ that generalizes several common cost functions used in NMF, including the Frobenius norm and the Kullback-Leibler divergence.
 For the definition of the beta divergence see subsection \ref{Beta divergence section}.
