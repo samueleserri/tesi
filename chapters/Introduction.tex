@@ -1,1 +1,60 @@
-\chapter{Introduction}
+\chapter{Introduction}\label{INTRO CHAPTER}
+This thesis is the result of the final project for the Bachelor's degree ``Intelligenza artificiale e data Analytics'' at the University of Trieste.
+The aim of this thesis is to explore the problem of non-negative matrix factorization (NMF) by analyzing the existing literature on the topic, 
+and then study and implement existing algorithms to solve it.
+Non-negative matrix factorization has gained significant attention in recent years due to its wide range of applications in data analysis. Traditional linear dimensionality reduction techniques often fail to capture non-negative structures inherent in many datasets. NMF provides a natural framework for this task.
+In linear dimensionality reduction problems, that is, finding a low-dimensional representation of the data that is close to the underlying structure, 
+each data point of the original dataset is represented as a linear combination of a small set of $r$ basis vectors, weighted by a set of coefficients:
+\begin{equation}\label{ldr equation}
+    x_j \approx \sum_{i=1}^r w_i h_{ij}, \quad j = 1, \dots, n
+\end{equation}
+where $x_j \in \R^m$ is the $j$-th data point, $w_i \in \R^m$ are the basis vectors and $h_{ij} \in \R$ are the coefficients.
+We can formulate equation (\ref{ldr equation}) for the whole dataset in a compact matrix form as follows:
+
+\begin{equation}\label{ldr matrix equation}
+\underbrace{\begin{bmatrix}
+& & & \\
+x_1 & x_2 & \dots & x_n \\
+& & & 
+\end{bmatrix}}_{X \in \mathbb{R}^{m \times n}}
+\approx
+\underbrace{\begin{bmatrix}
+& & & \\
+w_1 & w_2 & \dots & w_r \\
+& & & 
+\end{bmatrix}}_{W \in \mathbb{R}^{m \times r}}
+\underbrace{\begin{bmatrix}
+h_{11} & h_{12} & \dots & h_{1n} \\
+h_{21} & h_{22} & \dots & h_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+h_{r1} & h_{r2} & \dots & h_{rn}
+\end{bmatrix}}_{H \in \mathbb{R}^{r \times n}}.
+\end{equation}
+
+This illustrates the reason why the study of matrix factorization is so relevant in data analysis, many problems can be formulated as a matrix factorization problem, and the resulting matrices can be used to extract useful information from the original data.
+\par
+The most prominent example of linear dimensionality reduction is the principal component analysis (PCA),
+this method consists of an orthogonal linear transformation that transforms the data to a new coordinate system where the principal components are ordered by decreasing variance: the first principal component accounts for maximal variance, the second for the next highest variance orthogonal to the first, and so forth.
+Typically, the pipeline for performing PCA consists of (i) to center the data by subtracting the mean, (ii) to compute the eigenvectors of the covariance matrix of the centered data, and (iii) to project the data onto the subspace spanned by the top $r$ eigenvectors.
+However, for non-negative data, the mean removal process can drive some entries of the data to zero or negative values, and it requires further processing to recover the original information.
+In fact, one of the main disadvantages of PCA is that the new data can not be interpreted in the same way as the original data and this makes PCA less suitable for application that require non-negative representations, for example, when the input data represents physical quantities like signal strengths or pixel intensities.
+
+
+
+Non-negative matrix factorization is a constrained problem where the input matrix $V$ is approximated by the product of two matrices $W$ and $H$ that are constrained to be non-negative.
+The resulting matrix are easier to inspect than the original input matrix, and can automatically extract useful information from it.
+%Unlike PCA, which is  the constraints on NMF make this problem especially difficult to solve, in general it is not solvable by an analytical solution and it is solved via numerical algorithms.
+Unlike PCA, which relies on unconstrained linear projections, NMF's constraints make this problem more challenging to solve in general. Typically, NMF models are solved via numerical algorithms and do not have analytical solutions.
+One of the reason why NMF models are so popular is that they are very interpretable, the non-negativity constraint allows to interpret the resulting matrices in the same way as the original data.
+For example, suppose that the input matrix $V$ represents a collection of images, where each column of $V$ is a vectorized image, then the resulting matrix $W$ can be interpreted as a collection of basis images, and the matrix $H$ can be interpreted as the coefficients that represent how much of each basis image is present in each original image.
+
+This property makes NMF an extremely useful tool for inherently non-negative data, such as images and text. By extracting meaningful components from such data, NMF facilitates better understanding and analysis in various applications.
+\section*{Thesis structure}
+The document is structured as follows: 
+\begin{itemize}
+    \item Chapter \ref{BACKGROUND CHAPTER}: the necessary mathematical background is introduced.
+    \item Chapter \ref{NMF CHAPTER}: the problem of NMF is defined and the main results on the topic are presented.
+    \item Chapter \ref{ALGO CHAPTER}: the algorithms to solve the NMF problem are derived and the results on their convergence and complexity analysis are given.
+    \item Chapter \ref{Experiments chapter}: the numerical simulations of the implemented algorithms are presented and discussed.
+\end{itemize}
+Additionally, in the appendix \ref{code documentation appendix} the code of the implemented algorithms is documented and in \ref{Additional plots appendix} extra plots are provided.

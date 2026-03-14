@@ -6,7 +6,7 @@ In section \ref{2-BCD general framework} the two-block coordinate descent framew
 In section \ref{Stopping criteria section} the stopping criteria commonly used in the literature are discussed.
 In section \ref{initialization section} the sensitivity of NMF algorithms to the initialization in general is highlighted, and the non-negative double singular value decomposition (NNDSVD) initialization method is presented.
 \par
-Recall that the NMF problem (\ref{NMF optimization problem}) is NP-hard \cite{vavasis2007complexitynonnegativematrixfactorization}, hence all the Algorithms presented in this chapter are heuristics that aim to find a local minimum of the optimization problem.
+Recall that the NMF problem (\ref{NMF optimization problem}) is NP-hard \cite{vavasis2007complexitynonnegativematrixfactorization}, hence all the algorithms presented in this chapter are heuristics that aim to find a local minimum of the optimization problem.
 More precisely, they are iterative schemes that start from an initial guess of the factors \( W_0 \) and \( H_0 \) and iteratively update them to reduce the value of the objective function, converging to a local minimum.
 They don't guarantee to converge to the global minimum.
 Furthermore the optimization problem (\ref{NMF optimization problem}) is a constrained optimization problem, since the factors \( W \) and \( H \) are constrained to be non-negative, (\( W \geq 0 \) and \( H \geq 0 \)).
@@ -99,7 +99,7 @@ For instance, we can use the following rule:
 \begin{equation} \label{stopping criterion I}
     |e(t - T) - e(t)| \leq tol\times e(t)
 \end{equation}
-Where $e(t)$ is the relative error at iteration $t$. This is equal to:
+where $e(t)$ is the relative error at iteration $t$. This is equal to:
 \begin{equation}  
     e(t) = \frac{\|V - W^{(t)}H^{(t)}\|_F^2}{\|V\|_F^2}
 \end{equation}
@@ -718,9 +718,9 @@ During the last decades, many algorithm have been proposed to solve the NMF prob
 in this chapter we derived and presented the general framework for designing NMF algorithms,
 and derived the most important ones, namely the multiplicative updates with beta divergence (Algorithm \ref{MU for beta}), which includes the MU for the Frobenius norm and the Kullback-Leibler divergence as special cases for $\beta = 2$ and $\beta = 1$ respectively, the alternating non-negative least squares method (Algorithm \ref{ANLS}), the alternating least squares method (Algorithm \ref{ALS}), the projected gradient descent method (Algorithm \ref{Projected Gradient}), and the hierarchical alternating least squares method (Algorithm \ref{HALS}).
 There are different variants of the algorithms presented here, notably some algorithm can be accelerated, \cite{gillis2012accelerated}.
-Furthermore, all the algorithms presented here are part of a class of algorithms called first-order methods, that is, they only use the first order information of the objective function, however there are also second-order methods that use the second order information of the objective function, in the context of NMF, first-order methods are the most popular ones
-however some second-order methods have been proposed in the literature, see \cite{huang2019low} for a general survey.
+Furthermore, all the algorithms presented here are part of a class of algorithms called first-order methods, that is, they only use the first order information of the objective function, however there are also second-order methods that use the second order information of the objective function, in the context of NMF, first-order methods are the most popular ones,
+however, some second-order methods have been proposed in the literature, see \cite{huang2019low} for a general survey.
 Finally, one can observe that all the algorithms presented here compute the gradient of the objective function exactly at each iteration, 
-however one can wonder what happens if we decide to compute the gradient approximately, by just using a subset of the data, this leads to the class of stochastic algorithms for NMF, that are particularly useful when the data matrix \( V \) is very large.
+however, one can wonder what happens if we decide to compute the gradient approximately, by just using a subset of the data, this leads to the class of stochastic algorithms for NMF, that are particularly useful when the data matrix \( V \) is very large.
 One obvious fact is that the computational cost at each iteration will be reduced, in particular suppose that we want to compute the gradient of the objective function with respect to $H$, then we consider the objective function with a subset $I$ of the columns of \( V \) and \( W \):
 $\|V[:,I] - W H[:,I]\|_F^2$ then the cost of computing the gradient will be $O(|I|nr)$ instead of $O(mnr)$, usually with $|I| \ll m$.

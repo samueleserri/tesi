@@ -2,18 +2,18 @@
 The aim of this chapter is to introduce the mathematical background and notation necessary for understanding the non-negative matrix factorization (NMF) problem, and for deriving the algorithms to undertake it, in a 
 way such that the content is self-contained, and all the concepts used in the subsequent chapters are properly defined.
 \par
-In particular this chapter is organized as follows: first in section \ref{Linear algebra and matrix decomposition section} the basic concepts of linear algebra are introduced, together with the most known decomposition technique: the singular value decomposition (SVD). This last result will be
-used when discussing some technique for the initialization of the factors in NMF algorithms in chapter \ref{ALGO CHAPTER}.
-Then in section \ref{optimization section} the taxonomy of optimization problems is presented along with some important results regarding the linear least squares problem and the gradient descent (GD) algorithm, along with the convergence result in the case of a general smooth function.
+In particular this chapter is organized as follows: first, in section \ref{Linear algebra and matrix decomposition section} the basic concepts of linear algebra are introduced, together with the most known decomposition technique: the singular value decomposition (SVD). This last result will be
+used when discussing an initialization technique for the factors in NMF algorithms described in chapter \ref{ALGO CHAPTER}.
+Then in section \ref{optimization section} the taxonomy of optimization problems is presented together with some important results regarding the linear least squares problem and the gradient descent (GD) algorithm, along with the convergence result in the case of a general smooth function.
 \par
-Clearly this chapter is not mean to be an exhaustive introduction to linear algebra and optimization, and it is assumed that the reader is already familiar with most of the concepts presented here, therefore only those results that are essential are included. 
+Clearly, this chapter is not meant to be an exhaustive introduction to linear algebra and optimization, and it is assumed that the reader is already familiar with most of the concepts presented here, therefore only those results that are essential are included. 
 One last disclaimer is that the point of view adopted here is mainly computational and from a data analysis perspective.
 \par
 The main references for organizing this chapter have been the book by S. Wright and B. Recht \cite{wright2022optimization},
 and the book by A. Quarteroni, R. Sacco, F. Saleri, and P. Gervasio \cite{quarteroni2010matematica}. We refer to those books for proofs and more detailed explanations on the topics presented here.
 \section{Linear algebra and singular value decomposition}\label{Linear algebra and matrix decomposition section}
 This section briefly introduces the fundamentals notions of linear algebra relevant to this thesis;
-in subsection \ref{matrix decomposition section} the problem of matrix decomposition is introduced from a general perspective and the singular value decomposition (SVD) is presented, it is shown how the SVD can be equivalently expressed as a sum of rank-one matrices and the Eckart-Young theorem is stated, which is an important result for the theory of low-rank approximations.
+in subsection \ref{matrix decomposition section} the problem of matrix decomposition is introduced from a general perspective and the singular value decomposition (SVD) is presented, it is shown how the SVD can be equivalently expressed as a sum of rank-one matrices and the Eckart-Young theorem is stated, which is an important result for the theory of low rank matrix approximation.
 \subsection{Basics of linear algebra}
 \begin{definition}[Matrix]
     Given two numbers $m,n \in N$, a matrix $A \in \R^{m \times n}$ is a rectangular array of real numbers with $m$ rows and $n$ columns.
@@ -152,7 +152,7 @@ We have the following important theorem regarding the SVD:
 \begin{theorem}[\cite{schmidt1907theorie} Eckart-Young theorem for the Frobenius norm] \label{Eckart-Young Theorem}
     Let $A \in \R^{m \times n}$ be a matrix with singular value decomposition $A = U \Sigma V^\top$. For any integer $k$ such that $1 \leq k \leq rank(A)$, the best rank-$k$ approximation of $A$ in terms of the Frobenius norm is given by:
     \begin{equation}
-        A_k = \sum_{i=1}^{k} \sigma_i u_i v_i^\top
+        A_k = \sum_{i=1}^{k} \sigma_i u_i v_i^\top.
     \end{equation}
 \end{theorem}
 This means that the rank-$k$ matrix $A_k$ obtained by keeping only the top $k$ singular values and their corresponding singular vectors is the closest matrix to $A$ in terms of the Frobenius norm among all matrices of rank at most $k$.
@@ -255,7 +255,7 @@ We have the following convergence result for gradient descent:
     \begin{equation*}
         \| \nabla f(x) - \nabla f(y) \|_2 \leq L \| x - y \|_2
     \end{equation*}
-    Let $\{x_k\}$ be the sequence generated by (\ref{GD formula}) s.t. $f(x_{k+1}) \leq f(x_k) - \frac{1}{2L} \| \nabla f(x_k) \|_2^2$; and suppose that $f$ is bounded below, then we have:
+    Let $\{x_k\}$ be the sequence generated by (\ref{GD formula}) such that $f(x_{k+1}) \leq f(x_k) - \frac{1}{2L} \| \nabla f(x_k) \|_2^2$; and suppose that $f$ is bounded below, then we have:
     \begin{equation*}
         f(x_k) \rightarrow f(\bar{x}) \quad \text{as} \quad k \rightarrow \infty
     \end{equation*}
@@ -265,7 +265,7 @@ We have the following convergence result for gradient descent:
     The proof can be found in \cite{wright2022optimization}, section 3.3.
 \end{proof}
 \subsection{Low rank matrix approximation} \label{LRMA section}
-An important optimization problem that is relevant for this thesis, and that often arise in the context of data analysis and data compression, is the problem of low rank matrix approximation, that is the problem of approximating a given matrix $A \in \R^{m \times n}$ of rank $r$ with a matrix of lower rank.
+An important optimization problem that is relevant for this thesis, and that often arise in the context of data analysis and data compression, is the problem of low rank matrix approximation, that is, the problem of approximating a given matrix $A \in \R^{m \times n}$ of rank $r$ with a matrix of lower rank.
 In particular this is an optimization problem where the objective function is a matrix norm and the feasible set is the set of matrices with rank less than or equal to a given integer $k < r$.
 \begin{definition}[Low rank matrix approximation]
     Given a matrix $A \in \R^{m \times n}$ of rank $r$, and an integer $k < r$, the low rank matrix approximation problem is defined as:
