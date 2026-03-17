@@ -1,8 +1,33 @@
 \chapter{Introduction}\label{INTRO CHAPTER}
-This thesis is the result of the final project for the Bachelor's degree ``Intelligenza artificiale e data Analytics'' at the University of Trieste.
+This thesis is the result of the final project for the Bachelor's degree \textit{``Intelligenza Artificiale e Data Analytics''} at the University of Trieste.
 The aim of this thesis is to explore the problem of non-negative matrix factorization (NMF) by analyzing the existing literature on the topic, 
 and then study and implement existing algorithms to solve it.
-Non-negative matrix factorization has gained significant attention in recent years due to its wide range of applications in data analysis. Traditional linear dimensionality reduction techniques often fail to capture non-negative structures inherent in many datasets. NMF provides a natural framework for this task.
+
+In its more general form the non-negative matrix factorization problem can be defined as follows: given a non-negative matrix $V \in \R_+^{m \times n}$ and a factorization rank $r \in \N$, find two matrices
+$W \in \R_+^{m \times r}$ and $H \in \R_+^{r \times n}$, constrained to be non-negative, such that their product $WH$ approximates $V$ as closely as possible according to some distance measure $D$.
+This problem can be formulated as an optimization problem as follows:
+given a non-negative matrix $V \in \R_+^{m \times n}$ and a factorization rank $r \in \N$, find two non-negative matrices $W \in \R_+^{m \times r}$ and $H \in \R_+^{r \times n}$ that minimize 
+a given cost function $D(V, WH)$, that is:
+\begin{equation}\label{nmf definition intro}
+\min_{W \in \R_+^{m \times r}, H \in \R_+^{r \times n}} D(V, WH)
+\end{equation}
+where $D$ is a distance measure between matrices, for example the Frobenius norm, in this case the cost function can be defined as follows:
+\begin{equation}\label{frobenius norm intro}
+D(V, WH) = \|V - WH\|_F^2 = \sum_{i=1}^m \sum_{j=1}^n (V[i,j] - (WH)[i,j])^2 .
+\end{equation}
+After solving the optimization problem (\ref{nmf definition intro}), we obtain the factorized matrices $W \in \R_+^{m \times r}$ and $H \in \R_+^{r \times n}$.  The columns of the input matrix $V$ can be approximated as linear combinations of the columns of $W$, weighted by the corresponding entries in $H$:
+\begin{equation}\label{nmf approximation intro}
+    V[:,j] \approx \sum_{i=1}^r W[:,i] H[i,j], \quad j = 1, \dots, n
+\end{equation}
+where $V[:,j]$ is the $j$-th column of $V$, $W[:,i]$ is the $i$-th column of $W$, and $H[i,j]$ is the entry in the $i$-th row and $j$-th column of $H$.
+Generally, with the term \textit{NMF} we refer to the problem of finding an approximate factorization of $V$, that is, to the optimization problem (\ref{nmf definition intro}), 
+while with the term \textit{exact NMF} we refer to the problem of finding an exact factorization of $V$, that is, to the problem of finding non-negative matrices $W$ and $H$ such that $V = WH$.
+
+Historically, even though the problem of NMF has been studied since the 1960s\cite{wallace1960analysis}\cite{imbrie1964vector}, the first modern formulation of NMF is usually attributed to the work of Paatero and Tapper (1994) \cite{paatero1994positive}.
+Nevertheless, NMF remained relatively underexplored until the early 2000s, when Lee and Seung (1999) \cite{Lee1999} introduced this problem to the machine learning community by showing that NMF can be used for learning parts-based representations of data, and by proposing a simple multiplicative update algorithm to solve it,
+and later studying its convergence properties \cite{lee2000algorithms}.
+
+Non-negative matrix factorization has gained significant attention in recent years due to its wide range of applications in data analysis, for instance it find applications in the analysis of spectral data \cite{boardman1995mapping}, in topic modeling \cite{arora2013practical}, and audio signal processing \cite{fevotte2009nonnegative}. Traditional linear dimensionality reduction techniques often fail to capture non-negative structures inherent in many datasets. NMF provides a natural framework for this task.
 In linear dimensionality reduction problems, that is, finding a low-dimensional representation of the data that is close to the underlying structure, 
 each data point of the original dataset is represented as a linear combination of a small set of $r$ basis vectors, weighted by a set of coefficients:
 \begin{equation}\label{ldr equation}
@@ -33,28 +58,43 @@ h_{r1} & h_{r2} & \dots & h_{rn}
 
 This illustrates the reason why the study of matrix factorization is so relevant in data analysis, many problems can be formulated as a matrix factorization problem, and the resulting matrices can be used to extract useful information from the original data.
 \par
-The most prominent example of linear dimensionality reduction is the principal component analysis (PCA),
+The singular value decomposition (SVD) is one of the most widely used techniques for linear dimensionality reduction, and it provides an optimal low-rank approximation of a matrix in terms of any unitarily invariant norm. SVD is closely related to
+the principal component analysis (PCA),
 this method consists of an orthogonal linear transformation that transforms the data to a new coordinate system where the principal components are ordered by decreasing variance: the first principal component accounts for maximal variance, the second for the next highest variance orthogonal to the first, and so forth.
-Typically, the pipeline for performing PCA consists of (i) to center the data by subtracting the mean, (ii) to compute the eigenvectors of the covariance matrix of the centered data, and (iii) to project the data onto the subspace spanned by the top $r$ eigenvectors.
+The typical pipeline for performing PCA is (i) to center the data by subtracting the mean, (ii) to compute the eigenvectors of the covariance matrix of the centered data, and (iii) to project the data onto the subspace spanned by the top $r$ eigenvectors.
+This is equivalent to a SVD of the centered data matrix, where the left singular vectors correspond to the eigenvectors of the covariance matrix, and the singular values correspond to the square roots of the eigenvalues. (See \cite{IntroToSL} section 12.2 for more details on SVD and PCA).
 However, for non-negative data, the mean removal process can drive some entries of the data to zero or negative values, and it requires further processing to recover the original information.
-In fact, one of the main disadvantages of PCA is that the new data can not be interpreted in the same way as the original data and this makes PCA less suitable for application that require non-negative representations, for example, when the input data represents physical quantities like signal strengths or pixel intensities.
+In fact, one of the main disadvantages of SVD/PCA is that the new data can not be interpreted in the same way as the original data and this makes these techniques less suitable for applications that require non-negative representations, for example, when the input data represents physical quantities like signal strengths or pixel intensities. 
+Non-negativity constraint allows to interpret the resulting matrices in the same way
+as the original data.  
+Suppose, for example, that the input matrix V represents a
+collection of images, where each column of V is a vectorized image, then the resulting
+matrix W can be interpreted as a collection of basis images, and the matrix H can
+be interpreted as the coefficients that represent how much of each basis image is
+present in each original image.
+This property makes NMF an extremely useful tool for inherently non-negative
+data, such as images and text. By extracting meaningful components from such
+data, NMF facilitates better understanding and analysis in numerous applications.
+One of the drawback  of NMF is that the resulting factorized matrices of the exact NMF are not unique in general \cite{donoho2003does}.
+The other main drawback of NMF is that the non-negativity constraint makes the optimization problem difficult to solve.
+Vavasis proved that the NMF problem is NP-hard in general \cite{vavasis2007complexitynonnegativematrixfactorization}. 
+Typically, NMF problems are approximated using numerical algorithms, in particular, the algorithms presented in this thesis are iterative methods that update the factors $W$ and $H$ at each step to converge to a local minimum of the cost function $D(V, WH)$.
+Convergence to a global minimum is not guaranteed, and the quality of the solution can depend on the initialization of the matrices $W$ and $H$.
+Since the NMF problem requires the optimization of a cost function that depends on the product of the two factors $W$ and $H$, to design algorithms to solve it, a common approach is to fix one of the factors and optimize the cost function with respect to the other factor, and then alternate between the two factors until convergence.
+For instance the algorithm proposed by Lee and Seung in \cite{Lee1999} is a multiplicative update algorithm that iteratively updates the factors $W$ and $H$ using multiplicative rules derived from the gradient of the cost function w.r.t. each factor.
+The update rule, in the case of the Frobenius norm, is as follows:
+\begin{equation}
+    W^{(k+1)} = W^{(k)} \circ \frac{V H^\top}{W^{(k)} H H^\top}.
+\end{equation}
+\begin{equation}
+    H^{(k+1)} = H^{(k)} \circ \frac{W^\top V}{W^\top W^{(k)} H}.
+\end{equation}
 
-
-
-Non-negative matrix factorization is a constrained problem where the input matrix $V$ is approximated by the product of two matrices $W$ and $H$ that are constrained to be non-negative.
-The resulting matrix are easier to inspect than the original input matrix, and can automatically extract useful information from it.
-%Unlike PCA, which is  the constraints on NMF make this problem especially difficult to solve, in general it is not solvable by an analytical solution and it is solved via numerical algorithms.
-Unlike PCA, which relies on unconstrained linear projections, NMF's constraints make this problem more challenging to solve in general. Typically, NMF models are solved via numerical algorithms and do not have analytical solutions.
-One of the reason why NMF models are so popular is that they are very interpretable, the non-negativity constraint allows to interpret the resulting matrices in the same way as the original data.
-For example, suppose that the input matrix $V$ represents a collection of images, where each column of $V$ is a vectorized image, then the resulting matrix $W$ can be interpreted as a collection of basis images, and the matrix $H$ can be interpreted as the coefficients that represent how much of each basis image is present in each original image.
-
-This property makes NMF an extremely useful tool for inherently non-negative data, such as images and text. By extracting meaningful components from such data, NMF facilitates better understanding and analysis in various applications.
 \section*{Thesis structure}
-The document is structured as follows: 
-\begin{itemize}
-    \item Chapter \ref{BACKGROUND CHAPTER}: the necessary mathematical background is introduced.
-    \item Chapter \ref{NMF CHAPTER}: the problem of NMF is defined and the main results on the topic are presented.
-    \item Chapter \ref{ALGO CHAPTER}: the algorithms to solve the NMF problem are derived and the results on their convergence and complexity analysis are given.
-    \item Chapter \ref{Experiments chapter}: the numerical simulations of the implemented algorithms are presented and discussed.
-\end{itemize}
-Additionally, in the appendix \ref{code documentation appendix} the code of the implemented algorithms is documented and in \ref{Additional plots appendix} extra plots are provided.
+This document is structured as follows: Chapter \ref{BACKGROUND CHAPTER} introduces the necessary mathematical background regarding linear algebra basics and optimization theory.
+Chapter \ref{NMF CHAPTER} defines the problem of NMF and presents the main results on the topic: specifically, it discusses the metics commonly used in NMF models, it exhibits the non-uniqness of the exact NMF solutions, known in the literature as the identifiability issue, and the conditions under which the exact NMF solutions are identifiable. It reports the main result on the complexity of the NMF problem, and it give a geometric interpretation of the problem.
+Moreover, two examples of applications of NMF are presented: the first one is the problem of feature extraction from a dataset of images, and the second is the problem of topic modeling in text mining.
+Several algorithms to solve the NMF problem are derived in Chapter \ref{ALGO CHAPTER}, and the
+results on their convergence and complexity analysis are given. As part of the thesis project, these algorithms have been implemented in Python: the multiplicative update algorithm, the alternating least squares algorithm, the hierarchical alternating least squares algorithm, and the projected gradient descent algorithm. 
+The numerical simulations of the implemented algorithms are presented and discussed on chapter \ref{Experiments chapter} on the application of feature extraction from a collection of greysacle faces images, and in the application of topic modeling on a collection of documents. 
+Additionally, Appendix \ref{code documentation appendix} documents the code of the implemented algorithms, and Appendix \ref{Additional plots appendix} provides extra plots.

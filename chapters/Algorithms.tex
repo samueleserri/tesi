@@ -434,7 +434,7 @@ and
 \begin{equation}
     H(:,j) = \max\left(0, \arg\min_{h} \|V(:,j) - W^{(k)}h\|_2^2 \right), \quad \text{for } j = 1, \ldots, n.
 \end{equation}
-\subsection{Alternating least squares ALS}
+\subsection{Alternating least squares (ALS)}
 The alternating least squares (ALS) method is a projected method where the subproblems are solved using the linear least squares solution (\ref{linear least sqaures equation}) and then projected onto the non-negative orthant.
 This is very easy to implement since most programming languages have built-in functions to solve linear least squares problems. For instance in MATLAB one can use the backslash operator `$\backslash$'. 
 In Python, that is the language used to create the repository associated with this thesis, the method \textit {`numpy.linalg.lstsq'} is used. % to solve linear least squares problems.

@@ -25,7 +25,7 @@ where $D$ is a distance measure between matrices.
 \end{remark}
 After solving the optimization problem (\ref{NMF optimization problem}), as result we obtain two matrices $W \in \R_+^{m \times r}$ and $H \in \R_+^{r \times n}$ such that their product $WH \in \R_+^{m \times n}$ is an approximation to the original matrix $V \in \R_+^{m \times n}$.
 \par
-The column of the original non-negative matrix $V \in R^{m \times n}_+$ are then approximated as non-negative linear combinations of the columns of $W$ weighted by the coefficients in the corresponding column of $H$:
+The columns of the original non-negative matrix $V \in R^{m \times n}_+$ are then approximated as non-negative linear combinations of the columns of $W$ weighted by the coefficients in the corresponding column of $H$:
 \begin{equation}\label{formula for j-th column of V}
     V[:,j] \approx \sum_{k=1}^{r} H[k,j] W[:, k], \quad \forall j = 1, \ldots, n.
 \end{equation}
@@ -197,7 +197,7 @@ Let's start with an observation: in the case of the exact factorization $V = WH$
 \end{equation}
 This simple observation shows that in general the NMF problem does not have a unique solution.
 \par
-Even after removing this scaling ambiguity, one should not expect to find an unique NMF solution in general.
+Even after removing this scaling ambiguity, one should not expect to find an unique exact NMF solution in general.
 In the literature this is also known as the \textit{identifiability} problem of NMF. The interested reader may refer to \cite{gillis2020nonnegative} chapter $4$ for a detailed discussion on this topic.
 \par
 In this section we examine which necessary condition is required for identifiability and present a sufficient condition for it.
@@ -295,14 +295,14 @@ Now we present a sufficient condition for identifiability known as the \textit{s
 \begin{theorem}
 [Sufficient condition for identifiability: separability]\label{Sufficient condition for identifiability}
 Let $V \in \R_+^{m \times n}$ be a non-negative matrix and let $V = WH$ be an exact NMF of $V$ of size $r$.
-If the matrices $W$ and $H$ contain non-singular diagonal sub-matrices of size $r \times r$, then the NMF solutions are identifiable.
+If the matrices $W$ and $H$ contain non-singular diagonal sub-matrices of size $r \times r$, then the exact NMF solutions are identifiable.
 \end{theorem}
 \begin{proof}
     See \cite{donoho2003does}. The proof idea is to take advantage of the fact that the identity matrix $I$ has a unique NMF $I = I \times I$.
 \end{proof}
 An equivalent definition of separability is the following:
 \begin{definition}[Separable NMF]
-An NMF $V = WH$ is said to be separable if there exists a set of $r$ indices $\{j_1, j_2, \ldots, j_r\} \subseteq \{1, 2, \ldots, n\}$ such that:
+An exact NMF $V = WH$ is said to be separable if there exists a set of $r$ indices $\{j_1, j_2, \ldots, j_r\} \subseteq \{1, 2, \ldots, n\}$ such that:
 \begin{equation}
     V = W H = V[:, \{j_1, j_2, \ldots, j_r\}]\tilde{H}
 \end{equation}
