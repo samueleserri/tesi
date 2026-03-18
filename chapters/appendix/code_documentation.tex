@@ -44,7 +44,7 @@ python -m venv venv
 \end{lstlisting}
 then activate your virtual environment:
 \begin{lstlisting}
-source venv/bin/activate  # On macOS/Linux
+source venv/bin/activate
 \end{lstlisting}
 finally, inside the virtual environment, install the package in editable mode using pip:
 \begin{lstlisting}
@@ -97,10 +97,6 @@ to see the installed packages. You should see a package named \texttt{NMF} and i
           \item \texttt{CBCL.csv} \hfill -- face dataset used by \cite{Lee1999}
           \item \texttt{Swimmer.csv} \hfill -- 220 $\times$ 256-pixel swimmer images
           \item \texttt{tdt2\_top30.mat} \hfill -- top-30 news dataset for topic modelling
-        \end{itemize}
-      \item \texttt{tests/}
-        \begin{itemize}
-          \item \texttt{beta\_divergence\_plot.py} \hfill -- script to plot the beta-divergence
         \end{itemize}
       \item \texttt{README.md}
     \end{itemize}
@@ -168,9 +164,9 @@ Attributes:
 \end{itemize}
 \subsubsection{SparseNMF}
 The \texttt{SparseNMF.py} module contains a subclass of the NMF class that handles sparse matrices with the \texttt{scipy.sparse\_array}\footnote{This is the latest release \url{https://docs.scipy.org/doc/scipy/reference/sparse.html} fully compatible with NumPy arrays, 
-the older release was did not have full compatibility, for more information visit \url{https://docs.scipy.org/doc/scipy/reference/sparse.migration_to_sparray.html migration-to-sparray}} interface.
+the older release did not have full compatibility, for more information visit \url{https://docs.scipy.org/doc/scipy/reference/sparse.migration_to_sparray.html}} interface.
 \section{Examples usage}
-\subsection{Basic usage Example}
+\subsection{Basic usage example}
 First import the NMF class from the nmf package:
 \begin{lstlisting}
 from nmf import NMF
@@ -272,6 +268,4 @@ The $49$ columns of $W$ can be reshaped into $19 \times 19$ images and displayed
 \begin{lstlisting}
 display(fitted_model.W[:,:reconstruction_rank], perrow=7, height=19, width=19)
 \end{lstlisting}
-The output shows the learned parts of faces as in Figure \ref{fig:CBCL columns of W}
-% \subsubsection{Topic modeling }
-% TODO
+The output shows the learned parts of faces as in Figure \ref{fig:CBCL columns of W}.

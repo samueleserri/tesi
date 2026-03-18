@@ -13,24 +13,6 @@ Furthermore the optimization problem (\ref{NMF optimization problem}) is a const
 To handle the non-negativity constraints, the algorithms presented in this chapter use two main approaches: the first one is to design a scheme that ensures the non-negativity of the iterates at each step, this is the case of the MU, and ANLS.
 The second approach is to first solve the subproblems without the non-negativity constraints and then project the solution onto the non-negative orthant, this is the case of the ALS, HALS, and PGD.
 
-% \begin{table}
-%     \centering
-%     \caption{Summary of the NMF algorithms presented in this chapter.}
-%     \label{tab:algo_summary}
-%     \begin{tabular}{|l|c|}
-%         \hline
-%         \textbf{Algorithm} & \textbf{Reference} \\
-%         \hline
-%         MU (Frobenius) & Algorithm \ref{MU for Frobenius} \\
-%         MU (Kullback-Leibler) & Algorithm \ref{MU for KL} \\
-%         MU ($\beta$-divergence) & Algorithm \ref{MU for beta} \\
-%         ANLS & Algorithm \ref{ANLS} \\
-%         ALS & Algorithm \ref{ALS} \\
-%         PGD & Algorithm \ref{Projected Gradient} \\
-%         HALS & Algorithm \ref{HALS} \\
-%         \hline
-%     \end{tabular}
-% \end{table}
 
 \section{Two blocks coordinate descent (2-BCD)} \label{2-BCD general framework}
 The most common setting for NMF is the so called two-blocks coordinate descent, in this setting the factors \( W \) and \( H \) are updated alternately, fixing one while updating the other.
@@ -175,7 +157,7 @@ See chapter \ref{Experiments chapter}, section \ref{init comparison section} for
 \section{Multiplicative updates (MU)} \label{MU derivation section}
 The multiplicative updates (MU) were first introduced by Lee and Seung in \cite{Lee1999}. They are one of the most popular algorithms for NMF.
 In this section we derive the MU algorithm for two different cost functions: the Frobenius norm and the Kullback-Leibler divergence.
-In \cite{lee2000algorithms} Lee and Seung proved the convergence of Mu algorithm for the Frobenius and the Kullback-Leibler divergence.
+In \cite{lee2000algorithms} Lee and Seung proved the convergence of MU algorithm for the Frobenius and the Kullback-Leibler divergence.
 A detailed derivation using matrix algebra can be found in \cite{burred2014detailed}.
 In section \ref{MU beta section} we present the MU algorithm for the more general case of beta divergence \cite{févotte2011algorithmsnonnegativematrixfactorization}.
 \subsection{MU with the Frobenius norm}
@@ -714,7 +696,7 @@ while the gradient with respect to \( W \) is given by:
 \end{equation}
 The cost of computing the gradient with respect to \( H \) is $O(mnr)$ and the cost of computing the gradient with respect to \( W \) is also $O(mnr)$.
 \section*{Summary and extensions}
-During the last decades, many algorithm have been proposed to solve the NMF problem, 
+During the last decades, many algorithms have been proposed to solve the NMF problem,  
 in this chapter we derived and presented the general framework for designing NMF algorithms,
 and derived the most important ones, namely the multiplicative updates with beta divergence (Algorithm \ref{MU for beta}), which includes the MU for the Frobenius norm and the Kullback-Leibler divergence as special cases for $\beta = 2$ and $\beta = 1$ respectively, the alternating non-negative least squares method (Algorithm \ref{ANLS}), the alternating least squares method (Algorithm \ref{ALS}), the projected gradient descent method (Algorithm \ref{Projected Gradient}), and the hierarchical alternating least squares method (Algorithm \ref{HALS}).
 There are different variants of the algorithms presented here, notably some algorithm can be accelerated, \cite{gillis2012accelerated}.
