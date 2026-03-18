@@ -75,7 +75,8 @@ The other main drawback of NMF is that the non-negativity constraint makes the o
 Vavasis proved that the NMF problem is NP-hard in general \cite{vavasis2007complexitynonnegativematrixfactorization}. 
 Typically, NMF problems are approximated using numerical algorithms, in particular, the algorithms presented in this thesis are iterative methods that update the factors $W$ and $H$ at each step to converge to a local minimum of the cost function $D(V, WH)$.
 Convergence to a global minimum is not guaranteed, and the quality of the solution can depend on the initialization of the matrices $W$ and $H$.
-Since the NMF problem requires the optimization of a cost function that depends on the product of the two factors $W$ and $H$, to design algorithms to solve it, a common approach is to fix one of the factors and optimize the cost function with respect to the other factor, and then alternate between the two factors until convergence.
+
+Since the NMF problem requires optimizing a cost function that depends on the product of two factors, W and H, a common approach to designing algorithms to solve it, is to fix one factor and optimize the cost function with respect to the other, alternating between the two factors until convergence.
 For instance, the algorithm proposed by Lee and Seung in \cite{Lee1999} is a multiplicative update algorithm that iteratively updates the factors $W$ and $H$ using multiplicative rules derived from the gradient of the cost function with respect to each factor.
 %\section*{}
 
