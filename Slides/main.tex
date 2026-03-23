@@ -70,6 +70,9 @@
 
 \usepackage{hyperref}
 
+\setbeamerfont{caption name}{size=\tiny}
+\setbeamerfont{caption}{size=\tiny}
+
 \usepackage{etoolbox}
 \AtBeginEnvironment{algorithmic}{\footnotesize}
 
@@ -142,7 +145,9 @@
   \titlepage
 \end{frame}
 
-\begin{frame}{Outline}
+\begin{frame}{Outline}{Aim of the thesis: explore the problem of non-negative matrix factorization (NMF) by analyzing
+the existing literature on the topic, and then studying and implementing existing
+algorithms to solve it.}
   \tableofcontents
   % You might wish to add the option [pausesections]
 \end{frame}
@@ -191,9 +196,9 @@ W \geq 0, H \geq 0
 
 \subsection{Applications}
 
-\begin{frame}{Make Titles Informative.}
+\begin{frame}{}%Make Titles Informative.}
   \begin{block}{}
-  \textbf{NMF is extremely useful for inherently non-negative datasets}  
+  \textbf{NMF is extremely useful for inherently non-negative datasets.}  
   For instance, when the data represent physical quantities like signal strengths or pixel intensities.
   \end{block}
   Example applications include:
@@ -223,7 +228,7 @@ W \geq 0, H \geq 0
   \end{frame}
 
 
-  \begin{frame}{Example: learning parts of objects with NMF \cite{lee1999}}
+  \begin{frame}{Example: learning parts of objects with NMF \small{(Lee \& Seung \cite{lee1999})}}
     \begin{columns}
       \column{0.5\textwidth}
       \begin{figure}
@@ -250,8 +255,8 @@ W \geq 0, H \geq 0
 
 \subsection{MU}
 
-\begin{frame}{Make Titles Informative.}
-Can be interpreted as a scaled \alert{gradient descent} method:
+\begin{frame}{Lee and Seung proposed the Multiplicative Updates (MU).}
+\textbf{Can be interpreted as a scaled \alert{gradient descent} method:}
 
 the gradient of the cost function with respect to $H$ is given by:
 \begin{equation}
@@ -269,7 +274,7 @@ H \leftarrow H \circ \frac{W^TV}{W^TWH}
 \end{block}
 \end{frame}
 
-\begin{frame}{MU}
+\begin{frame}{Multiplicative Updates (MU) for NMF}
   \begin{block}{}
   \begin{algorithm}[H]
     \caption{Multiplicative Update for NMF}
@@ -290,7 +295,7 @@ H \leftarrow H \circ \frac{W^TV}{W^TWH}
 
 \subsection{PGD}
 
-\begin{frame}{PGD}
+\begin{frame}{Projected Gradient Descent (PGD) for NMF}
   \begin{block}{}
   \begin{algorithm}[H]
     \caption{Projected Gradient Descent for NMF}
@@ -319,7 +324,7 @@ H \leftarrow H \circ \frac{W^TV}{W^TWH}
 
 \subsection{ALS}
 
-\begin{frame}{ALS}
+\begin{frame}{Alternating Least Squares (ALS) for NMF}
   \begin{block}{}
     \begin{algorithm}[H]
     \caption{Alternating Least Squares for NMF}
@@ -329,10 +334,11 @@ H \leftarrow H \circ \frac{W^TV}{W^TWH}
 \in \mathbb{R}_+^{r \times n} \)
         % \output \( W \in \mathbb{R}_+^{m \times r} \), \( H \in \R_+^{r \times n} \) such that \( V \approx WH \)
         \While{stopping criterion not met}
-            \For{i = 1 to m}
+            \For{i = 1 to m}\Comment{m independent linear least squares}
                 \State \( W(i,:) \leftarrow \max\left(0, \arg\min_{w} \|V(i,:) - w H^{(k)}\|_2^2 \right) \)
+                
             \EndFor
-            \For{j = 1 to n}
+            \For{j = 1 to n} \Comment{n independent linear least squares}
                 \State \( H(:,j) \leftarrow \max\left(0, \arg\min_{h} \|V(:,j) - W^{(k)}h\|_2^2 \right) \)
             \EndFor
             % \State \( W^{(k + 1)} \leftarrow \max\left(0, \arg\min_W \|V - WH^{(k)}\|_F^2  \right) \)
@@ -346,7 +352,7 @@ H \leftarrow H \circ \frac{W^TV}{W^TWH}
 
 \subsection{HALS}
 
-\begin{frame}{HALS}
+\begin{frame}{Hierarchical Alternating Least Squares (HALS) for NMF}
   \begin{block}{}
   \begin{algorithm}[H]
     \caption{Hierarchical Alternating Least Squares for NMF}
@@ -356,8 +362,10 @@ H \leftarrow H \circ \frac{W^TV}{W^TWH}
         \While{stopping criterion not met}
             \For{\( \ell = 1 \) to \( r \)}
                 \State \( \tilde{R}_{\ell} \leftarrow V - \sum_{k\not=\ell}W[:,k]H[k,:] \)
+                \Comment{Residual matrix w.r.t. \(\ell\)}
                 \State \( H[\ell,:] \leftarrow \max\left(0, \frac{\tilde{R}_{\ell}^\top W[:,\ell]}{W[:,\ell]^\top W[:,\ell]} \right) \)
-            \EndFor
+                            
+                \EndFor
             \For{\( \ell = 1 \) to \( r \)}
                 \State \( \tilde{R}_{\ell} \leftarrow V - \sum_{k\not=\ell}W[:,k]H[k,:] \)
                 \State \( W[:,\ell] \leftarrow \max\left(0, \frac{\tilde{R}_{\ell} H[\ell,:]^\top}{H[\ell,:] H[\ell,:]^\top} \right) \)
@@ -369,64 +377,61 @@ H \leftarrow H \circ \frac{W^TV}{W^TWH}
   \end{block}
 \end{frame}
 
-\section{Numerical experiments}
+\section{Implementation and Results}
+
+\subsection{Python implementation}
 
 \begin{frame}{The Algorithms have been implemenetd in Python}
   \begin{figure}
     \includegraphics[width=1\textwidth]{images/Screenshot_20260322_114228.png}
+      \caption{\url{https://github.com/samueleserri/NMF.git}}    
   \end{figure}
 \end{frame}
 
-\begin{frame}{The Algorithms have been implemenetd in Python}
-  %% Repo link: \url{https://github.com/samueleserri/NMF.git}
+\subsection{Numerical simulations}
 
+\begin{frame}{Make Titles Informative.}
   \begin{columns}
-    \column{0.55\textwidth}
-    \begin{figure}
-      \includegraphics[width=\textwidth]{../Imgs/Chapter 5/CBCL_random_init.png}
-      \caption{CBCL dataset:}
-    \end{figure}
-    
     \column{0.5\textwidth}
     \begin{figure}
-      \includegraphics[width=\textwidth]{../Imgs/Chapter 5/Top30_news_random_init.png}
-      \caption{TDT2 dataset:}
+      \includegraphics[width=1\textwidth]{images/CBCL_random_init.png}
+      \caption{\tiny{Average relative reconstruction error for each algorithm averaged over 10 random initializations on the CBCL dataset.}}
     \end{figure}
+    
+    \begin{table}[htbp]
+      \centering
+      \tiny
+      \begin{tabular}{|l|l|l|}
+        \hline
+        Algorithm & Avg. iterations & Avg. time/iter (s) \\ \hline
+        MU        & 324             & $9.26 \times 10^{-2}$ \\ \hline
+        HALS      & 362             & $8.29 \times 10^{-2}$ \\ \hline
+        ALS       & 144             & $2.08 \times 10^{-1}$ \\ \hline
+        PGD       & 282             & $1.06 \times 10^{-1}$ \\ \hline
+      \end{tabular}
+      \caption{\tiny{Average iterations and time per iteration for each algorithm.}}
+      \label{tab:CBCL results 49}
+    \end{table}
+    
+    \column{0.5\textwidth}
+    \begin{block}{\small }
+      \tiny
+      Numerical simulations on the CBCL face dataset with rank $r = 49$, averaged over 10 random initialization.
+      Each algorithm was run for 30 seconds, and the average number of iterations and time per iteration were recorded.
+    \end{block}
+    
+    \vspace{1 cm}
+    
+    \begin{block}{\small Results}
+      \tiny
+      HALS converges the fastest and reaches the lowest relative reconstruction error within the 30 seconds.
+      ALS perform the worst, with the highest time per iteration and lowest number of iterations.
+      PGD has a higher time per iteration than MU and HALS, but converges faster than ALS.
+      MU and PGD have similar performance.
+
+    \end{block}
   \end{columns}
-  Dense case: fastest HALS
-  SParse case: fastest MU
 \end{frame}
-
-
-
-% \section*{Summary}
-
-% \begin{frame}{Summary}
-
-%   % Keep the summary *very short*.
-%   \begin{itemize}
-%   \item
-%     The \alert{first main message} of your talk in one or two lines.
-%   \item
-%     The \alert{second main message} of your talk in one or two lines.
-%   \item
-%     Perhaps a \alert{third message}, but not more than that.
-%   \end{itemize}
-  
-%   % The following outlook is optional.
-%   \vskip0pt plus.5fill
-%   \begin{itemize}
-%   \item
-%     Outlook
-%     \begin{itemize}
-%     \item
-%       Something you haven't solved.
-%     \item
-%       Something else you haven't solved.
-%     \end{itemize}
-%   \end{itemize}
-% \end{frame}
-
 
 
 % All of the following is optional and typically not needed. 
