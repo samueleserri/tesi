@@ -174,7 +174,7 @@ algorithms to solve it.}
 
 \subsection{NMF Definition}
 
-\begin{frame}{Make Titles Informative. Use Uppercase Letters.}
+\begin{frame}{Definition of non-negative matrix factorization (NMF)}
   % - A title should summarize the slide in an understandable fashion
   %   for anyone how does not follow everything on the slide itself.
   % - Avoid using lowercase letters in titles, as they are harder to
@@ -242,11 +242,11 @@ W \geq 0, H \geq 0
       
       \column{0.5\textwidth}
       \begin{itemize}
-        \item CBCL face dataset $\rightarrow$ 2429 images of faces with 19x19 pixels.
+        \item CBCL face dataset $\rightarrow$ 2429 images of faces with 19x19 pixels resolution.
         \item NMF with $r = 49$ $\rightarrow$ 49 basis images and corresponding coefficients.
-        \item Basis images extract \alert{facial features}.
-        \item Columns of $H$ contain the weight of each feature for each image.
-        \item Original images reconstructed as $V[:,i] \approx \sum_{k=1}^r W[:,k] H[k,i]$.
+        \item Columns of W $\rightarrow$ basis images that extract \alert{facial features}.
+        \item Columns of $H$ $\rightarrow$ weight of each feature for each image.
+        \item $v_i \approx \displaystyle\sum_{k=1}^r w_k h_{k,i}$.
       \end{itemize}
     \end{columns}
   \end{frame}
@@ -256,7 +256,7 @@ W \geq 0, H \geq 0
 \subsection{MU}
 
 \begin{frame}{Lee and Seung proposed the Multiplicative Updates (MU).}
-\textbf{Can be interpreted as a scaled \alert{gradient descent} method:}
+\textbf{MU can be interpreted as a scaled \alert{gradient descent} method:}
 
 the gradient of the cost function with respect to $H$ is given by:
 \begin{equation}
@@ -390,7 +390,7 @@ H \leftarrow H \circ \frac{W^TV}{W^TWH}
 
 \subsection{Numerical simulations}
 
-\begin{frame}{Make Titles Informative.}
+\begin{frame}{Numerical Simulations on the CBCL dataset}
   \begin{columns}
     \column{0.5\textwidth}
     \begin{figure}
@@ -425,8 +425,8 @@ H \leftarrow H \circ \frac{W^TV}{W^TWH}
     \begin{block}{\small Results}
       \tiny
       HALS converges the fastest and reaches the lowest relative reconstruction error within the 30 seconds.
-      ALS perform the worst, with the highest time per iteration and lowest number of iterations.
-      PGD has a higher time per iteration than MU and HALS, but converges faster than ALS.
+      ALS performs the worst, with the highest time per iteration and lowest number of iterations.
+      PGD has a higher time per iteration than MU and HALS, but is faster than ALS.
       MU and PGD have similar performance.
 
     \end{block}
